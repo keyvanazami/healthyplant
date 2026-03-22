@@ -1,0 +1,10 @@
+# GCP Project Configuration
+project_id = "my-healthyplant-project"
+region     = "us-central1"
+
+# Application Settings
+app_name    = "healthyplant"
+environment = "prod"
+
+# Secrets (do NOT commit real values — use terraform.tfvars which is gitignored)
+anthropic_api_key = "sk-ant-REPLACE_ME"

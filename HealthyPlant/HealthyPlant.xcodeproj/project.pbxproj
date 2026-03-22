@@ -1,0 +1,904 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02E1F27BED55E9BE4C52D353 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12E6B48BB0CF50BF509A8B2 /* AppState.swift */; };
+		04020A9133A100DE876D15DB /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5005F68806E7D348C880E825 /* ImageUploadService.swift */; };
+		0683486046F6D36A09E719F3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607934E90864478D31784E51 /* SettingsView.swift */; };
+		0779C0829034D57BF2C90666 /* APIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33DCB01F91E7D8BCDAB4B6A2 /* APIClientTests.swift */; };
+		0BF5CE3905060AB73F02452C /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 6B92AE8783AA3DC0A01D9157 /* Lottie */; };
+		0D8C6F3D1FF174C78173B6FF /* CreateProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD7B146ED0B0E553AF12C8E /* CreateProfileView.swift */; };
+		0EDD84FB1C061E868052FB05 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F311D4F3D58A9DC7ED4E60 /* HomeView.swift */; };
+		18C1831C4364CE9F33D8DBD6 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2446114BCB6649FE8A010280 /* TabBarView.swift */; };
+		28DFB7FA140B6268E4C9C5B0 /* AssistantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */; };
+		29503608C932C61DCA1A2238 /* ProfilesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D425E8CAE3E3024DD7E7C4E /* ProfilesListView.swift */; };
+		2C8B4B48AC048F31DED79B93 /* CactusAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */; };
+		4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */; };
+		4BA61E4B6E0B40FD3D97FACB /* GardenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B198D286EF6642EFF35ED /* GardenView.swift */; };
+		50F8B932534BB850696A9B48 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */; };
+		56461FA418405FAD6A26A9DE /* ProfileFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */; };
+		61ABAE9EC5CAE06C30697277 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */; };
+		62BC69F35E5769ABE14C91B4 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BEBF554FDF515B95719584 /* HomeUITests.swift */; };
+		723CE6EBE3E6A78003D42BE9 /* AssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */; };
+		75E89F2CC17C5FE41BF0297A /* CalendarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */; };
+		7C472239CEFB077992103E45 /* GreenOutlineStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */; };
+		7F2A5301161F18F873D92C95 /* PlantProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */; };
+		8CE4EE31410ED174DC969F78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD134568F9E8494A6B50B263 /* Assets.xcassets */; };
+		92D55262C66FD5D0574201BB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */; };
+		92DD502C558BA80D6CC818CC /* GardenUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2909072BF771725B0384A740 /* GardenUITests.swift */; };
+		97C7D2FECFAEB467417F285B /* CalendarEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071CEF25C072B0C32E90AF94 /* CalendarEvent.swift */; };
+		9F41780CF011CB9896AAF70E /* ProfilesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845CDB71DC07082F314356EA /* ProfilesViewModel.swift */; };
+		A1145AA178E47EB393BC055C /* PlantProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8190328E5207C746AD96236 /* PlantProfileTests.swift */; };
+		A646AB87343EAF3DFD4B6566 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99CB616CB0A4E06A2B9A5C /* CalendarView.swift */; };
+		AEE603AEA81F060444E518F1 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B453B63957050A8FA16A7829 /* ChatService.swift */; };
+		B16356FE7D294D6C6A6C22F9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CED33880E82F3D0650BB9B /* ContentView.swift */; };
+		B188BF11C3EDBB420C97E2CA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = AA748F85000C00FA578D64A7 /* FirebaseMessaging */; };
+		B203F95F5BC3AC7E20181E60 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1D76B9948F1489F06694C /* ProfileDetailView.swift */; };
+		B20A01D757943591D9EAD452 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */; };
+		B26BA7F008D323245B539223 /* HealthyPlantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F40EE250A44656A679243D /* HealthyPlantUITests.swift */; };
+		B72EDA2B7FE237D301BA33BB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B92143B409EDE1D9F6F6B2 /* APIClient.swift */; };
+		B78C0B162BCB086B9EFDCF69 /* CalendarEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEF40604144CF7328862DEE /* CalendarEventTests.swift */; };
+		B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D744FAA423E013E653BFAAF /* CalendarService.swift */; };
+		BA47989B7148E0243E296061 /* ProfilesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */; };
+		BC9FCB5CA203FADE0ACFB461 /* AssistantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A040067AE9F1263E0BEA62F3 /* AssistantViewModelTests.swift */; };
+		C3360A871998ABFE3F999456 /* PlantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C679A8901BDC330AE672EA /* PlantService.swift */; };
+		C4D081EF952799B08E2DC12B /* PlantServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB294462B44D894111B7C94 /* PlantServiceTests.swift */; };
+		CB2C2167E65875D1B5190752 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A45D715ED3FE8999514B99 /* HomeViewModel.swift */; };
+		CD0CEEEF34867F7DBA117F8A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = F72CC76A1C8A25F49971E2CF /* Theme.swift */; };
+		CFA18C464582D2B631A88981 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */; };
+		D264F0517DAFC3BA6C2BF735 /* HealthyPlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 392B39C3E180BBB7A06A41C2 /* HealthyPlantTests.swift */; };
+		D597800B89FE88FE754DD286 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */; };
+		E0F05610362FB895556A9278 /* GardenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCAC4EAF03E693F96BEC4A3 /* GardenViewModel.swift */; };
+		ECF71DFC30B273E777F8A883 /* DayEventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A08ED75273BB58F62906DEF2 /* DayEventsView.swift */; };
+		F0843E7CEA49500CC81D170A /* HealthyPlantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */; };
+		F11F9BBE049460496DFE8A5E /* AssistantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */; };
+		F35663A1301D2C9739C2F55E /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 567555CC85BCCF67112CEBBB /* SettingsViewModel.swift */; };
+		F7BC8EF4C0E9C496086D7357 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3C7ED42D772A36942662A22C /* FirebaseAuth */; };
+		FC143CA67114AD4CF1AFE04C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26777CFA7F56463810915890 /* AuthService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		268D44B6142FC79EF9BEE213 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E54BD531521288A2618FDDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCF8C333F8AA504A7E26E3DA;
+			remoteInfo = HealthyPlant;
+		};
+		6D404DFD37F99BAFD6C0035D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2E54BD531521288A2618FDDF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DCF8C333F8AA504A7E26E3DA;
+			remoteInfo = HealthyPlant;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantProfile.swift; sourceTree = "<group>"; };
+		071CEF25C072B0C32E90AF94 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
+		084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantApp.swift; sourceTree = "<group>"; };
+		091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantView.swift; sourceTree = "<group>"; };
+		1CB1D76B9948F1489F06694C /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
+		22B92143B409EDE1D9F6F6B2 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFlowUITests.swift; sourceTree = "<group>"; };
+		2446114BCB6649FE8A010280 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
+		26777CFA7F56463810915890 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		2909072BF771725B0384A740 /* GardenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenUITests.swift; sourceTree = "<group>"; };
+		2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenOutlineStyle.swift; sourceTree = "<group>"; };
+		2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantUITests.swift; sourceTree = "<group>"; };
+		33DCB01F91E7D8BCDAB4B6A2 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
+		392B39C3E180BBB7A06A41C2 /* HealthyPlantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantTests.swift; sourceTree = "<group>"; };
+		3FD7B146ED0B0E553AF12C8E /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
+		4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CactusAnimationView.swift; sourceTree = "<group>"; };
+		5005F68806E7D348C880E825 /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
+		55F311D4F3D58A9DC7ED4E60 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		567555CC85BCCF67112CEBBB /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		57F40EE250A44656A679243D /* HealthyPlantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantUITests.swift; sourceTree = "<group>"; };
+		5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatBubbleView.swift; sourceTree = "<group>"; };
+		607934E90864478D31784E51 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		63CED33880E82F3D0650BB9B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		6D425E8CAE3E3024DD7E7C4E /* ProfilesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesListView.swift; sourceTree = "<group>"; };
+		6EA1DBAA1F5648DEF43AAEB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7B99CB616CB0A4E06A2B9A5C /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		7BCAC4EAF03E693F96BEC4A3 /* GardenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenViewModel.swift; sourceTree = "<group>"; };
+		7FB294462B44D894111B7C94 /* PlantServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantServiceTests.swift; sourceTree = "<group>"; };
+		845CDB71DC07082F314356EA /* ProfilesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesViewModel.swift; sourceTree = "<group>"; };
+		84BEBF554FDF515B95719584 /* HomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
+		8D744FAA423E013E653BFAAF /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
+		8E79621A9D19C1277D432A3C /* HealthyPlantUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		94A45D715ED3FE8999514B99 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesViewModelTests.swift; sourceTree = "<group>"; };
+		A040067AE9F1263E0BEA62F3 /* AssistantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantViewModelTests.swift; sourceTree = "<group>"; };
+		A08ED75273BB58F62906DEF2 /* DayEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEventsView.swift; sourceTree = "<group>"; };
+		A6C679A8901BDC330AE672EA /* PlantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantService.swift; sourceTree = "<group>"; };
+		A8190328E5207C746AD96236 /* PlantProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantProfileTests.swift; sourceTree = "<group>"; };
+		B12E6B48BB0CF50BF509A8B2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUITests.swift; sourceTree = "<group>"; };
+		B453B63957050A8FA16A7829 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
+		B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HealthyPlant.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B52B198D286EF6642EFF35ED /* GardenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenView.swift; sourceTree = "<group>"; };
+		B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantViewModel.swift; sourceTree = "<group>"; };
+		C47699F06DB75EB8598F019D /* HealthyPlantTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
+		CD134568F9E8494A6B50B263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
+		E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		EFEF40604144CF7328862DEE /* CalendarEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventTests.swift; sourceTree = "<group>"; };
+		F72CC76A1C8A25F49971E2CF /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		60C28D452A66E42CE6D586CE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0BF5CE3905060AB73F02452C /* Lottie in Frameworks */,
+				F7BC8EF4C0E9C496086D7357 /* FirebaseAuth in Frameworks */,
+				B188BF11C3EDBB420C97E2CA /* FirebaseMessaging in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A322FF21F05814478BE22FE /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				607934E90864478D31784E51 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		1DBBA60B147E0B33089D2C1C /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				7B99CB616CB0A4E06A2B9A5C /* CalendarView.swift */,
+				A08ED75273BB58F62906DEF2 /* DayEventsView.swift */,
+			);
+			path = Calendar;
+			sourceTree = "<group>";
+		};
+		54982AED2750F200A938B015 /* Assistant */ = {
+			isa = PBXGroup;
+			children = (
+				1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */,
+				5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */,
+			);
+			path = Assistant;
+			sourceTree = "<group>";
+		};
+		54F6710FD88EE6A0D3A99FB4 /* HealthyPlantTests */ = {
+			isa = PBXGroup;
+			children = (
+				392B39C3E180BBB7A06A41C2 /* HealthyPlantTests.swift */,
+				57AFB47F715B12F8D5C8A65E /* Models */,
+				6154B71FA7A13B4797A840ED /* Services */,
+				5F08D2011765DD856481E335 /* ViewModels */,
+			);
+			path = HealthyPlantTests;
+			sourceTree = "<group>";
+		};
+		55108A8585C60A6E16263928 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */,
+				2446114BCB6649FE8A010280 /* TabBarView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		57AFB47F715B12F8D5C8A65E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				EFEF40604144CF7328862DEE /* CalendarEventTests.swift */,
+				A8190328E5207C746AD96236 /* PlantProfileTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5F08D2011765DD856481E335 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A040067AE9F1263E0BEA62F3 /* AssistantViewModelTests.swift */,
+				CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */,
+				9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6154B71FA7A13B4797A840ED /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				33DCB01F91E7D8BCDAB4B6A2 /* APIClientTests.swift */,
+				7FB294462B44D894111B7C94 /* PlantServiceTests.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		700261FBD5B7F4B06F88ADB6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */,
+				C47699F06DB75EB8598F019D /* HealthyPlantTests.xctest */,
+				8E79621A9D19C1277D432A3C /* HealthyPlantUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7099E507486D9EC31267D880 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */,
+				F72CC76A1C8A25F49971E2CF /* Theme.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		727F3E1971078D741A310F2C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CD134568F9E8494A6B50B263 /* Assets.xcassets */,
+				6EA1DBAA1F5648DEF43AAEB3 /* Info.plist */,
+				8624D379856AF6E56DD9EB20 /* Animations */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		84B16754BC87DA4CC2410502 /* Garden */ = {
+			isa = PBXGroup;
+			children = (
+				B52B198D286EF6642EFF35ED /* GardenView.swift */,
+			);
+			path = Garden;
+			sourceTree = "<group>";
+		};
+		8624D379856AF6E56DD9EB20 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Animations;
+			sourceTree = "<group>";
+		};
+		92742D1EB1BE891E7C2F58E6 /* HealthyPlant */ = {
+			isa = PBXGroup;
+			children = (
+				BD2BCE83EC2BAF16794FA99B /* App */,
+				E525C5A048961AB3818BC634 /* Models */,
+				727F3E1971078D741A310F2C /* Resources */,
+				EBCF56CFAF64170E18D76E74 /* Services */,
+				7099E507486D9EC31267D880 /* Utilities */,
+				E2F555CB0A836EF1EF1BF480 /* ViewModels */,
+				D0B4886E77FD6A7BC78E28B7 /* Views */,
+			);
+			path = HealthyPlant;
+			sourceTree = "<group>";
+		};
+		BD2BCE83EC2BAF16794FA99B /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B12E6B48BB0CF50BF509A8B2 /* AppState.swift */,
+				63CED33880E82F3D0650BB9B /* ContentView.swift */,
+				084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		D0B4886E77FD6A7BC78E28B7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				54982AED2750F200A938B015 /* Assistant */,
+				1DBBA60B147E0B33089D2C1C /* Calendar */,
+				55108A8585C60A6E16263928 /* Components */,
+				84B16754BC87DA4CC2410502 /* Garden */,
+				D0F21474502E3F4440BF4963 /* Home */,
+				FEC965DFCB4A30FC1F30B5C3 /* Profiles */,
+				0A322FF21F05814478BE22FE /* Settings */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D0F21474502E3F4440BF4963 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */,
+				55F311D4F3D58A9DC7ED4E60 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		D86276C5D943331888F7F134 = {
+			isa = PBXGroup;
+			children = (
+				92742D1EB1BE891E7C2F58E6 /* HealthyPlant */,
+				54F6710FD88EE6A0D3A99FB4 /* HealthyPlantTests */,
+				E51F23ADB03B2EEDA0A96210 /* HealthyPlantUITests */,
+				700261FBD5B7F4B06F88ADB6 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E2F555CB0A836EF1EF1BF480 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */,
+				DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */,
+				7BCAC4EAF03E693F96BEC4A3 /* GardenViewModel.swift */,
+				94A45D715ED3FE8999514B99 /* HomeViewModel.swift */,
+				845CDB71DC07082F314356EA /* ProfilesViewModel.swift */,
+				567555CC85BCCF67112CEBBB /* SettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		E51F23ADB03B2EEDA0A96210 /* HealthyPlantUITests */ = {
+			isa = PBXGroup;
+			children = (
+				2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */,
+				B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */,
+				2909072BF771725B0384A740 /* GardenUITests.swift */,
+				57F40EE250A44656A679243D /* HealthyPlantUITests.swift */,
+				84BEBF554FDF515B95719584 /* HomeUITests.swift */,
+				230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */,
+			);
+			path = HealthyPlantUITests;
+			sourceTree = "<group>";
+		};
+		E525C5A048961AB3818BC634 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				071CEF25C072B0C32E90AF94 /* CalendarEvent.swift */,
+				E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */,
+				06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */,
+				0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		EBCF56CFAF64170E18D76E74 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				22B92143B409EDE1D9F6F6B2 /* APIClient.swift */,
+				26777CFA7F56463810915890 /* AuthService.swift */,
+				8D744FAA423E013E653BFAAF /* CalendarService.swift */,
+				B453B63957050A8FA16A7829 /* ChatService.swift */,
+				5005F68806E7D348C880E825 /* ImageUploadService.swift */,
+				091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */,
+				A6C679A8901BDC330AE672EA /* PlantService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		FEC965DFCB4A30FC1F30B5C3 /* Profiles */ = {
+			isa = PBXGroup;
+			children = (
+				3FD7B146ED0B0E553AF12C8E /* CreateProfileView.swift */,
+				1CB1D76B9948F1489F06694C /* ProfileDetailView.swift */,
+				6D425E8CAE3E3024DD7E7C4E /* ProfilesListView.swift */,
+			);
+			path = Profiles;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		679934C4E2900E4F1D10A2FB /* HealthyPlantUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F46C7770A3C8A710395F8F7 /* Build configuration list for PBXNativeTarget "HealthyPlantUITests" */;
+			buildPhases = (
+				4788FD0745AEF72DBB1E6507 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8D00F3A1B14C4D81EE46683D /* PBXTargetDependency */,
+			);
+			name = HealthyPlantUITests;
+			packageProductDependencies = (
+			);
+			productName = HealthyPlantUITests;
+			productReference = 8E79621A9D19C1277D432A3C /* HealthyPlantUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		B2EA90C5FA7DFB85C7C3B3E9 /* HealthyPlantTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6043EB2B4934416CBC7946B3 /* Build configuration list for PBXNativeTarget "HealthyPlantTests" */;
+			buildPhases = (
+				13A7F7704320D43DFCF17019 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5F82582B4E0EAD861050110D /* PBXTargetDependency */,
+			);
+			name = HealthyPlantTests;
+			packageProductDependencies = (
+			);
+			productName = HealthyPlantTests;
+			productReference = C47699F06DB75EB8598F019D /* HealthyPlantTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DCF8C333F8AA504A7E26E3DA /* HealthyPlant */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14B52AC823988852A003EF9E /* Build configuration list for PBXNativeTarget "HealthyPlant" */;
+			buildPhases = (
+				BB114BB98BF5C921716B3E6B /* Sources */,
+				37709166345D85D8977A4841 /* Resources */,
+				60C28D452A66E42CE6D586CE /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HealthyPlant;
+			packageProductDependencies = (
+				6B92AE8783AA3DC0A01D9157 /* Lottie */,
+				3C7ED42D772A36942662A22C /* FirebaseAuth */,
+				AA748F85000C00FA578D64A7 /* FirebaseMessaging */,
+			);
+			productName = HealthyPlant;
+			productReference = B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2E54BD531521288A2618FDDF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					679934C4E2900E4F1D10A2FB = {
+						TestTargetID = DCF8C333F8AA504A7E26E3DA;
+					};
+					DCF8C333F8AA504A7E26E3DA = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 8FB5A0C4A9213A5D86DD7697 /* Build configuration list for PBXProject "HealthyPlant" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D86276C5D943331888F7F134;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2CB43F461237B66DD2812522 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				C6F407BB16B3737D7168250D /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 700261FBD5B7F4B06F88ADB6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DCF8C333F8AA504A7E26E3DA /* HealthyPlant */,
+				B2EA90C5FA7DFB85C7C3B3E9 /* HealthyPlantTests */,
+				679934C4E2900E4F1D10A2FB /* HealthyPlantUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		37709166345D85D8977A4841 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8CE4EE31410ED174DC969F78 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		13A7F7704320D43DFCF17019 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0779C0829034D57BF2C90666 /* APIClientTests.swift in Sources */,
+				BC9FCB5CA203FADE0ACFB461 /* AssistantViewModelTests.swift in Sources */,
+				B78C0B162BCB086B9EFDCF69 /* CalendarEventTests.swift in Sources */,
+				61ABAE9EC5CAE06C30697277 /* CalendarViewModelTests.swift in Sources */,
+				D264F0517DAFC3BA6C2BF735 /* HealthyPlantTests.swift in Sources */,
+				A1145AA178E47EB393BC055C /* PlantProfileTests.swift in Sources */,
+				C4D081EF952799B08E2DC12B /* PlantServiceTests.swift in Sources */,
+				BA47989B7148E0243E296061 /* ProfilesViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4788FD0745AEF72DBB1E6507 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28DFB7FA140B6268E4C9C5B0 /* AssistantUITests.swift in Sources */,
+				75E89F2CC17C5FE41BF0297A /* CalendarUITests.swift in Sources */,
+				92DD502C558BA80D6CC818CC /* GardenUITests.swift in Sources */,
+				B26BA7F008D323245B539223 /* HealthyPlantUITests.swift in Sources */,
+				62BC69F35E5769ABE14C91B4 /* HomeUITests.swift in Sources */,
+				56461FA418405FAD6A26A9DE /* ProfileFlowUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BB114BB98BF5C921716B3E6B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B72EDA2B7FE237D301BA33BB /* APIClient.swift in Sources */,
+				02E1F27BED55E9BE4C52D353 /* AppState.swift in Sources */,
+				723CE6EBE3E6A78003D42BE9 /* AssistantView.swift in Sources */,
+				F11F9BBE049460496DFE8A5E /* AssistantViewModel.swift in Sources */,
+				FC143CA67114AD4CF1AFE04C /* AuthService.swift in Sources */,
+				2C8B4B48AC048F31DED79B93 /* CactusAnimationView.swift in Sources */,
+				97C7D2FECFAEB467417F285B /* CalendarEvent.swift in Sources */,
+				B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */,
+				A646AB87343EAF3DFD4B6566 /* CalendarView.swift in Sources */,
+				50F8B932534BB850696A9B48 /* CalendarViewModel.swift in Sources */,
+				4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */,
+				B20A01D757943591D9EAD452 /* ChatMessage.swift in Sources */,
+				AEE603AEA81F060444E518F1 /* ChatService.swift in Sources */,
+				B16356FE7D294D6C6A6C22F9 /* ContentView.swift in Sources */,
+				0D8C6F3D1FF174C78173B6FF /* CreateProfileView.swift in Sources */,
+				ECF71DFC30B273E777F8A883 /* DayEventsView.swift in Sources */,
+				92D55262C66FD5D0574201BB /* Extensions.swift in Sources */,
+				4BA61E4B6E0B40FD3D97FACB /* GardenView.swift in Sources */,
+				E0F05610362FB895556A9278 /* GardenViewModel.swift in Sources */,
+				7C472239CEFB077992103E45 /* GreenOutlineStyle.swift in Sources */,
+				F0843E7CEA49500CC81D170A /* HealthyPlantApp.swift in Sources */,
+				0EDD84FB1C061E868052FB05 /* HomeView.swift in Sources */,
+				CB2C2167E65875D1B5190752 /* HomeViewModel.swift in Sources */,
+				04020A9133A100DE876D15DB /* ImageUploadService.swift in Sources */,
+				CFA18C464582D2B631A88981 /* NotificationService.swift in Sources */,
+				7F2A5301161F18F873D92C95 /* PlantProfile.swift in Sources */,
+				C3360A871998ABFE3F999456 /* PlantService.swift in Sources */,
+				B203F95F5BC3AC7E20181E60 /* ProfileDetailView.swift in Sources */,
+				29503608C932C61DCA1A2238 /* ProfilesListView.swift in Sources */,
+				9F41780CF011CB9896AAF70E /* ProfilesViewModel.swift in Sources */,
+				0683486046F6D36A09E719F3 /* SettingsView.swift in Sources */,
+				F35663A1301D2C9739C2F55E /* SettingsViewModel.swift in Sources */,
+				18C1831C4364CE9F33D8DBD6 /* TabBarView.swift in Sources */,
+				CD0CEEEF34867F7DBA117F8A /* Theme.swift in Sources */,
+				D597800B89FE88FE754DD286 /* UserSettings.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5F82582B4E0EAD861050110D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCF8C333F8AA504A7E26E3DA /* HealthyPlant */;
+			targetProxy = 6D404DFD37F99BAFD6C0035D /* PBXContainerItemProxy */;
+		};
+		8D00F3A1B14C4D81EE46683D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DCF8C333F8AA504A7E26E3DA /* HealthyPlant */;
+			targetProxy = 268D44B6142FC79EF9BEE213 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		31B58117082DC1C9F5C303A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HealthyPlant;
+			};
+			name = Debug;
+		};
+		3B11EDE2816C84BC64ABF815 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HealthyPlant.app/HealthyPlant";
+			};
+			name = Debug;
+		};
+		8E0CCE0632F91397B4ECE106 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		AFE5B093F96E96F6C1A53264 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app.uitests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HealthyPlant;
+			};
+			name = Release;
+		};
+		B69B67AAC08F8112698202EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CF8C64E9F462AC29A67604D2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D0CFF1C190A722BAF4AEC49B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E3B99438251F008D8D4472DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app.tests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HealthyPlant.app/HealthyPlant";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		14B52AC823988852A003EF9E /* Build configuration list for PBXNativeTarget "HealthyPlant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CF8C64E9F462AC29A67604D2 /* Debug */,
+				8E0CCE0632F91397B4ECE106 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6043EB2B4934416CBC7946B3 /* Build configuration list for PBXNativeTarget "HealthyPlantTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3B11EDE2816C84BC64ABF815 /* Debug */,
+				E3B99438251F008D8D4472DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8F46C7770A3C8A710395F8F7 /* Build configuration list for PBXNativeTarget "HealthyPlantUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31B58117082DC1C9F5C303A8 /* Debug */,
+				AFE5B093F96E96F6C1A53264 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8FB5A0C4A9213A5D86DD7697 /* Build configuration list for PBXProject "HealthyPlant" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B69B67AAC08F8112698202EC /* Debug */,
+				D0CFF1C190A722BAF4AEC49B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2CB43F461237B66DD2812522 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.22.0;
+			};
+		};
+		C6F407BB16B3737D7168250D /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3C7ED42D772A36942662A22C /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CB43F461237B66DD2812522 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		6B92AE8783AA3DC0A01D9157 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C6F407BB16B3737D7168250D /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+		AA748F85000C00FA578D64A7 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CB43F461237B66DD2812522 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 2E54BD531521288A2618FDDF /* Project object */;
+}

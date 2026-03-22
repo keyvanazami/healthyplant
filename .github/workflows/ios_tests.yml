@@ -1,0 +1,67 @@
+name: iOS Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "HealthyPlant/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "HealthyPlant/**"
+
+concurrency:
+  group: ios-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: HealthyPlant
+        run: xcodegen generate
+
+      - name: Cache Swift packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            HealthyPlant/HealthyPlant.xcodeproj/project.xcworkspace/xcshareddata/swiftpm
+            ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('HealthyPlant/project.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Resolve packages
+        working-directory: HealthyPlant
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project HealthyPlant.xcodeproj \
+            -scheme HealthyPlant
+
+      - name: Build and test
+        working-directory: HealthyPlant
+        run: |
+          xcodebuild test \
+            -project HealthyPlant.xcodeproj \
+            -scheme HealthyPlant \
+            -destination "platform=iOS Simulator,name=iPhone 15,OS=17.5" \
+            -resultBundlePath TestResults \
+            -enableCodeCoverage YES \
+            CODE_SIGNING_ALLOWED=NO | xcpretty --color
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: HealthyPlant/TestResults.xcresult
+          retention-days: 7
