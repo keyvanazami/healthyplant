@@ -6,6 +6,11 @@ resource "google_firestore_database" "default" {
 
   # Prevent accidental deletion
   deletion_policy = "DELETE"
+
+  lifecycle {
+    # If the database already exists, don't try to recreate it
+    ignore_changes = [location_id, type]
+  }
 }
 
 # Firestore security rules are deployed separately via Firebase CLI.

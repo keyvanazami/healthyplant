@@ -46,7 +46,9 @@ struct ProfilesListView: View {
             .navigationDestination(for: PlantProfile.self) { profile in
                 ProfileDetailView(profile: profile, viewModel: viewModel)
             }
-            .sheet(isPresented: $showCreateProfile) {
+            .sheet(isPresented: $showCreateProfile, onDismiss: {
+                Task { await viewModel.loadProfiles() }
+            }) {
                 CreateProfileView(viewModel: viewModel)
             }
             .task {

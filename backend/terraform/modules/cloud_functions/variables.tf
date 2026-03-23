@@ -22,3 +22,9 @@ variable "gcs_bucket" {
   description = "GCS bucket name for plant photos"
   type        = string
 }
+
+variable "firestore_region" {
+  description = "Region where Firestore database is located"
+  type        = string
+  default     = "us-central1"
+}

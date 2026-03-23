@@ -53,7 +53,7 @@ gcloud auth configure-docker --quiet
 # Build the Docker image
 # -------------------------------------------------------
 info "Building Docker image..."
-docker build -t "$TAG" -t "$TAG_LATEST" "$BACKEND_DIR"
+docker build --platform linux/amd64 -t "$TAG" -t "$TAG_LATEST" "$BACKEND_DIR/api"
 
 # -------------------------------------------------------
 # Push to Google Container Registry

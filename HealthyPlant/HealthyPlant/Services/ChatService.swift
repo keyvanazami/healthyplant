@@ -1,7 +1,7 @@
 import Foundation
 
 struct ChatService {
-    private let baseURL = "http://localhost:8000"
+    private let baseURL = "https://healthyplant-api-prod-680872497777.us-central1.run.app"
     private let decoder: JSONDecoder = {
         let d = JSONDecoder()
         d.dateDecodingStrategy = .iso8601
@@ -14,7 +14,7 @@ struct ChatService {
         AsyncThrowingStream { continuation in
             Task {
                 do {
-                    guard let url = URL(string: "\(baseURL)/api/chat/stream") else {
+                    guard let url = URL(string: "\(baseURL)/api/v1/chat") else {
                         continuation.finish(throwing: APIError.invalidURL)
                         return
                     }
@@ -25,7 +25,7 @@ struct ChatService {
                     request.setValue(userId, forHTTPHeaderField: "X-User-ID")
                     request.setValue("text/event-stream", forHTTPHeaderField: "Accept")
 
-                    let body = ChatRequest(message: text, userId: userId)
+                    let body = ChatRequest(content: text)
                     request.httpBody = try JSONEncoder().encode(body)
 
                     let (bytes, response) = try await URLSession.shared.bytes(for: request)
@@ -39,11 +39,17 @@ struct ChatService {
                     // Parse SSE stream
                     for try await line in bytes.lines {
                         if line.hasPrefix("data: ") {
-                            let data = String(line.dropFirst(6))
-                            if data == "[DONE]" {
-                                break
+                            let jsonString = String(line.dropFirst(6))
+                            if let jsonData = jsonString.data(using: .utf8),
+                               let parsed = try? JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+                                if let type = parsed["type"] as? String {
+                                    if type == "chunk", let content = parsed["content"] as? String {
+                                        continuation.yield(content)
+                                    } else if type == "done" {
+                                        break
+                                    }
+                                }
                             }
-                            continuation.yield(data)
                         }
                     }
 
@@ -58,7 +64,7 @@ struct ChatService {
     // MARK: - Fetch Chat History
 
     func fetchHistory(userId: String) async throws -> [ChatMessage] {
-        guard let url = URL(string: "\(baseURL)/api/chat/history") else {
+        guard let url = URL(string: "\(baseURL)/api/v1/chat/history") else {
             throw APIError.invalidURL
         }
 
@@ -73,13 +79,14 @@ struct ChatService {
             throw APIError.invalidResponse
         }
 
-        return try decoder.decode([ChatMessage].self, from: data)
+        let historyResponse = try decoder.decode(ChatHistoryResponse.self, from: data)
+        return historyResponse.messages
     }
 
     // MARK: - Clear Chat History
 
     func clearHistory(userId: String) async throws {
-        guard let url = URL(string: "\(baseURL)/api/chat/history") else {
+        guard let url = URL(string: "\(baseURL)/api/v1/chat/history") else {
             throw APIError.invalidURL
         }
 
@@ -96,9 +103,12 @@ struct ChatService {
     }
 }
 
-// MARK: - Request Body
+// MARK: - Request / Response Bodies
 
 private struct ChatRequest: Encodable {
-    let message: String
-    let userId: String
+    let content: String
+}
+
+private struct ChatHistoryResponse: Decodable {
+    let messages: [ChatMessage]
 }

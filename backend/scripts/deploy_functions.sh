@@ -46,6 +46,7 @@ echo ""
 # 1. Deploy on_profile_create (Firestore trigger)
 # -------------------------------------------------------
 info "Deploying on_profile_create..."
+FIRESTORE_REGION="${FIRESTORE_REGION:-us-central1}"
 gcloud functions deploy "${APP_NAME}-on-profile-create-${ENVIRONMENT}" \
   --gen2 \
   --region="$REGION" \
@@ -55,6 +56,7 @@ gcloud functions deploy "${APP_NAME}-on-profile-create-${ENVIRONMENT}" \
   --trigger-event-filters="type=google.cloud.firestore.document.v1.created" \
   --trigger-event-filters="database=(default)" \
   --trigger-event-filters-path-pattern="document=users/{userId}/plants/{plantId}" \
+  --trigger-location="$FIRESTORE_REGION" \
   --service-account="$SA_EMAIL" \
   --memory=256Mi \
   --timeout=60s \

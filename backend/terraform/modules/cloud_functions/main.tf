@@ -25,6 +25,12 @@ resource "google_project_iam_member" "functions_pubsub" {
   member  = "serviceAccount:${google_service_account.functions_sa.email}"
 }
 
+resource "google_project_iam_member" "functions_eventarc" {
+  project = var.project_id
+  role    = "roles/eventarc.eventReceiver"
+  member  = "serviceAccount:${google_service_account.functions_sa.email}"
+}
+
 # -------------------------------------------------------
 # Source bucket for function code
 # -------------------------------------------------------
@@ -80,7 +86,7 @@ resource "google_cloudfunctions2_function" "on_profile_create" {
   }
 
   event_trigger {
-    trigger_region = var.region
+    trigger_region = var.firestore_region
     event_type     = "google.cloud.firestore.document.v1.created"
     event_filters {
       attribute = "database"

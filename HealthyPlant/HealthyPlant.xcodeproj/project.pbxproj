@@ -35,6 +35,7 @@
 		9F41780CF011CB9896AAF70E /* ProfilesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845CDB71DC07082F314356EA /* ProfilesViewModel.swift */; };
 		A1145AA178E47EB393BC055C /* PlantProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8190328E5207C746AD96236 /* PlantProfileTests.swift */; };
 		A646AB87343EAF3DFD4B6566 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99CB616CB0A4E06A2B9A5C /* CalendarView.swift */; };
+		A74291A49665967CEFA40CC9 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D0EEC4AD334481E6C5F951 /* CameraView.swift */; };
 		AEE603AEA81F060444E518F1 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B453B63957050A8FA16A7829 /* ChatService.swift */; };
 		B16356FE7D294D6C6A6C22F9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CED33880E82F3D0650BB9B /* ContentView.swift */; };
 		B188BF11C3EDBB420C97E2CA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = AA748F85000C00FA578D64A7 /* FirebaseMessaging */; };
@@ -118,12 +119,13 @@
 		9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesViewModelTests.swift; sourceTree = "<group>"; };
 		A040067AE9F1263E0BEA62F3 /* AssistantViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantViewModelTests.swift; sourceTree = "<group>"; };
 		A08ED75273BB58F62906DEF2 /* DayEventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayEventsView.swift; sourceTree = "<group>"; };
+		A5D0EEC4AD334481E6C5F951 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		A6C679A8901BDC330AE672EA /* PlantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantService.swift; sourceTree = "<group>"; };
 		A8190328E5207C746AD96236 /* PlantProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantProfileTests.swift; sourceTree = "<group>"; };
 		B12E6B48BB0CF50BF509A8B2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUITests.swift; sourceTree = "<group>"; };
 		B453B63957050A8FA16A7829 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
-		B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HealthyPlant.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthyPlant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52B198D286EF6642EFF35ED /* GardenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenView.swift; sourceTree = "<group>"; };
 		B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantViewModel.swift; sourceTree = "<group>"; };
 		C47699F06DB75EB8598F019D /* HealthyPlantTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,6 +192,7 @@
 		55108A8585C60A6E16263928 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A5D0EEC4AD334481E6C5F951 /* CameraView.swift */,
 				2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */,
 				2446114BCB6649FE8A010280 /* TabBarView.swift */,
 			);
@@ -459,9 +462,6 @@
 					679934C4E2900E4F1D10A2FB = {
 						TestTargetID = DCF8C333F8AA504A7E26E3DA;
 					};
-					DCF8C333F8AA504A7E26E3DA = {
-						DevelopmentTeam = "";
-					};
 				};
 			};
 			buildConfigurationList = 8FB5A0C4A9213A5D86DD7697 /* Build configuration list for PBXProject "HealthyPlant" */;
@@ -543,6 +543,7 @@
 				B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */,
 				A646AB87343EAF3DFD4B6566 /* CalendarView.swift in Sources */,
 				50F8B932534BB850696A9B48 /* CalendarViewModel.swift in Sources */,
+				A74291A49665967CEFA40CC9 /* CameraView.swift in Sources */,
 				4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */,
 				B20A01D757943591D9EAD452 /* ChatMessage.swift in Sources */,
 				AEE603AEA81F060444E518F1 /* ChatService.swift in Sources */,
@@ -630,7 +631,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -733,7 +734,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

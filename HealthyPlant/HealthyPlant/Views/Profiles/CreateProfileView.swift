@@ -7,12 +7,17 @@ struct CreateProfileView: View {
 
     @State private var name = ""
     @State private var plantType = ""
-    @State private var ageDays = 0
+    @State private var ageYears = 0
+    @State private var ageMonths = 0
+    @State private var ageDaysOnly = 0
     @State private var heightFeet = 0
     @State private var heightInches = 0
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var selectedImageData: Data?
     @State private var isSaving = false
+    @State private var showImageSourcePicker = false
+    @State private var showCamera = false
+    @State private var showPhotoPicker = false
 
     var body: some View {
         NavigationStack {
@@ -42,7 +47,13 @@ struct CreateProfileView: View {
 
                     // Age
                     Section("Age") {
-                        Stepper("Age: \(ageDays) days", value: $ageDays, in: 0...9999)
+                        Stepper("Years: \(ageYears)", value: $ageYears, in: 0...100)
+                            .foregroundColor(Theme.textPrimary)
+
+                        Stepper("Months: \(ageMonths)", value: $ageMonths, in: 0...11)
+                            .foregroundColor(Theme.textPrimary)
+
+                        Stepper("Days: \(ageDaysOnly)", value: $ageDaysOnly, in: 0...30)
                             .foregroundColor(Theme.textPrimary)
                     }
                     .listRowBackground(Color.white.opacity(0.05))
@@ -85,7 +96,9 @@ struct CreateProfileView: View {
     // MARK: - Photo Picker
 
     private var photoPickerView: some View {
-        PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
+        Button {
+            showImageSourcePicker = true
+        } label: {
             Group {
                 if let data = selectedImageData, let uiImage = UIImage(data: data) {
                     Image(uiImage: uiImage)
@@ -108,6 +121,20 @@ struct CreateProfileView: View {
             .clipShape(Circle())
             .overlay(Circle().strokeBorder(Theme.accent, lineWidth: Theme.outlineWidth))
         }
+        .confirmationDialog("Add Photo", isPresented: $showImageSourcePicker) {
+            Button("Take Photo") {
+                showCamera = true
+            }
+            Button("Choose from Library") {
+                showPhotoPicker = true
+            }
+            Button("Cancel", role: .cancel) {}
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraView(imageData: $selectedImageData)
+                .ignoresSafeArea()
+        }
+        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
         .onChange(of: selectedPhotoItem) { _, newItem in
             Task {
                 if let data = try? await newItem?.loadTransferable(type: Data.self) {
@@ -123,6 +150,10 @@ struct CreateProfileView: View {
         !name.isBlank && !plantType.isBlank
     }
 
+    private var totalAgeDays: Int {
+        (ageYears * 365) + (ageMonths * 30) + ageDaysOnly
+    }
+
     private func save() {
         guard canSave else { return }
         isSaving = true
@@ -131,7 +162,7 @@ struct CreateProfileView: View {
             await viewModel.createProfile(
                 name: name.trimmed,
                 plantType: plantType.trimmed,
-                ageDays: ageDays,
+                ageDays: totalAgeDays,
                 heightFeet: heightFeet,
                 heightInches: heightInches,
                 imageData: selectedImageData

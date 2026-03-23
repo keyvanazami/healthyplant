@@ -6,7 +6,7 @@ struct PlantService {
     // MARK: - Fetch All Profiles
 
     func fetchProfiles() async throws -> [PlantProfile] {
-        try await api.get(path: "/api/profiles")
+        try await api.get(path: "/api/v1/profiles")
     }
 
     // MARK: - Create Profile
@@ -19,15 +19,20 @@ struct PlantService {
         heightInches: Int,
         photoURL: String? = nil
     ) async throws -> PlantProfile {
+        let plantedDate = Calendar.current.date(byAdding: .day, value: -ageDays, to: Date()) ?? Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+
         let body = CreateProfileRequest(
             name: name,
             plantType: plantType,
             ageDays: ageDays,
+            plantedDate: formatter.string(from: plantedDate),
             heightFeet: heightFeet,
             heightInches: heightInches,
             photoURL: photoURL
         )
-        return try await api.post(path: "/api/profiles", body: body)
+        return try await api.post(path: "/api/v1/profiles", body: body)
     }
 
     // MARK: - Update Profile
@@ -47,19 +52,19 @@ struct PlantService {
             heightFeet: heightFeet,
             heightInches: heightInches
         )
-        return try await api.put(path: "/api/profiles/\(id)", body: body)
+        return try await api.put(path: "/api/v1/profiles/\(id)", body: body)
     }
 
     // MARK: - Delete Profile
 
     func deleteProfile(id: String) async throws {
-        try await api.delete(path: "/api/profiles/\(id)")
+        try await api.delete(path: "/api/v1/profiles/\(id)")
     }
 
     // MARK: - Fetch Garden (same data, different endpoint for garden-specific logic)
 
     func fetchGarden() async throws -> [PlantProfile] {
-        try await api.get(path: "/api/profiles")
+        try await api.get(path: "/api/v1/profiles")
     }
 }
 
@@ -69,6 +74,7 @@ struct CreateProfileRequest: Encodable {
     let name: String
     let plantType: String
     let ageDays: Int
+    let plantedDate: String
     let heightFeet: Int
     let heightInches: Int
     let photoURL: String?

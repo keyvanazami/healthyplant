@@ -40,6 +40,7 @@ locals {
     "cloudscheduler.googleapis.com",
     "firebase.googleapis.com",
     "cloudbuild.googleapis.com",
+    "eventarc.googleapis.com",
   ]
 }
 
@@ -92,11 +93,12 @@ module "cloud_run" {
 module "cloud_functions" {
   source = "./modules/cloud_functions"
 
-  project_id  = var.project_id
-  region      = var.region
-  app_name    = var.app_name
-  environment = var.environment
-  gcs_bucket  = module.cloud_storage.bucket_name
+  project_id       = var.project_id
+  region           = var.region
+  app_name         = var.app_name
+  environment      = var.environment
+  gcs_bucket       = module.cloud_storage.bucket_name
+  firestore_region = "us-central1"
 
   depends_on = [google_project_service.apis]
 }
