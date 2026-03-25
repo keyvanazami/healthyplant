@@ -3,6 +3,7 @@ import SwiftUI
 struct CalendarView: View {
     @StateObject private var viewModel = CalendarViewModel()
     @State private var selectedDate: Date?
+    @State private var showDayEvents = false
 
     private let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
@@ -41,14 +42,16 @@ struct CalendarView: View {
             .refreshable {
                 await viewModel.generateSchedule()
             }
-            .sheet(item: $selectedDate) { date in
-                DayEventsView(
-                    date: date,
-                    events: viewModel.eventsForDay(date),
-                    viewModel: viewModel,
-                    profiles: viewModel.profiles
-                )
-                .presentationDetents([.medium, .large])
+            .sheet(isPresented: $showDayEvents) {
+                if let date = selectedDate {
+                    DayEventsView(
+                        date: date,
+                        events: viewModel.eventsForDay(date),
+                        viewModel: viewModel,
+                        profiles: viewModel.profiles
+                    )
+                    .presentationDetents([.medium, .large])
+                }
             }
             .task {
                 await viewModel.loadEvents(for: viewModel.currentMonth)
@@ -129,6 +132,7 @@ struct CalendarView: View {
                     )
                     .onTapGesture {
                         selectedDate = date
+                        showDayEvents = true
                     }
                 } else {
                     Color.clear.frame(height: 50)

@@ -38,7 +38,7 @@ struct CalendarService {
         return try await api.post(path: "/api/v1/calendar/generate", body: EmptyBody())
     }
 
-    // MARK: - Mark Event Complete (legacy, no return value)
+    // MARK: - Mark Event Complete
 
     func markEventComplete(id: String) async throws {
         let body = MarkCompleteRequest(completed: true)
