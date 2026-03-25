@@ -2,6 +2,7 @@
 
 import logging
 import re
+from datetime import datetime, timezone
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Query, Request
@@ -39,6 +40,49 @@ async def get_calendar_events(
     except Exception as e:
         logger.error(f"Error fetching calendar for user {user_id}, month {month}: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve calendar events")
+
+
+@router.post("/calendar/generate", response_model=List[CalendarEventResponse])
+async def generate_calendar(request: Request):
+    """Generate calendar events for all user profiles using AI."""
+    user_id = getattr(request.state, "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    firestore = request.app.state.firestore_service
+    ai_service = request.app.state.ai_service
+
+    try:
+        profiles = await firestore.get_profiles(user_id)
+        if not profiles:
+            return []
+
+        current_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        events = await ai_service.generate_calendar_events(profiles, current_date)
+        if not events:
+            return []
+
+        # Deduplicate against existing events
+        new_events = []
+        for event in events:
+            exists = await firestore.event_exists(
+                user_id,
+                event.get("profileId", ""),
+                event.get("date", ""),
+                event.get("eventType", ""),
+            )
+            if not exists:
+                new_events.append(event)
+
+        if not new_events:
+            return []
+
+        created = await firestore.create_events(user_id, new_events)
+        logger.info(f"Generated {len(created)} calendar events for user {user_id}")
+        return created
+    except Exception as e:
+        logger.error(f"Error generating calendar for user {user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate calendar events")
 
 
 @router.put("/calendar/{event_id}/complete", response_model=CalendarEventResponse)

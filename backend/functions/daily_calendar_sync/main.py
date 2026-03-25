@@ -164,7 +164,13 @@ def _event_exists(
 
 
 def _generate_events(profiles: list, current_date: str) -> list:
-    """Generate calendar events for the next 7 days using Claude."""
+    """Generate calendar events for the next 7 days using Claude.
+
+    NOTE: This prompt is duplicated from backend/api/services/ai_service.py
+    AIService.generate_calendar_events(). Ideally this Cloud Function would
+    import from the shared service, but the deployment structure doesn't
+    support that yet. Keep both prompts in sync when making changes.
+    """
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
         logger.error("ANTHROPIC_API_KEY not set")
@@ -172,14 +178,26 @@ def _generate_events(profiles: list, current_date: str) -> list:
 
     client = anthropic.Anthropic(api_key=api_key)
 
-    plants_summary = "\n".join(
-        f"- {p.get('name', 'Unknown')} ({p.get('plantType', 'Unknown')}): "
-        f"age {p.get('ageDays', 0)} days, "
-        f"sun needs: {p.get('sunNeeds', 'unknown')}, "
-        f"water needs: {p.get('waterNeeds', 'unknown')}, "
-        f"profile ID: {p.get('id', '')}"
-        for p in profiles
-    )
+    plants_lines = []
+    for p in profiles:
+        line = (
+            f"- {p.get('name', 'Unknown')} ({p.get('plantType', 'Unknown')}): "
+            f"age {p.get('ageDays', 0)} days, "
+            f"sun needs: {p.get('sunNeeds', 'unknown')}, "
+            f"water needs: {p.get('waterNeeds', 'unknown')}, "
+            f"profile ID: {p.get('id', '')}"
+        )
+        # Include structured data when available for precise scheduling
+        freq = p.get("wateringFrequencyDays")
+        sun_min = p.get("sunHoursMin")
+        sun_max = p.get("sunHoursMax")
+        if freq is not None:
+            line += f", watering every {freq} days"
+        if sun_min is not None and sun_max is not None:
+            line += f", {sun_min}-{sun_max}h sun/day"
+        plants_lines.append(line)
+
+    plants_summary = "\n".join(plants_lines)
 
     prompt = f"""You are an expert gardener creating a 7-day care calendar. Today is {current_date}.
 
@@ -188,6 +206,12 @@ Plants in the garden:
 
 Generate care events for the next 7 days. For each event, consider the plant's specific needs.
 
+IMPORTANT scheduling rules:
+- If a plant has a "watering every N days" value, schedule watering events exactly every N days starting from {current_date}. Do NOT guess a different frequency.
+- If a plant has sun hour requirements, generate "needs_sun" events on days when sun exposure reminders would be helpful.
+- If no structured frequency data is provided, infer a reasonable schedule from the text-based water/sun needs.
+- Not every plant needs attention every day.
+
 Respond with ONLY a JSON array (no markdown, no extra text). Each element must have:
 - "profileId": the profile ID string from above
 - "plantName": the plant name
@@ -195,7 +219,7 @@ Respond with ONLY a JSON array (no markdown, no extra text). Each element must h
 - "eventType": one of "needs_water", "needs_sun", "needs_treatment"
 - "description": a brief, actionable description
 
-Generate realistic events based on each plant's care requirements. Not every plant needs attention every day."""
+Generate realistic events based on each plant's care requirements."""
 
     try:
         response = client.messages.create(

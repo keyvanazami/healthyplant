@@ -35,6 +35,9 @@ class FirestoreService:
             "sunNeeds": None,
             "waterNeeds": None,
             "harvestTime": None,
+            "wateringFrequencyDays": None,
+            "sunHoursMin": None,
+            "sunHoursMax": None,
             "aiLastUpdated": None,
             "createdAt": now,
             "updatedAt": now,
@@ -85,7 +88,7 @@ class FirestoreService:
         update_data = {**data, "updatedAt": now}
 
         # Set aiLastUpdated if AI fields are being updated
-        ai_fields = {"sunNeeds", "waterNeeds", "harvestTime"}
+        ai_fields = {"sunNeeds", "waterNeeds", "harvestTime", "wateringFrequencyDays", "sunHoursMin", "sunHoursMax"}
         if any(k in ai_fields for k in data):
             update_data["aiLastUpdated"] = now
 
