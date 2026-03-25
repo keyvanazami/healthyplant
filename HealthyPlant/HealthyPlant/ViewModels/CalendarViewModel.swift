@@ -6,6 +6,7 @@ final class CalendarViewModel: ObservableObject {
     @Published var profiles: [PlantProfile] = []
     @Published var currentMonth: Date = Date().startOfMonth
     @Published var isLoading = false
+    @Published var isGenerating = false
     @Published var errorMessage: String?
 
     private let calendarService = CalendarService()
@@ -61,13 +62,40 @@ final class CalendarViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Generate Schedule
+
+    func generateSchedule() async {
+        isGenerating = true
+        errorMessage = nil
+
+        do {
+            _ = try await calendarService.generateEvents()
+            await loadEvents(for: currentMonth)
+        } catch {
+            errorMessage = error.localizedDescription
+            print("[CalendarVM] Failed to generate schedule: \(error)")
+        }
+
+        isGenerating = false
+    }
+
     // MARK: - Mark Complete
 
     func markComplete(eventId: String) async {
         do {
-            try await calendarService.markEventComplete(id: eventId)
+            let response = try await calendarService.completeEvent(id: eventId)
             if let index = events.firstIndex(where: { $0.id == eventId }) {
-                events[index].completed.toggle()
+                events[index].completed = true
+            }
+            // If the backend auto-created a next recurring event, add it to
+            // the local array if it falls within the current month view
+            if let nextEvent = response.nextEvent {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM"
+                let currentMonthStr = formatter.string(from: currentMonth)
+                if nextEvent.date.hasPrefix(currentMonthStr) {
+                    events.append(nextEvent)
+                }
             }
         } catch {
             print("[CalendarVM] Failed to mark complete: \(error)")

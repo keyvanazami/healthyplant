@@ -10,6 +10,7 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
     var eventType: EventType
     var description: String
     var completed: Bool
+    var completedAt: String?
 
     // MARK: - EventType
 

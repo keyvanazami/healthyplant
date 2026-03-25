@@ -16,7 +16,16 @@ struct ProfilesListView: View {
             ZStack {
                 Theme.background.ignoresSafeArea()
 
-                if viewModel.profiles.isEmpty {
+                if viewModel.isLoading && viewModel.profiles.isEmpty {
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(Theme.accent)
+                        Text("Loading plants...")
+                            .font(.subheadline)
+                            .foregroundColor(Theme.textSecondary)
+                    }
+                } else if viewModel.profiles.isEmpty {
                     emptyState
                 } else {
                     ScrollView {

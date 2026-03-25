@@ -1,5 +1,11 @@
 import Foundation
 
+// MARK: - Date Identifiable (for sheet(item:))
+
+extension Date: @retroactive Identifiable {
+    public var id: TimeInterval { timeIntervalSinceReferenceDate }
+}
+
 // MARK: - Date Extensions
 
 extension Date {

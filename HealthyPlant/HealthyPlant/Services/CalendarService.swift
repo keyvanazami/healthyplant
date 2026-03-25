@@ -32,15 +32,30 @@ struct CalendarService {
         return try await api.post(path: "/api/v1/calendar", body: body)
     }
 
-    // MARK: - Mark Event Complete
+    // MARK: - Generate Events
+
+    func generateEvents() async throws -> [CalendarEvent] {
+        return try await api.post(path: "/api/v1/calendar/generate", body: EmptyBody())
+    }
+
+    // MARK: - Mark Event Complete (legacy, no return value)
 
     func markEventComplete(id: String) async throws {
         let body = MarkCompleteRequest(completed: true)
-        let _: CalendarEvent = try await api.put(path: "/api/v1/calendar/\(id)/complete", body: body)
+        let _: CompleteEventResponse = try await api.put(path: "/api/v1/calendar/\(id)/complete", body: body)
+    }
+
+    // MARK: - Complete Event (returns response with optional next event)
+
+    func completeEvent(id: String) async throws -> CompleteEventResponse {
+        let body = MarkCompleteRequest(completed: true)
+        return try await api.put(path: "/api/v1/calendar/\(id)/complete", body: body)
     }
 }
 
-// MARK: - Request Body
+// MARK: - Request/Response Bodies
+
+private struct EmptyBody: Encodable {}
 
 private struct MarkCompleteRequest: Encodable {
     let completed: Bool
@@ -52,4 +67,17 @@ struct CreateEventRequest: Encodable {
     let date: String
     let eventType: String
     let description: String
+}
+
+struct CompleteEventResponse: Codable {
+    let id: String
+    let userId: String
+    let profileId: String
+    var plantName: String
+    var date: String
+    var eventType: CalendarEvent.EventType
+    var description: String
+    var completed: Bool
+    var completedAt: String?
+    var nextEvent: CalendarEvent?
 }

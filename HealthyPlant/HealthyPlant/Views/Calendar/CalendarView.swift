@@ -10,9 +10,7 @@ struct CalendarView: View {
 
     var body: some View {
         NavigationStack {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-
+            ScrollView {
                 VStack(spacing: 16) {
                     monthHeader
                     weekdayHeader
@@ -22,8 +20,28 @@ struct CalendarView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 100)
             }
+            .background(Theme.background.ignoresSafeArea())
             .navigationTitle("Calendar")
             .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task { await viewModel.generateSchedule() }
+                    } label: {
+                        if viewModel.isGenerating {
+                            ProgressView()
+                                .tint(Theme.accent)
+                        } else {
+                            Label("Generate Schedule", systemImage: "sparkles")
+                                .foregroundColor(Theme.accent)
+                        }
+                    }
+                    .disabled(viewModel.isGenerating)
+                }
+            }
+            .refreshable {
+                await viewModel.generateSchedule()
+            }
             .sheet(isPresented: $showDayEvents) {
                 if let date = selectedDate {
                     DayEventsView(

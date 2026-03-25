@@ -3,15 +3,21 @@ import SwiftUI
 struct CactusAnimationView: View {
     @State private var breathing = false
     @State private var glowPulse = false
+    @State private var swaying = false
 
     var body: some View {
         VStack(spacing: 0) {
             // Custom drawn cactus
             CactusShape()
                 .scaleEffect(breathing ? 1.02 : 0.98)
+                .rotationEffect(.degrees(swaying ? 2.5 : -2.5), anchor: .bottom)
                 .animation(
                     .easeInOut(duration: 2.0).repeatForever(autoreverses: true),
                     value: breathing
+                )
+                .animation(
+                    .easeInOut(duration: 3.0).repeatForever(autoreverses: true),
+                    value: swaying
                 )
                 .frame(width: 140, height: 200)
 
@@ -46,6 +52,7 @@ struct CactusAnimationView: View {
         .onAppear {
             breathing = true
             glowPulse = true
+            swaying = true
         }
         .animation(
             .easeInOut(duration: 3.0).repeatForever(autoreverses: true),

@@ -43,6 +43,7 @@
 		B203F95F5BC3AC7E20181E60 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CB1D76B9948F1489F06694C /* ProfileDetailView.swift */; };
 		B20A01D757943591D9EAD452 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */; };
 		B26BA7F008D323245B539223 /* HealthyPlantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F40EE250A44656A679243D /* HealthyPlantUITests.swift */; };
+		B5136BD48A1F76FFBE3E21C5 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE684B95C821409BA8BFA258 /* AppEnvironment.swift */; };
 		B72EDA2B7FE237D301BA33BB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B92143B409EDE1D9F6F6B2 /* APIClient.swift */; };
 		B78C0B162BCB086B9EFDCF69 /* CalendarEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEF40604144CF7328862DEE /* CalendarEventTests.swift */; };
 		B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D744FAA423E013E653BFAAF /* CalendarService.swift */; };
@@ -123,10 +124,11 @@
 		A5D0EEC4AD334481E6C5F951 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		A6C679A8901BDC330AE672EA /* PlantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantService.swift; sourceTree = "<group>"; };
 		A8190328E5207C746AD96236 /* PlantProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantProfileTests.swift; sourceTree = "<group>"; };
+		AE684B95C821409BA8BFA258 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		B12E6B48BB0CF50BF509A8B2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUITests.swift; sourceTree = "<group>"; };
 		B453B63957050A8FA16A7829 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
-		B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HealthyPlant.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = HealthyPlant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52B198D286EF6642EFF35ED /* GardenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenView.swift; sourceTree = "<group>"; };
 		B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantViewModel.swift; sourceTree = "<group>"; };
 		C47699F06DB75EB8598F019D /* HealthyPlantTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -291,6 +293,7 @@
 		BD2BCE83EC2BAF16794FA99B /* App */ = {
 			isa = PBXGroup;
 			children = (
+				AE684B95C821409BA8BFA258 /* AppEnvironment.swift */,
 				B12E6B48BB0CF50BF509A8B2 /* AppState.swift */,
 				63CED33880E82F3D0650BB9B /* ContentView.swift */,
 				084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */,
@@ -465,6 +468,9 @@
 					679934C4E2900E4F1D10A2FB = {
 						TestTargetID = DCF8C333F8AA504A7E26E3DA;
 					};
+					DCF8C333F8AA504A7E26E3DA = {
+						DevelopmentTeam = "";
+					};
 				};
 			};
 			buildConfigurationList = 8FB5A0C4A9213A5D86DD7697 /* Build configuration list for PBXProject "HealthyPlant" */;
@@ -537,6 +543,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B72EDA2B7FE237D301BA33BB /* APIClient.swift in Sources */,
+				B5136BD48A1F76FFBE3E21C5 /* AppEnvironment.swift in Sources */,
 				02E1F27BED55E9BE4C52D353 /* AppState.swift in Sources */,
 				723CE6EBE3E6A78003D42BE9 /* AssistantView.swift in Sources */,
 				F11F9BBE049460496DFE8A5E /* AssistantViewModel.swift in Sources */,
@@ -635,7 +642,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SNJ4V48UPB;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -738,7 +745,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = SNJ4V48UPB;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (

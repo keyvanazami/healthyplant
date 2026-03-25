@@ -1,6 +1,7 @@
 """Router for plant profile CRUD operations."""
 
 import logging
+from datetime import datetime, timezone
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Request
@@ -12,6 +13,9 @@ from models.plant_profile import (
 )
 
 logger = logging.getLogger(__name__)
+
+# Fields that affect care recommendations — changes trigger AI re-generation
+CARE_RELEVANT_FIELDS = {"plantType", "ageDays", "plantedDate"}
 
 router = APIRouter()
 
@@ -67,7 +71,7 @@ async def create_profile(request: Request, body: PlantProfileCreate):
 async def _generate_and_update_recommendations(
     ai_service, firestore, user_id: str, profile_id: str, profile: dict
 ):
-    """Background task to generate AI recommendations and update the profile."""
+    """Background task to generate AI recommendations, update the profile, and regenerate calendar."""
     try:
         recommendations = await ai_service.generate_plant_recommendations(
             plant_type=profile.get("plantType", ""),
@@ -78,10 +82,47 @@ async def _generate_and_update_recommendations(
             "sunNeeds": recommendations.get("sun_needs"),
             "waterNeeds": recommendations.get("water_needs"),
             "harvestTime": recommendations.get("harvest_time"),
+            "wateringFrequencyDays": recommendations.get("watering_frequency_days"),
+            "sunHoursMin": recommendations.get("sun_hours_min"),
+            "sunHoursMax": recommendations.get("sun_hours_max"),
         })
         logger.info(f"AI recommendations updated for profile {profile_id}")
+
+        # Regenerate calendar events after recommendations update
+        await _regenerate_calendar_for_user(ai_service, firestore, user_id)
     except Exception as e:
         logger.error(f"Failed to generate AI recommendations for profile {profile_id}: {e}")
+
+
+async def _regenerate_calendar_for_user(ai_service, firestore, user_id: str):
+    """Regenerate calendar events for a user based on their current profiles."""
+    try:
+        current_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        profiles = await firestore.get_profiles(user_id)
+        if not profiles:
+            return
+
+        events = await ai_service.generate_calendar_events(profiles, current_date)
+        if not events:
+            return
+
+        # Deduplicate and save new events
+        new_events = []
+        for event in events:
+            exists = await firestore.event_exists(
+                user_id,
+                event.get("profileId", ""),
+                event.get("date", ""),
+                event.get("eventType", ""),
+            )
+            if not exists:
+                new_events.append(event)
+
+        if new_events:
+            await firestore.create_events(user_id, new_events)
+            logger.info(f"Created {len(new_events)} calendar events for user {user_id}")
+    except Exception as e:
+        logger.error(f"Failed to regenerate calendar for user {user_id}: {e}")
 
 
 @router.get("/profiles/{profile_id}", response_model=PlantProfileResponse)
@@ -118,6 +159,19 @@ async def update_profile(request: Request, profile_id: str, body: PlantProfileUp
             raise HTTPException(status_code=400, detail="No fields to update")
 
         profile = await firestore.update_profile(user_id, profile_id, update_data)
+
+        # If care-relevant fields changed, re-trigger AI recommendations + calendar regen
+        if CARE_RELEVANT_FIELDS & set(update_data.keys()):
+            ai_service = request.app.state.ai_service
+
+            import asyncio
+
+            asyncio.create_task(
+                _generate_and_update_recommendations(
+                    ai_service, firestore, user_id, profile_id, profile
+                )
+            )
+
         return profile
     except HTTPException:
         raise

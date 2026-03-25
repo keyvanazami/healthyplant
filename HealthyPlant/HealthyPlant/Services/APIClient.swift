@@ -33,7 +33,9 @@ enum APIError: LocalizedError {
 actor APIClient {
     static let shared = APIClient()
 
-    let baseURL: String = "https://healthyplant-api-prod-680872497777.us-central1.run.app"
+    var baseURL: String {
+        AppEnvironment.current.baseURL
+    }
 
     private let session: URLSession
     private let decoder: JSONDecoder
