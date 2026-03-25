@@ -2,7 +2,7 @@
 
 import logging
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 
 from google.cloud import firestore
@@ -262,6 +262,55 @@ class FirestoreService:
         async for _ in docs:
             return True
         return False
+
+    async def create_next_recurring_event(
+        self, user_id: str, completed_event: dict, frequency_days: int
+    ) -> Optional[dict]:
+        """Create the next recurring event based on a completed event.
+
+        Schedules the next occurrence frequency_days from now. Deduplicates
+        to avoid creating a duplicate if one already exists for that date.
+
+        Args:
+            user_id: The user's ID.
+            completed_event: The event dict that was just completed.
+            frequency_days: Number of days until next occurrence.
+
+        Returns:
+            The created event dict, or None if a duplicate already exists.
+        """
+        next_date = (
+            datetime.now(timezone.utc) + timedelta(days=frequency_days)
+        ).strftime("%Y-%m-%d")
+
+        profile_id = completed_event.get("profileId", "")
+        event_type = completed_event.get("eventType", "")
+
+        # Deduplicate: don't create if one already exists for that date
+        if await self.event_exists(user_id, profile_id, next_date, event_type):
+            return None
+
+        now = datetime.now(timezone.utc).isoformat()
+        doc_data = {
+            "userId": user_id,
+            "profileId": profile_id,
+            "plantName": completed_event.get("plantName", ""),
+            "date": next_date,
+            "eventType": event_type,
+            "description": completed_event.get("description", ""),
+            "completed": False,
+            "createdAt": now,
+        }
+
+        collection = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("calendar_events")
+        )
+        doc_ref = collection.document()
+        await doc_ref.set(doc_data)
+
+        return {"id": doc_ref.id, **doc_data}
 
     # ──────────────────────────────────────────────
     # Chat message operations

@@ -47,9 +47,18 @@ final class CalendarViewModel: ObservableObject {
 
     func markComplete(eventId: String) async {
         do {
-            try await calendarService.markEventComplete(id: eventId)
+            let response = try await calendarService.completeEvent(id: eventId)
             if let index = events.firstIndex(where: { $0.id == eventId }) {
-                events[index].completed.toggle()
+                events[index].completed = true
+            }
+            // If the backend auto-created a next recurring event, add it to
+            // the local array if it falls within the current month view
+            if let nextEvent = response.nextEvent {
+                let monthStart = currentMonth
+                let monthEnd = Calendar.current.date(byAdding: .month, value: 1, to: monthStart) ?? monthStart
+                if nextEvent.date >= monthStart && nextEvent.date < monthEnd {
+                    events.append(nextEvent)
+                }
             }
         } catch {
             print("[CalendarVM] Failed to mark complete: \(error)")
