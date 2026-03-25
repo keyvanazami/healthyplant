@@ -5,6 +5,7 @@ final class CalendarViewModel: ObservableObject {
     @Published var events: [CalendarEvent] = []
     @Published var currentMonth: Date = Date().startOfMonth
     @Published var isLoading = false
+    @Published var isGenerating = false
     @Published var errorMessage: String?
 
     private let calendarService = CalendarService()
@@ -23,6 +24,23 @@ final class CalendarViewModel: ObservableObject {
         }
 
         isLoading = false
+    }
+
+    // MARK: - Generate Schedule
+
+    func generateSchedule() async {
+        isGenerating = true
+        errorMessage = nil
+
+        do {
+            _ = try await calendarService.generateEvents()
+            await loadEvents(for: currentMonth)
+        } catch {
+            errorMessage = error.localizedDescription
+            print("[CalendarVM] Failed to generate schedule: \(error)")
+        }
+
+        isGenerating = false
     }
 
     // MARK: - Mark Complete

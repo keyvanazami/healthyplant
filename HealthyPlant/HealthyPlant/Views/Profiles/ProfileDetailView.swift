@@ -146,7 +146,18 @@ struct ProfileDetailView: View {
             }
 
             detailRow(label: "Sun Needs", value: profile.sunNeeds)
+
+            if let minSun = profile.sunHoursMin, let maxSun = profile.sunHoursMax {
+                detailRow(label: "Sun", value: "\(minSun)-\(maxSun) hours/day")
+            } else if let minSun = profile.sunHoursMin {
+                detailRow(label: "Sun", value: "\(minSun)+ hours/day")
+            }
+
             detailRow(label: "Water Needs", value: profile.waterNeeds)
+
+            if let days = profile.wateringFrequencyDays {
+                detailRow(label: "Watering", value: "Every \(days) day\(days == 1 ? "" : "s")")
+            }
 
             if let harvest = profile.harvestTime {
                 detailRow(label: "Harvest Time", value: harvest)

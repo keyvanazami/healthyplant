@@ -13,6 +13,12 @@ struct CalendarService {
         return try await api.get(path: "/api/v1/calendar?month=\(monthString)")
     }
 
+    // MARK: - Generate Events
+
+    func generateEvents() async throws -> [CalendarEvent] {
+        return try await api.post(path: "/api/v1/calendar/generate")
+    }
+
     // MARK: - Mark Event Complete
 
     func markEventComplete(id: String) async throws {

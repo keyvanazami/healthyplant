@@ -13,6 +13,9 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
     var sunNeeds: String
     var waterNeeds: String
     var harvestTime: String?
+    var wateringFrequencyDays: Int?
+    var sunHoursMin: Int?
+    var sunHoursMax: Int?
     var aiLastUpdated: Date?
     let createdAt: Date
     var updatedAt: Date
@@ -37,6 +40,9 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
         sunNeeds: "Full sun (6-8 hours)",
         waterNeeds: "Water every 2-3 days",
         harvestTime: "60-80 days from transplant",
+        wateringFrequencyDays: 3,
+        sunHoursMin: 6,
+        sunHoursMax: 8,
         aiLastUpdated: .now,
         createdAt: Calendar.current.date(byAdding: .day, value: -45, to: .now) ?? .now,
         updatedAt: .now
@@ -57,6 +63,9 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
             sunNeeds: "Partial to full sun",
             waterNeeds: "Keep soil moist",
             harvestTime: "3-4 weeks for first harvest",
+            wateringFrequencyDays: nil,
+            sunHoursMin: nil,
+            sunHoursMax: nil,
             aiLastUpdated: .now,
             createdAt: Calendar.current.date(byAdding: .day, value: -20, to: .now) ?? .now,
             updatedAt: .now
