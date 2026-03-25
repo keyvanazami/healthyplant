@@ -25,9 +25,12 @@ final class NotificationService {
         content.sound = .default
 
         // Schedule for 8 AM on the event date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let eventDate = formatter.date(from: event.date) ?? Date()
         var dateComponents = Calendar.current.dateComponents(
             [.year, .month, .day],
-            from: event.date
+            from: eventDate
         )
         dateComponents.hour = 8
         dateComponents.minute = 0

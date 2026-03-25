@@ -1,46 +1,44 @@
 import Foundation
 
 struct ImageUploadService {
-    private let api = APIClient.shared
-    private let baseURL = "http://localhost:8000"
+    private let baseURL = "https://healthyplant-api-prod-680872497777.us-central1.run.app"
 
-    /// Uploads image data and returns the public URL of the uploaded image.
+    /// Uploads image data directly to the backend. Returns the public URL.
     func uploadImage(_ data: Data) async throws -> String {
-        // Step 1: Get a signed upload URL from the backend
-        let signedResponse: SignedUploadResponse = try await api.get(
-            path: "/api/uploads/signed-url"
-        )
-
-        // Step 2: Upload image data directly to GCS using the signed URL
-        guard let uploadURL = URL(string: signedResponse.uploadURL) else {
+        guard let url = URL(string: "\(baseURL)/api/v1/photos/upload") else {
             throw APIError.invalidURL
         }
 
-        var request = URLRequest(url: uploadURL)
-        request.httpMethod = "PUT"
-        request.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
-        request.httpBody = data
+        let boundary = UUID().uuidString
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
 
-        let (_, response) = try await URLSession.shared.data(for: request)
+        let userId = UserDefaults.standard.string(forKey: "hp_user_id") ?? "unknown"
+        request.setValue(userId, forHTTPHeaderField: "X-User-ID")
+
+        // Build multipart body
+        var body = Data()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"plant.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(data)
+        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
+
+        let (responseData, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse,
               (200...299).contains(httpResponse.statusCode) else {
             throw APIError.invalidResponse
         }
 
-        // Step 3: Return the public URL
-        return signedResponse.publicURL
+        let result = try JSONDecoder().decode(PhotoUploadResponse.self, from: responseData)
+        return result.url
     }
 }
 
-// MARK: - Response Model
-
-private struct SignedUploadResponse: Decodable {
-    let uploadURL: String
-    let publicURL: String
-
-    enum CodingKeys: String, CodingKey {
-        case uploadURL = "upload_url"
-        case publicURL = "public_url"
-    }
+private struct PhotoUploadResponse: Decodable {
+    let url: String
 }

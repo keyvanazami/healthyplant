@@ -27,22 +27,31 @@ struct ContentView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Main content area
-            Group {
-                switch selectedTab {
-                case .home:
-                    HomeView()
-                case .profiles:
-                    ProfilesListView()
-                case .garden:
-                    GardenView()
-                case .calendar:
-                    CalendarView()
-                case .assistant:
-                    AssistantView()
-                }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            // Keep all tab views alive to prevent cancellation of in-flight requests
+            HomeView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .opacity(selectedTab == .home ? 1 : 0)
+                .allowsHitTesting(selectedTab == .home)
+
+            ProfilesListView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .opacity(selectedTab == .profiles ? 1 : 0)
+                .allowsHitTesting(selectedTab == .profiles)
+
+            GardenView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .opacity(selectedTab == .garden ? 1 : 0)
+                .allowsHitTesting(selectedTab == .garden)
+
+            CalendarView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .opacity(selectedTab == .calendar ? 1 : 0)
+                .allowsHitTesting(selectedTab == .calendar)
+
+            AssistantView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .opacity(selectedTab == .assistant ? 1 : 0)
+                .allowsHitTesting(selectedTab == .assistant)
 
             // Custom tab bar
             TabBarView(selectedTab: $selectedTab)

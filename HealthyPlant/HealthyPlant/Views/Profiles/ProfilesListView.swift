@@ -3,6 +3,8 @@ import SwiftUI
 struct ProfilesListView: View {
     @StateObject private var viewModel = ProfilesViewModel()
     @State private var showCreateProfile = false
+    @State private var profileToDelete: PlantProfile? = nil
+    @State private var showDeleteAlert = false
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -22,6 +24,14 @@ struct ProfilesListView: View {
                             ForEach(viewModel.profiles) { profile in
                                 NavigationLink(value: profile) {
                                     ProfileCardView(profile: profile)
+                                }
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        profileToDelete = profile
+                                        showDeleteAlert = true
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
@@ -50,6 +60,23 @@ struct ProfilesListView: View {
                 Task { await viewModel.loadProfiles() }
             }) {
                 CreateProfileView(viewModel: viewModel)
+            }
+            .alert("Delete Profile", isPresented: $showDeleteAlert) {
+                Button("Delete", role: .destructive) {
+                    if let profile = profileToDelete {
+                        Task {
+                            await viewModel.deleteProfile(id: profile.id)
+                            await viewModel.loadProfiles()
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {
+                    profileToDelete = nil
+                }
+            } message: {
+                if let profile = profileToDelete {
+                    Text("Are you sure you want to delete \"\(profile.name)\"? This action cannot be undone.")
+                }
             }
             .task {
                 await viewModel.loadProfiles()

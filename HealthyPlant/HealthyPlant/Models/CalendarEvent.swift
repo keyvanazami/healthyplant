@@ -6,7 +6,7 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
     let userId: String
     let profileId: String
     var plantName: String
-    var date: Date
+    var date: String
     var eventType: EventType
     var description: String
     var completed: Bool
@@ -17,12 +17,16 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
         case needsWater = "needs_water"
         case needsSun = "needs_sun"
         case needsTreatment = "needs_treatment"
+        case moveInside = "move_inside"
+        case moveOutside = "move_outside"
 
         var color: Color {
             switch self {
             case .needsWater: return .blue
             case .needsSun: return .yellow
             case .needsTreatment: return .red
+            case .moveInside: return .purple
+            case .moveOutside: return .orange
             }
         }
 
@@ -31,6 +35,8 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
             case .needsWater: return "Water"
             case .needsSun: return "Sunlight"
             case .needsTreatment: return "Treatment"
+            case .moveInside: return "Move Inside"
+            case .moveOutside: return "Move Outside"
             }
         }
 
@@ -39,6 +45,8 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
             case .needsWater: return "drop.fill"
             case .needsSun: return "sun.max.fill"
             case .needsTreatment: return "cross.circle.fill"
+            case .moveInside: return "house.fill"
+            case .moveOutside: return "sun.and.horizon.fill"
             }
         }
     }
@@ -50,7 +58,7 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
         userId: "user-001",
         profileId: "mock-001",
         plantName: "Tommy Tomato",
-        date: .now,
+        date: "2026-03-23",
         eventType: .needsWater,
         description: "Water the tomato plant thoroughly.",
         completed: false
@@ -63,7 +71,7 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
             userId: "user-001",
             profileId: "mock-001",
             plantName: "Tommy Tomato",
-            date: .now,
+            date: "2026-03-23",
             eventType: .needsSun,
             description: "Move to a sunnier spot for at least 6 hours.",
             completed: false
@@ -73,7 +81,7 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
             userId: "user-001",
             profileId: "mock-002",
             plantName: "Basil Buddy",
-            date: Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now,
+            date: "2026-03-24",
             eventType: .needsTreatment,
             description: "Apply neem oil for aphid prevention.",
             completed: true

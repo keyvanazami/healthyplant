@@ -12,6 +12,8 @@ class EventType(str, Enum):
     NEEDS_WATER = "needs_water"
     NEEDS_SUN = "needs_sun"
     NEEDS_TREATMENT = "needs_treatment"
+    MOVE_INSIDE = "move_inside"
+    MOVE_OUTSIDE = "move_outside"
 
 
 class CalendarEventResponse(BaseModel):
@@ -27,3 +29,15 @@ class CalendarEventResponse(BaseModel):
     completed: bool = Field(default=False)
 
     model_config = {"populate_by_name": True, "from_attributes": True}
+
+
+class CalendarEventCreate(BaseModel):
+    """Request model for creating a calendar event."""
+
+    profile_id: str = Field(..., alias="profileId")
+    plant_name: str = Field(..., alias="plantName")
+    date: str = Field(..., description="Event date in YYYY-MM-DD format")
+    event_type: EventType = Field(..., alias="eventType")
+    description: str = Field(default="", description="Description of the care task")
+
+    model_config = {"populate_by_name": True}

@@ -29,13 +29,15 @@ struct CalendarView: View {
                     DayEventsView(
                         date: date,
                         events: viewModel.eventsForDay(date),
-                        viewModel: viewModel
+                        viewModel: viewModel,
+                        profiles: viewModel.profiles
                     )
                     .presentationDetents([.medium, .large])
                 }
             }
             .task {
                 await viewModel.loadEvents(for: viewModel.currentMonth)
+                await viewModel.loadProfiles()
             }
         }
         .tint(Theme.accent)
@@ -96,36 +98,30 @@ struct CalendarView: View {
         let firstWeekday = viewModel.currentMonth.startOfMonth.firstWeekdayOfMonth
         let daysInMonth = viewModel.currentMonth.daysInMonth
         let totalCells = firstWeekday + daysInMonth
+        let totalRows = (totalCells + 6) / 7
+        let gridCells = totalRows * 7
 
         return LazyVGrid(columns: columns, spacing: 8) {
-            // Empty cells before first day
-            ForEach(0..<firstWeekday, id: \.self) { _ in
-                Color.clear.frame(height: 50)
-            }
-
-            // Day cells
-            ForEach(1...daysInMonth, id: \.self) { day in
-                let date = dateForDay(day)
-                DayCellView(
-                    day: day,
-                    date: date,
-                    events: viewModel.eventsForDay(date),
-                    isToday: date.isSameDay(as: .now)
-                )
-                .onTapGesture {
-                    selectedDate = date
-                    showDayEvents = true
-                }
-            }
-
-            // Padding cells to fill last row
-            let remainder = totalCells % 7
-            if remainder > 0 {
-                ForEach(0..<(7 - remainder), id: \.self) { _ in
+            ForEach(0..<gridCells, id: \.self) { index in
+                let dayNumber = index - firstWeekday + 1
+                if dayNumber >= 1 && dayNumber <= daysInMonth {
+                    let date = dateForDay(dayNumber)
+                    DayCellView(
+                        day: dayNumber,
+                        date: date,
+                        events: viewModel.eventsForDay(date),
+                        isToday: date.isSameDay(as: .now)
+                    )
+                    .onTapGesture {
+                        selectedDate = date
+                        showDayEvents = true
+                    }
+                } else {
                     Color.clear.frame(height: 50)
                 }
             }
         }
+        .id(viewModel.currentMonth.monthYearFormatted)
     }
 
     private func dateForDay(_ day: Int) -> Date {

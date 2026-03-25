@@ -16,7 +16,7 @@ class StorageService:
     """Service for generating signed upload URLs and public URLs for GCS."""
 
     def __init__(self):
-        self.bucket_name = os.getenv("GCS_BUCKET_NAME", DEFAULT_BUCKET)
+        self.bucket_name = os.getenv("GCS_BUCKET", os.getenv("GCS_BUCKET_NAME", DEFAULT_BUCKET))
         try:
             self.client = storage.Client()
             self.bucket = self.client.bucket(self.bucket_name)
