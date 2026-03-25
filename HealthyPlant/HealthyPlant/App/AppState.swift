@@ -6,6 +6,7 @@ final class AppState: ObservableObject {
     @Published var userId: String
     @Published var isAuthenticated: Bool
     @Published var notificationsEnabled: Bool
+    @Published var environment: AppEnvironment
 
     init() {
         // Retrieve or generate a persistent anonymous user ID
@@ -23,5 +24,10 @@ final class AppState: ObservableObject {
     func setNotifications(enabled: Bool) {
         notificationsEnabled = enabled
         UserDefaults.standard.set(enabled, forKey: "hp_notifications_enabled")
+    }
+}
+
+        environment = env
+        AppEnvironment.current = env
     }
 }

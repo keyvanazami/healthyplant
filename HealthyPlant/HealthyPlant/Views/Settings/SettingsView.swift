@@ -20,6 +20,10 @@ struct SettingsView: View {
                                 .foregroundColor(Theme.textSecondary)
                         }
                         .listRowBackground(Color.white.opacity(0.05))
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            viewModel.handleVersionTap()
+                        }
 
                         HStack {
                             Text("Healthy Plant")
@@ -28,6 +32,38 @@ struct SettingsView: View {
                             Text("🌵")
                         }
                         .listRowBackground(Color.white.opacity(0.05))
+                    }
+
+                    // Developer (hidden until unlocked via 5x version tap)
+                    if viewModel.devModeUnlocked {
+                        Section("Developer") {
+                            HStack {
+                                Circle()
+                                    .fill(viewModel.isDevelopment ? Color.orange : Color.green)
+                                    .frame(width: 8, height: 8)
+                                Text("Environment")
+                                    .foregroundColor(Theme.textPrimary)
+                                Spacer()
+                                Text(viewModel.isDevelopment ? "Development" : "Production")
+                                    .foregroundColor(Theme.textSecondary)
+                                    .font(.footnote)
+                            }
+                            .listRowBackground(Color.white.opacity(0.05))
+
+                            Toggle(isOn: $viewModel.isDevelopment) {
+                                HStack {
+                                    Image(systemName: "hammer.fill")
+                                        .foregroundColor(.orange)
+                                    Text("Use Dev Server")
+                                        .foregroundColor(Theme.textPrimary)
+                                }
+                            }
+                            .tint(.orange)
+                            .listRowBackground(Color.white.opacity(0.05))
+                            .onChange(of: viewModel.isDevelopment) { _, _ in
+                                viewModel.toggleEnvironment()
+                            }
+                        }
                     }
 
                     // Notifications

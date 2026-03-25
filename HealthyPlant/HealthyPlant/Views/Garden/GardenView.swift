@@ -8,7 +8,16 @@ struct GardenView: View {
             ZStack {
                 Theme.background.ignoresSafeArea()
 
-                if viewModel.plants.isEmpty {
+                if viewModel.isLoading && viewModel.plants.isEmpty {
+                    VStack(spacing: 12) {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(Theme.accent)
+                        Text("Loading garden...")
+                            .font(.subheadline)
+                            .foregroundColor(Theme.textSecondary)
+                    }
+                } else if viewModel.plants.isEmpty {
                     emptyState
                 } else {
                     ScrollView(.horizontal, showsIndicators: false) {
