@@ -11,11 +11,14 @@ final class ProfilesViewModel: ObservableObject {
     // MARK: - Load
 
     func loadProfiles() async {
+        guard !isLoading else { return }
         isLoading = true
         errorMessage = nil
 
         do {
-            profiles = try await plantService.fetchProfiles()
+            let fetched = try await plantService.fetchProfiles()
+            print("[ProfilesVM] Loaded \(fetched.count) profiles")
+            profiles = fetched
         } catch {
             errorMessage = error.localizedDescription
             print("[ProfilesVM] Failed to load profiles: \(error)")
@@ -38,13 +41,18 @@ final class ProfilesViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            // Upload image if provided
+            // Upload image if provided (non-blocking — profile saves even if upload fails)
             var photoURL: String?
             if let data = imageData {
-                let imageService = ImageUploadService()
-                photoURL = try await imageService.uploadImage(data)
+                do {
+                    let imageService = ImageUploadService()
+                    photoURL = try await imageService.uploadImage(data)
+                } catch {
+                    print("[ProfilesVM] Image upload failed (continuing without photo): \(error)")
+                }
             }
 
+            print("[ProfilesVM] Sending create request: name=\(name) type=\(plantType) ageDays=\(ageDays)")
             let profile = try await plantService.createProfile(
                 name: name,
                 plantType: plantType,
@@ -53,6 +61,7 @@ final class ProfilesViewModel: ObservableObject {
                 heightInches: heightInches,
                 photoURL: photoURL
             )
+            print("[ProfilesVM] Created profile: \(profile.id) - \(profile.name)")
             profiles.append(profile)
         } catch {
             errorMessage = error.localizedDescription
@@ -93,6 +102,20 @@ final class ProfilesViewModel: ObservableObject {
         }
 
         isLoading = false
+    }
+
+    // MARK: - Update Photo
+
+    func updateProfilePhoto(id: String, photoURL: String) async {
+        do {
+            let updated = try await plantService.updateProfilePhoto(id: id, photoURL: photoURL)
+            if let index = profiles.firstIndex(where: { $0.id == id }) {
+                profiles[index] = updated
+            }
+            print("[ProfilesVM] Photo updated for profile \(id)")
+        } catch {
+            print("[ProfilesVM] Failed to update photo: \(error)")
+        }
     }
 
     // MARK: - Delete

@@ -55,6 +55,13 @@ struct PlantService {
         return try await api.put(path: "/api/v1/profiles/\(id)", body: body)
     }
 
+    // MARK: - Update Photo
+
+    func updateProfilePhoto(id: String, photoURL: String) async throws -> PlantProfile {
+        let body = UpdatePhotoRequest(photoURL: photoURL)
+        return try await api.put(path: "/api/v1/profiles/\(id)", body: body)
+    }
+
     // MARK: - Delete Profile
 
     func deleteProfile(id: String) async throws {
@@ -86,4 +93,8 @@ struct UpdateProfileRequest: Encodable {
     let ageDays: Int
     let heightFeet: Int
     let heightInches: Int
+}
+
+struct UpdatePhotoRequest: Encodable {
+    let photoURL: String
 }

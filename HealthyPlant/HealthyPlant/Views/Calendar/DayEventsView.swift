@@ -4,7 +4,9 @@ struct DayEventsView: View {
     let date: Date
     let events: [CalendarEvent]
     @ObservedObject var viewModel: CalendarViewModel
+    let profiles: [PlantProfile]
     @Environment(\.dismiss) private var dismiss
+    @State private var showCreateEvent = false
 
     var body: some View {
         NavigationStack {
@@ -39,10 +41,26 @@ struct DayEventsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        showCreateEvent = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundColor(Theme.accent)
+                            .fontWeight(.semibold)
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
                         .foregroundColor(Theme.accent)
                 }
+            }
+            .sheet(isPresented: $showCreateEvent) {
+                CreateCalendarEventView(
+                    date: date,
+                    profiles: profiles,
+                    viewModel: viewModel
+                )
             }
         }
     }
@@ -91,6 +109,7 @@ struct EventRowView: View {
     DayEventsView(
         date: .now,
         events: CalendarEvent.mockList,
-        viewModel: CalendarViewModel()
+        viewModel: CalendarViewModel(),
+        profiles: [.mock]
     )
 }

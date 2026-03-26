@@ -51,27 +51,32 @@ final class CalendarViewModelTests: XCTestCase {
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
 
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let todayString = formatter.string(from: today)
+        let tomorrowString = formatter.string(from: tomorrow)
+
         vm.events = [
             CalendarEvent(
                 id: "evt-1", userId: "user-001", profileId: "p-001",
-                plantName: "Tomato", date: today, eventType: .needsWater,
+                plantName: "Tomato", date: todayString, eventType: .needsWater,
                 description: "Water today", completed: false
             ),
             CalendarEvent(
                 id: "evt-2", userId: "user-001", profileId: "p-001",
-                plantName: "Tomato", date: today, eventType: .needsSun,
+                plantName: "Tomato", date: todayString, eventType: .needsSun,
                 description: "Sun today", completed: false
             ),
             CalendarEvent(
                 id: "evt-3", userId: "user-001", profileId: "p-002",
-                plantName: "Basil", date: tomorrow, eventType: .needsTreatment,
+                plantName: "Basil", date: tomorrowString, eventType: .needsTreatment,
                 description: "Treatment tomorrow", completed: false
             ),
         ]
 
         let todayEvents = vm.eventsForDay(today)
         XCTAssertEqual(todayEvents.count, 2)
-        XCTAssertTrue(todayEvents.allSatisfy { $0.date.isSameDay(as: today) })
+        XCTAssertTrue(todayEvents.allSatisfy { $0.date == todayString })
 
         let tomorrowEvents = vm.eventsForDay(tomorrow)
         XCTAssertEqual(tomorrowEvents.count, 1)
@@ -141,7 +146,7 @@ final class CalendarViewModelTests: XCTestCase {
         let vm = CalendarViewModel()
         let event = CalendarEvent(
             id: "evt-toggle", userId: "user-001", profileId: "p-001",
-            plantName: "Tomato", date: .now, eventType: .needsWater,
+            plantName: "Tomato", date: "2026-03-23", eventType: .needsWater,
             description: "Water", completed: false
         )
         vm.events = [event]

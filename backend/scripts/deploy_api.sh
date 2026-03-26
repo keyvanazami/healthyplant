@@ -69,6 +69,7 @@ ok "Image pushed: $TAG"
 info "Deploying to Cloud Run..."
 gcloud run deploy "$SERVICE_NAME" \
   --image="$TAG_LATEST" \
+  --project="$PROJECT_ID" \
   --region="$REGION" \
   --platform=managed \
   --allow-unauthenticated \
@@ -83,6 +84,7 @@ gcloud run deploy "$SERVICE_NAME" \
 # Output the service URL
 # -------------------------------------------------------
 SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" \
+  --project="$PROJECT_ID" \
   --region="$REGION" \
   --format="value(status.url)")
 

@@ -57,17 +57,14 @@ final class CalendarEventTests: XCTestCase {
 
     func testCodableRoundTrip() throws {
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
 
         let event = CalendarEvent(
             id: "evt-test-001",
             userId: "user-001",
             profileId: "profile-001",
             plantName: "Tommy Tomato",
-            date: Date(timeIntervalSince1970: 1_700_000_000),
+            date: "2023-11-14",
             eventType: .needsWater,
             description: "Water the tomato plant",
             completed: false
@@ -80,6 +77,7 @@ final class CalendarEventTests: XCTestCase {
         XCTAssertEqual(decoded.userId, event.userId)
         XCTAssertEqual(decoded.profileId, event.profileId)
         XCTAssertEqual(decoded.plantName, event.plantName)
+        XCTAssertEqual(decoded.date, event.date)
         XCTAssertEqual(decoded.eventType, event.eventType)
         XCTAssertEqual(decoded.description, event.description)
         XCTAssertEqual(decoded.completed, event.completed)
@@ -87,17 +85,14 @@ final class CalendarEventTests: XCTestCase {
 
     func testCodableRoundTripCompleted() throws {
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
 
         let event = CalendarEvent(
             id: "evt-test-002",
             userId: "user-001",
             profileId: "profile-001",
             plantName: "Basil",
-            date: Date(timeIntervalSince1970: 1_700_000_000),
+            date: "2023-11-14",
             eventType: .needsTreatment,
             description: "Apply neem oil",
             completed: true
@@ -112,10 +107,7 @@ final class CalendarEventTests: XCTestCase {
 
     func testCodableAllEventTypes() throws {
         let encoder = JSONEncoder()
-        encoder.dateEncodingStrategy = .iso8601
-
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
 
         for eventType in CalendarEvent.EventType.allCases {
             let event = CalendarEvent(
@@ -123,7 +115,7 @@ final class CalendarEventTests: XCTestCase {
                 userId: "user-001",
                 profileId: "profile-001",
                 plantName: "Test Plant",
-                date: Date(timeIntervalSince1970: 1_700_000_000),
+                date: "2023-11-14",
                 eventType: eventType,
                 description: "Test \(eventType.label)",
                 completed: false
@@ -138,7 +130,7 @@ final class CalendarEventTests: XCTestCase {
     // MARK: - Equatable
 
     func testEquatable() {
-        let date = Date(timeIntervalSince1970: 1_700_000_000)
+        let date = "2023-11-14"
         let event1 = CalendarEvent(
             id: "evt-001", userId: "user-001", profileId: "p-001",
             plantName: "Tomato", date: date, eventType: .needsWater,

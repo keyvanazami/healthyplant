@@ -19,14 +19,15 @@ final class AppState: ObservableObject {
         }
         self.isAuthenticated = true // anonymous auth by default
         self.notificationsEnabled = UserDefaults.standard.bool(forKey: "hp_notifications_enabled")
+        self.environment = AppEnvironment.current
     }
 
     func setNotifications(enabled: Bool) {
         notificationsEnabled = enabled
         UserDefaults.standard.set(enabled, forKey: "hp_notifications_enabled")
     }
-}
 
+    func switchEnvironment(_ env: AppEnvironment) {
         environment = env
         AppEnvironment.current = env
     }

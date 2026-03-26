@@ -3,12 +3,14 @@ import Foundation
 @MainActor
 final class CalendarViewModel: ObservableObject {
     @Published var events: [CalendarEvent] = []
+    @Published var profiles: [PlantProfile] = []
     @Published var currentMonth: Date = Date().startOfMonth
     @Published var isLoading = false
     @Published var isGenerating = false
     @Published var errorMessage: String?
 
     private let calendarService = CalendarService()
+    private let plantService = PlantService()
 
     // MARK: - Load Events
 
@@ -24,6 +26,40 @@ final class CalendarViewModel: ObservableObject {
         }
 
         isLoading = false
+    }
+
+    // MARK: - Load Profiles
+
+    func loadProfiles() async {
+        do {
+            profiles = try await plantService.fetchProfiles()
+        } catch {
+            print("[CalendarVM] Failed to load profiles: \(error)")
+        }
+    }
+
+    // MARK: - Create Event
+
+    func createEvent(
+        profileId: String,
+        plantName: String,
+        date: String,
+        eventType: String,
+        description: String
+    ) async {
+        do {
+            _ = try await calendarService.createEvent(
+                profileId: profileId,
+                plantName: plantName,
+                date: date,
+                eventType: eventType,
+                description: description
+            )
+            await loadEvents(for: currentMonth)
+        } catch {
+            errorMessage = error.localizedDescription
+            print("[CalendarVM] Failed to create event: \(error)")
+        }
     }
 
     // MARK: - Generate Schedule
@@ -54,9 +90,10 @@ final class CalendarViewModel: ObservableObject {
             // If the backend auto-created a next recurring event, add it to
             // the local array if it falls within the current month view
             if let nextEvent = response.nextEvent {
-                let monthStart = currentMonth
-                let monthEnd = Calendar.current.date(byAdding: .month, value: 1, to: monthStart) ?? monthStart
-                if nextEvent.date >= monthStart && nextEvent.date < monthEnd {
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM"
+                let currentMonthStr = formatter.string(from: currentMonth)
+                if nextEvent.date.hasPrefix(currentMonthStr) {
                     events.append(nextEvent)
                 }
             }
@@ -68,6 +105,9 @@ final class CalendarViewModel: ObservableObject {
     // MARK: - Computed
 
     func eventsForDay(_ date: Date) -> [CalendarEvent] {
-        events.filter { $0.date.isSameDay(as: date) }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let dateString = formatter.string(from: date)
+        return events.filter { $0.date == dateString }
     }
 }

@@ -1,0 +1,48 @@
+"""Router for photo upload operations."""
+
+import logging
+import os
+import uuid
+
+from fastapi import APIRouter, File, HTTPException, Request, UploadFile
+from pydantic import BaseModel, Field
+
+from google.cloud import storage
+
+logger = logging.getLogger(__name__)
+
+router = APIRouter()
+
+
+class PhotoUploadResponse(BaseModel):
+    url: str = Field(..., description="Public URL of the uploaded photo")
+
+    model_config = {"populate_by_name": True}
+
+
+@router.post("/photos/upload", response_model=PhotoUploadResponse, status_code=201)
+async def upload_photo(request: Request, file: UploadFile = File(...)):
+    """Upload a plant photo directly. Returns the public URL."""
+    user_id = getattr(request.state, "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    bucket_name = os.getenv("GCS_BUCKET", "healthy-plant-uploads")
+
+    try:
+        client = storage.Client()
+        bucket = client.bucket(bucket_name)
+
+        filename = f"{uuid.uuid4().hex}.jpg"
+        blob_path = f"users/{user_id}/plants/{filename}"
+        blob = bucket.blob(blob_path)
+
+        contents = await file.read()
+        blob.upload_from_string(contents, content_type="image/jpeg")
+
+        public_url = f"https://storage.googleapis.com/{bucket_name}/{blob_path}"
+        logger.info(f"Uploaded photo for user {user_id}: {public_url}")
+        return PhotoUploadResponse(url=public_url)
+    except Exception as e:
+        logger.error(f"Error uploading photo for user {user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to upload photo")

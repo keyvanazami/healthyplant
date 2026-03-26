@@ -7,7 +7,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, Query, Request
 
-from models.calendar_event import CalendarEventCompleteResponse, CalendarEventResponse
+from models.calendar_event import CalendarEventCompleteResponse, CalendarEventCreate, CalendarEventResponse
 from services.schedule_service import generate_deterministic_events
 
 logger = logging.getLogger(__name__)
@@ -41,6 +41,34 @@ async def get_calendar_events(
     except Exception as e:
         logger.error(f"Error fetching calendar for user {user_id}, month {month}: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve calendar events")
+
+
+@router.post("/calendar", response_model=CalendarEventResponse, status_code=201)
+async def create_calendar_event(request: Request, event: CalendarEventCreate):
+    """Create a new calendar event manually."""
+    user_id = getattr(request.state, "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    firestore = request.app.state.firestore_service
+
+    try:
+        event_data = {
+            "profileId": event.profile_id,
+            "plantName": event.plant_name,
+            "date": event.date,
+            "eventType": event.event_type.value,
+            "description": event.description,
+        }
+        created = await firestore.create_events(user_id, [event_data])
+        if created:
+            return created[0]
+        raise HTTPException(status_code=500, detail="Failed to create event")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating calendar event for user {user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create calendar event")
 
 
 @router.post("/calendar/generate", response_model=List[CalendarEventResponse])

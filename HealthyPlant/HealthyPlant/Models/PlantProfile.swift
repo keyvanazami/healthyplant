@@ -7,22 +7,34 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
     var plantType: String
     var photoURL: String?
     var ageDays: Int
-    var plantedDate: Date
+    var plantedDate: String
     var heightFeet: Int
     var heightInches: Int
-    var sunNeeds: String
-    var waterNeeds: String
+    var sunNeeds: String?
+    var waterNeeds: String?
     var harvestTime: String?
     var wateringFrequencyDays: Int?
     var sunHoursMin: Int?
     var sunHoursMax: Int?
-    var aiLastUpdated: Date?
-    let createdAt: Date
-    var updatedAt: Date
+    var aiLastUpdated: String?
+    let createdAt: String
+    var updatedAt: String
 
     /// Formatted height string, e.g. "2ft 6in"
     var formattedHeight: String {
         Int.formatHeight(feet: heightFeet, inches: heightInches)
+    }
+
+    /// Formatted age string, e.g. "1yr 3mo 5d"
+    var formattedAge: String {
+        let years = ageDays / 365
+        let months = (ageDays % 365) / 30
+        let days = ageDays % 30
+        var parts: [String] = []
+        if years > 0 { parts.append("\(years)yr") }
+        if months > 0 { parts.append("\(months)mo") }
+        if days > 0 || parts.isEmpty { parts.append("\(days)d") }
+        return parts.joined(separator: " ")
     }
 
     // MARK: - Preview Mock
@@ -34,7 +46,7 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
         plantType: "Tomato",
         photoURL: nil,
         ageDays: 45,
-        plantedDate: Calendar.current.date(byAdding: .day, value: -45, to: .now) ?? .now,
+        plantedDate: "2026-02-05",
         heightFeet: 1,
         heightInches: 8,
         sunNeeds: "Full sun (6-8 hours)",
@@ -43,9 +55,9 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
         wateringFrequencyDays: 3,
         sunHoursMin: 6,
         sunHoursMax: 8,
-        aiLastUpdated: .now,
-        createdAt: Calendar.current.date(byAdding: .day, value: -45, to: .now) ?? .now,
-        updatedAt: .now
+        aiLastUpdated: "2026-03-22T00:00:00+00:00",
+        createdAt: "2026-02-05T00:00:00+00:00",
+        updatedAt: "2026-03-22T00:00:00+00:00"
     )
 
     static let mockList: [PlantProfile] = [
@@ -57,7 +69,7 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
             plantType: "Basil",
             photoURL: nil,
             ageDays: 20,
-            plantedDate: Calendar.current.date(byAdding: .day, value: -20, to: .now) ?? .now,
+            plantedDate: "2026-03-02",
             heightFeet: 0,
             heightInches: 10,
             sunNeeds: "Partial to full sun",
@@ -66,9 +78,9 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
             wateringFrequencyDays: nil,
             sunHoursMin: nil,
             sunHoursMax: nil,
-            aiLastUpdated: .now,
-            createdAt: Calendar.current.date(byAdding: .day, value: -20, to: .now) ?? .now,
-            updatedAt: .now
+            aiLastUpdated: "2026-03-22T00:00:00+00:00",
+            createdAt: "2026-03-02T00:00:00+00:00",
+            updatedAt: "2026-03-22T00:00:00+00:00"
         ),
     ]
 }

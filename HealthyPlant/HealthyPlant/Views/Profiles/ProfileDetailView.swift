@@ -1,9 +1,18 @@
 import SwiftUI
+import PhotosUI
 
 struct ProfileDetailView: View {
     let profile: PlantProfile
     @ObservedObject var viewModel: ProfilesViewModel
+    @Environment(\.dismiss) private var dismiss
     @State private var isEditing = false
+    @State private var showDeleteAlert = false
+    @State private var showImageSourcePicker = false
+    @State private var showCamera = false
+    @State private var showPhotoPicker = false
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var newImageData: Data?
+    @State private var isUploadingPhoto = false
 
     // Editable fields
     @State private var name: String
@@ -36,6 +45,22 @@ struct ProfileDetailView: View {
                 // AI-managed section
                 aiSection
 
+                // Delete button
+                Button {
+                    showDeleteAlert = true
+                } label: {
+                    HStack {
+                        Image(systemName: "trash")
+                        Text("Delete Profile")
+                    }
+                    .font(.body.weight(.semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red)
+                    .cornerRadius(12)
+                }
+
                 Spacer(minLength: 100)
             }
             .padding()
@@ -54,25 +79,93 @@ struct ProfileDetailView: View {
                 .foregroundColor(Theme.accent)
             }
         }
+        .alert("Delete Profile", isPresented: $showDeleteAlert) {
+            Button("Delete", role: .destructive) {
+                Task {
+                    await viewModel.deleteProfile(id: profile.id)
+                    dismiss()
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to delete \"\(profile.name)\"? This action cannot be undone.")
+        }
     }
 
     // MARK: - Photo
 
     private var profilePhoto: some View {
-        Group {
-            if let urlString = profile.photoURL, let url = URL(string: urlString) {
-                AsyncImage(url: url) { image in
-                    image.resizable().scaledToFill()
-                } placeholder: {
-                    photoPlaceholder
+        Button {
+            showImageSourcePicker = true
+        } label: {
+            ZStack {
+                Group {
+                    if let data = newImageData, let uiImage = UIImage(data: data) {
+                        Image(uiImage: uiImage)
+                            .resizable().scaledToFill()
+                    } else if let urlString = profile.photoURL, let url = URL(string: urlString) {
+                        AsyncImage(url: url) { image in
+                            image.resizable().scaledToFill()
+                        } placeholder: {
+                            photoPlaceholder
+                        }
+                    } else {
+                        photoPlaceholder
+                    }
                 }
-            } else {
-                photoPlaceholder
+                .frame(width: 150, height: 150)
+                .clipShape(Circle())
+
+                // Edit overlay
+                VStack {
+                    Spacer()
+                    HStack {
+                        Image(systemName: "camera.fill")
+                            .font(.system(size: 12))
+                        Text(profile.photoURL != nil || newImageData != nil ? "Edit" : "Add Photo")
+                            .font(.caption.bold())
+                    }
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Theme.accent.opacity(0.85))
+                    .cornerRadius(10)
+                    .offset(y: -8)
+                }
+                .frame(width: 150, height: 150)
+
+                if isUploadingPhoto {
+                    Circle()
+                        .fill(Color.black.opacity(0.5))
+                        .frame(width: 150, height: 150)
+                    ProgressView()
+                        .tint(Theme.accent)
+                }
+            }
+            .overlay(Circle().strokeBorder(Theme.accent, lineWidth: 2))
+        }
+        .disabled(isUploadingPhoto)
+        .confirmationDialog("Change Photo", isPresented: $showImageSourcePicker) {
+            Button("Take Photo") { showCamera = true }
+            Button("Choose from Library") { showPhotoPicker = true }
+            Button("Cancel", role: .cancel) {}
+        }
+        .fullScreenCover(isPresented: $showCamera) {
+            CameraView(imageData: $newImageData)
+                .ignoresSafeArea()
+        }
+        .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
+        .onChange(of: selectedPhotoItem) { _, newItem in
+            Task {
+                if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                    newImageData = data
+                }
             }
         }
-        .frame(width: 150, height: 150)
-        .clipShape(Circle())
-        .overlay(Circle().strokeBorder(Theme.accent, lineWidth: 2))
+        .onChange(of: newImageData) { _, data in
+            guard let data else { return }
+            Task { await uploadPhoto(data) }
+        }
     }
 
     private var photoPlaceholder: some View {
@@ -82,6 +175,19 @@ struct ProfileDetailView: View {
                 .font(.system(size: 50))
                 .foregroundColor(Theme.accent)
         }
+    }
+
+    private func uploadPhoto(_ data: Data) async {
+        isUploadingPhoto = true
+        do {
+            let imageService = ImageUploadService()
+            let url = try await imageService.uploadImage(data)
+            await viewModel.updateProfilePhoto(id: profile.id, photoURL: url)
+            print("[ProfileDetail] Photo uploaded: \(url)")
+        } catch {
+            print("[ProfileDetail] Photo upload failed: \(error)")
+        }
+        isUploadingPhoto = false
     }
 
     // MARK: - Info Section
@@ -100,9 +206,9 @@ struct ProfileDetailView: View {
         VStack(spacing: 12) {
             detailRow(label: "Name", value: profile.name)
             detailRow(label: "Type", value: profile.plantType)
-            detailRow(label: "Age", value: "\(profile.ageDays) days")
+            detailRow(label: "Age", value: profile.formattedAge)
             detailRow(label: "Height", value: profile.formattedHeight)
-            detailRow(label: "Planted", value: profile.plantedDate.mediumFormatted)
+            detailRow(label: "Planted", value: profile.plantedDate)
         }
     }
 
@@ -145,7 +251,7 @@ struct ProfileDetailView: View {
                     .foregroundColor(Theme.accent)
             }
 
-            detailRow(label: "Sun Needs", value: profile.sunNeeds)
+            detailRow(label: "Sun Needs", value: profile.sunNeeds ?? "Analyzing...")
 
             if let minSun = profile.sunHoursMin, let maxSun = profile.sunHoursMax {
                 detailRow(label: "Sun", value: "\(minSun)-\(maxSun) hours/day")
@@ -153,7 +259,7 @@ struct ProfileDetailView: View {
                 detailRow(label: "Sun", value: "\(minSun)+ hours/day")
             }
 
-            detailRow(label: "Water Needs", value: profile.waterNeeds)
+            detailRow(label: "Water Needs", value: profile.waterNeeds ?? "Analyzing...")
 
             if let days = profile.wateringFrequencyDays {
                 detailRow(label: "Watering", value: "Every \(days) day\(days == 1 ? "" : "s")")
@@ -164,7 +270,7 @@ struct ProfileDetailView: View {
             }
 
             if let lastUpdated = profile.aiLastUpdated {
-                Text("AI last updated: \(lastUpdated.mediumFormatted)")
+                Text("AI last updated: \(lastUpdated)")
                     .font(.caption)
                     .foregroundColor(Theme.textSecondary)
             }
