@@ -18,16 +18,20 @@
 		28DFB7FA140B6268E4C9C5B0 /* AssistantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */; };
 		29503608C932C61DCA1A2238 /* ProfilesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D425E8CAE3E3024DD7E7C4E /* ProfilesListView.swift */; };
 		2C8B4B48AC048F31DED79B93 /* CactusAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */; };
+		3AEDBD88A996D5AD9E3431FB /* CommunityComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */; };
 		4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */; };
 		4BA61E4B6E0B40FD3D97FACB /* GardenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B198D286EF6642EFF35ED /* GardenView.swift */; };
 		50F8B932534BB850696A9B48 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */; };
 		56461FA418405FAD6A26A9DE /* ProfileFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */; };
 		61ABAE9EC5CAE06C30697277 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */; };
 		62BC69F35E5769ABE14C91B4 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BEBF554FDF515B95719584 /* HomeUITests.swift */; };
+		6D20C63E67B7BA93E77D82B7 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B005E6AFF5ED6347D84E9987 /* CommunityViewModel.swift */; };
 		6D3DC08BDF68D0D6D3FEBBE1 /* CreateCalendarEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B138E1858D2CE35B38EE14 /* CreateCalendarEventView.swift */; };
 		723CE6EBE3E6A78003D42BE9 /* AssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */; };
+		747A0AE2F456DBBC024AD6F7 /* CommunityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A9D0F621AEAA3B474CAEBF /* CommunityService.swift */; };
 		75E89F2CC17C5FE41BF0297A /* CalendarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */; };
 		7C472239CEFB077992103E45 /* GreenOutlineStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */; };
+		7DEE2187DE2129A35CA17F60 /* CommunityPlant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783C79A28A0F21DB73BF179 /* CommunityPlant.swift */; };
 		7F2A5301161F18F873D92C95 /* PlantProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */; };
 		8CE4EE31410ED174DC969F78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD134568F9E8494A6B50B263 /* Assets.xcassets */; };
 		92D55262C66FD5D0574201BB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */; };
@@ -37,6 +41,7 @@
 		A1145AA178E47EB393BC055C /* PlantProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8190328E5207C746AD96236 /* PlantProfileTests.swift */; };
 		A646AB87343EAF3DFD4B6566 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B99CB616CB0A4E06A2B9A5C /* CalendarView.swift */; };
 		A74291A49665967CEFA40CC9 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5D0EEC4AD334481E6C5F951 /* CameraView.swift */; };
+		AD7AEF771BABC08358C342DB /* CommunityPlantDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FECCF7CCD1F668B9692876 /* CommunityPlantDetailView.swift */; };
 		AEE603AEA81F060444E518F1 /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B453B63957050A8FA16A7829 /* ChatService.swift */; };
 		B16356FE7D294D6C6A6C22F9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CED33880E82F3D0650BB9B /* ContentView.swift */; };
 		B188BF11C3EDBB420C97E2CA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = AA748F85000C00FA578D64A7 /* FirebaseMessaging */; };
@@ -49,6 +54,7 @@
 		B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D744FAA423E013E653BFAAF /* CalendarService.swift */; };
 		BA47989B7148E0243E296061 /* ProfilesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */; };
 		BC9FCB5CA203FADE0ACFB461 /* AssistantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A040067AE9F1263E0BEA62F3 /* AssistantViewModelTests.swift */; };
+		C1D64A0696FDC39CF04AFC8E /* CommunityBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153306346B47AC898FF27E12 /* CommunityBrowseView.swift */; };
 		C3360A871998ABFE3F999456 /* PlantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C679A8901BDC330AE672EA /* PlantService.swift */; };
 		C4D081EF952799B08E2DC12B /* PlantServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB294462B44D894111B7C94 /* PlantServiceTests.swift */; };
 		CB2C2167E65875D1B5190752 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94A45D715ED3FE8999514B99 /* HomeViewModel.swift */; };
@@ -88,12 +94,14 @@
 		084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantApp.swift; sourceTree = "<group>"; };
 		091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		153306346B47AC898FF27E12 /* CommunityBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityBrowseView.swift; sourceTree = "<group>"; };
 		1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantView.swift; sourceTree = "<group>"; };
 		1CB1D76B9948F1489F06694C /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
 		22B92143B409EDE1D9F6F6B2 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFlowUITests.swift; sourceTree = "<group>"; };
 		2446114BCB6649FE8A010280 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		26777CFA7F56463810915890 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		2783C79A28A0F21DB73BF179 /* CommunityPlant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPlant.swift; sourceTree = "<group>"; };
 		2909072BF771725B0384A740 /* GardenUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenUITests.swift; sourceTree = "<group>"; };
 		2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenOutlineStyle.swift; sourceTree = "<group>"; };
 		2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantUITests.swift; sourceTree = "<group>"; };
@@ -112,9 +120,12 @@
 		6EA1DBAA1F5648DEF43AAEB3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		7B99CB616CB0A4E06A2B9A5C /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		7BCAC4EAF03E693F96BEC4A3 /* GardenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenViewModel.swift; sourceTree = "<group>"; };
+		7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityComment.swift; sourceTree = "<group>"; };
 		7FB294462B44D894111B7C94 /* PlantServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantServiceTests.swift; sourceTree = "<group>"; };
 		845CDB71DC07082F314356EA /* ProfilesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesViewModel.swift; sourceTree = "<group>"; };
 		84BEBF554FDF515B95719584 /* HomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
+		86A9D0F621AEAA3B474CAEBF /* CommunityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityService.swift; sourceTree = "<group>"; };
+		89FECCF7CCD1F668B9692876 /* CommunityPlantDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPlantDetailView.swift; sourceTree = "<group>"; };
 		8D744FAA423E013E653BFAAF /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
 		8E79621A9D19C1277D432A3C /* HealthyPlantUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		94A45D715ED3FE8999514B99 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -125,6 +136,7 @@
 		A6C679A8901BDC330AE672EA /* PlantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantService.swift; sourceTree = "<group>"; };
 		A8190328E5207C746AD96236 /* PlantProfileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantProfileTests.swift; sourceTree = "<group>"; };
 		AE684B95C821409BA8BFA258 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		B005E6AFF5ED6347D84E9987 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
 		B12E6B48BB0CF50BF509A8B2 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarUITests.swift; sourceTree = "<group>"; };
 		B453B63957050A8FA16A7829 /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
@@ -290,6 +302,15 @@
 			path = HealthyPlant;
 			sourceTree = "<group>";
 		};
+		BC8EAC93E956E60B07278DE6 /* Community */ = {
+			isa = PBXGroup;
+			children = (
+				153306346B47AC898FF27E12 /* CommunityBrowseView.swift */,
+				89FECCF7CCD1F668B9692876 /* CommunityPlantDetailView.swift */,
+			);
+			path = Community;
+			sourceTree = "<group>";
+		};
 		BD2BCE83EC2BAF16794FA99B /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +327,7 @@
 			children = (
 				54982AED2750F200A938B015 /* Assistant */,
 				1DBBA60B147E0B33089D2C1C /* Calendar */,
+				BC8EAC93E956E60B07278DE6 /* Community */,
 				55108A8585C60A6E16263928 /* Components */,
 				84B16754BC87DA4CC2410502 /* Garden */,
 				D0F21474502E3F4440BF4963 /* Home */,
@@ -339,6 +361,7 @@
 			children = (
 				B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */,
 				DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */,
+				B005E6AFF5ED6347D84E9987 /* CommunityViewModel.swift */,
 				7BCAC4EAF03E693F96BEC4A3 /* GardenViewModel.swift */,
 				94A45D715ED3FE8999514B99 /* HomeViewModel.swift */,
 				845CDB71DC07082F314356EA /* ProfilesViewModel.swift */,
@@ -365,6 +388,8 @@
 			children = (
 				071CEF25C072B0C32E90AF94 /* CalendarEvent.swift */,
 				E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */,
+				7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */,
+				2783C79A28A0F21DB73BF179 /* CommunityPlant.swift */,
 				06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */,
 				0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */,
 			);
@@ -378,6 +403,7 @@
 				26777CFA7F56463810915890 /* AuthService.swift */,
 				8D744FAA423E013E653BFAAF /* CalendarService.swift */,
 				B453B63957050A8FA16A7829 /* ChatService.swift */,
+				86A9D0F621AEAA3B474CAEBF /* CommunityService.swift */,
 				5005F68806E7D348C880E825 /* ImageUploadService.swift */,
 				091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */,
 				A6C679A8901BDC330AE672EA /* PlantService.swift */,
@@ -469,7 +495,7 @@
 						TestTargetID = DCF8C333F8AA504A7E26E3DA;
 					};
 					DCF8C333F8AA504A7E26E3DA = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = SNJ4V48UPB;
 					};
 				};
 			};
@@ -557,6 +583,12 @@
 				4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */,
 				B20A01D757943591D9EAD452 /* ChatMessage.swift in Sources */,
 				AEE603AEA81F060444E518F1 /* ChatService.swift in Sources */,
+				C1D64A0696FDC39CF04AFC8E /* CommunityBrowseView.swift in Sources */,
+				3AEDBD88A996D5AD9E3431FB /* CommunityComment.swift in Sources */,
+				7DEE2187DE2129A35CA17F60 /* CommunityPlant.swift in Sources */,
+				AD7AEF771BABC08358C342DB /* CommunityPlantDetailView.swift in Sources */,
+				747A0AE2F456DBBC024AD6F7 /* CommunityService.swift in Sources */,
+				6D20C63E67B7BA93E77D82B7 /* CommunityViewModel.swift in Sources */,
 				B16356FE7D294D6C6A6C22F9 /* ContentView.swift in Sources */,
 				6D3DC08BDF68D0D6D3FEBBE1 /* CreateCalendarEventView.swift in Sources */,
 				0D8C6F3D1FF174C78173B6FF /* CreateProfileView.swift in Sources */,
@@ -642,7 +674,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -745,7 +777,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
