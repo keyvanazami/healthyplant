@@ -13,6 +13,9 @@ struct ProfileDetailView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var newImageData: Data?
     @State private var isUploadingPhoto = false
+    @StateObject private var communityViewModel = CommunityViewModel()
+    @State private var showDisplayNamePrompt = false
+    @State private var pendingDisplayName = ""
 
     // Editable fields
     @State private var name: String
@@ -44,6 +47,9 @@ struct ProfileDetailView: View {
 
                 // AI-managed section
                 aiSection
+
+                // Community sharing
+                communitySection
 
                 // Delete button
                 Button {
@@ -78,6 +84,12 @@ struct ProfileDetailView: View {
                 }
                 .foregroundColor(Theme.accent)
             }
+        }
+        .task {
+            await communityViewModel.loadMyShared()
+        }
+        .sheet(isPresented: $showDisplayNamePrompt) {
+            displayNameSheet
         }
         .alert("Delete Profile", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
@@ -305,6 +317,117 @@ struct ProfileDetailView: View {
                 .multilineTextAlignment(.trailing)
                 .textFieldStyle(.plain)
         }
+    }
+
+    // MARK: - Community Sharing
+
+    private var communitySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Image(systemName: "person.3.fill")
+                    .foregroundColor(Theme.accent)
+                Text("Community")
+                    .font(.headline)
+                    .foregroundColor(Theme.accent)
+            }
+
+            Text("Let other plant lovers see your plant and share tips!")
+                .font(.caption)
+                .foregroundColor(Theme.textSecondary)
+
+            if communityViewModel.isProfileShared(profile.id) {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(Theme.accent)
+                    Text("Shared")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundColor(Theme.accent)
+
+                    Spacer()
+
+                    Button {
+                        Task { await communityViewModel.unshareProfile(profileId: profile.id) }
+                    } label: {
+                        Text("Unshare")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundColor(.red)
+                    }
+                }
+            } else {
+                Button {
+                    if communityViewModel.hasSetDisplayName {
+                        Task { await communityViewModel.shareProfile(profileId: profile.id) }
+                    } else {
+                        pendingDisplayName = ""
+                        showDisplayNamePrompt = true
+                    }
+                } label: {
+                    HStack {
+                        Image(systemName: "square.and.arrow.up")
+                        Text("Share to Community")
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundColor(Theme.accent)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .cornerRadius(10)
+                    .greenOutline(cornerRadius: 10)
+                }
+            }
+        }
+        .padding()
+        .background(Color.white.opacity(0.05))
+        .cornerRadius(16)
+        .greenOutline(cornerRadius: 16)
+    }
+
+    private var displayNameSheet: some View {
+        NavigationStack {
+            ZStack {
+                Theme.background.ignoresSafeArea()
+
+                VStack(spacing: 20) {
+                    Text("Set your display name")
+                        .font(.headline)
+                        .foregroundColor(Theme.textPrimary)
+
+                    Text("This is how other plant lovers will see you in the community.")
+                        .font(.subheadline)
+                        .foregroundColor(Theme.textSecondary)
+                        .multilineTextAlignment(.center)
+
+                    TextField("Display name", text: $pendingDisplayName)
+                        .foregroundColor(Theme.textPrimary)
+                        .padding()
+                        .background(Color.white.opacity(0.08))
+                        .cornerRadius(10)
+
+                    Button {
+                        let trimmed = pendingDisplayName.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let finalName = trimmed.isEmpty ? "Plant Lover" : trimmed
+                        communityViewModel.saveDisplayName(finalName)
+                        showDisplayNamePrompt = false
+                        Task { await communityViewModel.shareProfile(profileId: profile.id) }
+                    } label: {
+                        Text("Save & Share")
+                            .font(.body.weight(.semibold))
+                            .foregroundColor(.black)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Theme.accent)
+                            .cornerRadius(12)
+                    }
+                }
+                .padding(24)
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Cancel") { showDisplayNamePrompt = false }
+                        .foregroundColor(Theme.accent)
+                }
+            }
+        }
+        .presentationDetents([.medium])
     }
 
     private func saveChanges() {

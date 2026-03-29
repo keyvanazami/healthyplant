@@ -383,3 +383,128 @@ class FirestoreService:
 
         if count > 0:
             await batch.commit()
+
+    # ──────────────────────────────────────────────
+    # Community operations
+    # ──────────────────────────────────────────────
+
+    async def create_community_plant(self, data: dict) -> dict:
+        """Create a community plant document."""
+        collection = self.db.collection("community_plants")
+        doc_ref = collection.document()
+        await doc_ref.set(data)
+        return {"id": doc_ref.id, **data}
+
+    async def community_plant_exists(self, user_id: str, profile_id: str) -> Optional[dict]:
+        """Check if a profile is already shared. Returns the doc if found."""
+        collection = self.db.collection("community_plants")
+        query = (
+            collection
+            .where("sourceUserId", "==", user_id)
+            .where("sourceProfileId", "==", profile_id)
+            .limit(1)
+        )
+        docs = query.stream()
+        async for doc in docs:
+            result = doc.to_dict()
+            result["id"] = doc.id
+            return result
+        return None
+
+    async def get_community_plants(
+        self, plant_type: Optional[str] = None, limit: int = 50
+    ) -> List[dict]:
+        """Get community plants, optionally filtered by plant type."""
+        collection = self.db.collection("community_plants")
+        query = collection.order_by("sharedAt", direction=firestore.Query.DESCENDING)
+
+        if plant_type:
+            query = collection.where(
+                "plantTypeLower", "==", plant_type.lower()
+            ).order_by("sharedAt", direction=firestore.Query.DESCENDING)
+
+        query = query.limit(limit)
+        docs = query.stream()
+
+        plants = []
+        async for doc in docs:
+            plant = doc.to_dict()
+            plant["id"] = doc.id
+            plants.append(plant)
+        return plants
+
+    async def get_community_plant(self, community_id: str) -> Optional[dict]:
+        """Get a single community plant by ID."""
+        doc_ref = self.db.collection("community_plants").document(community_id)
+        doc = await doc_ref.get()
+        if not doc.exists:
+            return None
+        result = doc.to_dict()
+        result["id"] = doc.id
+        return result
+
+    async def get_community_plants_by_user(self, user_id: str) -> List[dict]:
+        """Get all community plants shared by a specific user."""
+        collection = self.db.collection("community_plants")
+        query = collection.where("sourceUserId", "==", user_id)
+        docs = query.stream()
+
+        plants = []
+        async for doc in docs:
+            plant = doc.to_dict()
+            plant["id"] = doc.id
+            plants.append(plant)
+        return plants
+
+    async def delete_community_plant(self, community_id: str) -> None:
+        """Delete a community plant and its comments subcollection."""
+        doc_ref = self.db.collection("community_plants").document(community_id)
+
+        # Delete comments subcollection first
+        comments = doc_ref.collection("comments").stream()
+        batch = self.db.batch()
+        count = 0
+        async for comment in comments:
+            batch.delete(comment.reference)
+            count += 1
+            if count >= 499:
+                await batch.commit()
+                batch = self.db.batch()
+                count = 0
+        if count > 0:
+            await batch.commit()
+
+        await doc_ref.delete()
+
+    async def add_comment(self, community_id: str, data: dict) -> dict:
+        """Add a comment to a community plant."""
+        collection = (
+            self.db.collection("community_plants")
+            .document(community_id)
+            .collection("comments")
+        )
+        doc_ref = collection.document()
+        await doc_ref.set(data)
+        return {"id": doc_ref.id, **data}
+
+    async def get_comments(self, community_id: str, limit: int = 50) -> List[dict]:
+        """Get comments for a community plant, ordered chronologically."""
+        collection = (
+            self.db.collection("community_plants")
+            .document(community_id)
+            .collection("comments")
+        )
+        query = collection.order_by("createdAt").limit(limit)
+        docs = query.stream()
+
+        comments = []
+        async for doc in docs:
+            comment = doc.to_dict()
+            comment["id"] = doc.id
+            comments.append(comment)
+        return comments
+
+    async def increment_comment_count(self, community_id: str) -> None:
+        """Increment the comment count on a community plant."""
+        doc_ref = self.db.collection("community_plants").document(community_id)
+        await doc_ref.update({"commentCount": firestore.Increment(1)})

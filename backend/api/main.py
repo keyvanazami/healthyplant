@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import profiles, garden, calendar, chat, photos
+from routers import profiles, garden, calendar, chat, photos, community
 from services.firestore_service import FirestoreService
 from services.ai_service import AIService
 from services.storage_service import StorageService
@@ -76,6 +76,7 @@ app.include_router(garden.router, prefix="/api/v1", tags=["garden"])
 app.include_router(calendar.router, prefix="/api/v1", tags=["calendar"])
 app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 app.include_router(photos.router, prefix="/api/v1", tags=["photos"])
+app.include_router(community.router, prefix="/api/v1", tags=["community"])
 
 
 @app.get("/health")
