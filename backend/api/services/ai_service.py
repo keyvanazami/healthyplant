@@ -231,14 +231,30 @@ Generate realistic events based on each plant's care requirements."""
 
         # Build plant context
         if plant_profiles:
-            plant_context = "The user has the following plants:\n" + "\n".join(
-                f"- {p.get('name', 'Unknown')} ({p.get('plantType', 'Unknown')}): "
-                f"age {p.get('ageDays', 0)} days, "
-                f"height {p.get('heightFeet', 0)}'{p.get('heightInches', 0)}\", "
-                f"sun: {p.get('sunNeeds', 'unknown')}, "
-                f"water: {p.get('waterNeeds', 'unknown')}"
-                for p in plant_profiles
-            )
+            lines = []
+            for p in plant_profiles:
+                line = (
+                    f"- {p.get('name', 'Unknown')} ({p.get('plantType', 'Unknown')}): "
+                    f"age {p.get('ageDays', 0)} days, "
+                    f"height {p.get('heightFeet', 0)}'{p.get('heightInches', 0)}\", "
+                    f"sun: {p.get('sunNeeds', 'unknown')}, "
+                    f"water: {p.get('waterNeeds', 'unknown')}"
+                )
+                sensor = p.get("sensorLastReading")
+                if sensor:
+                    parts = []
+                    if sensor.get("soilMoisture") is not None:
+                        parts.append(f"soil moisture {sensor['soilMoisture']:.0f}%")
+                    if sensor.get("lightLux") is not None:
+                        parts.append(f"light {sensor['lightLux']:.0f} lux")
+                    if sensor.get("temperature") is not None:
+                        parts.append(f"temp {sensor['temperature']:.1f}°C")
+                    if sensor.get("humidity") is not None:
+                        parts.append(f"humidity {sensor['humidity']:.0f}%")
+                    if parts:
+                        line += f" | LIVE SENSOR: {', '.join(parts)}"
+                lines.append(line)
+            plant_context = "The user has the following plants:\n" + "\n".join(lines)
         else:
             plant_context = "The user hasn't added any plants yet."
 

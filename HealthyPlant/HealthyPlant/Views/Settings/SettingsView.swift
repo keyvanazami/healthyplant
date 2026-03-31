@@ -2,8 +2,10 @@ import SwiftUI
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var sensorViewModel = SensorViewModel()
     @Environment(\.dismiss) private var dismiss
     @State private var showUserGuide = false
+    @State private var showAddSensor = false
 
     var body: some View {
         NavigationStack {
@@ -67,6 +69,40 @@ struct SettingsView: View {
                         }
                     }
 
+                    // Sensors
+                    Section("Sensors") {
+                        ForEach(sensorViewModel.sensors) { sensor in
+                            HStack {
+                                Circle()
+                                    .fill(sensor.status == "online" ? Color.green : Color.gray)
+                                    .frame(width: 8, height: 8)
+                                Text(sensor.name)
+                                    .foregroundColor(Theme.textPrimary)
+                                Spacer()
+                                Text(sensor.sensorId)
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textSecondary)
+                            }
+                            .listRowBackground(Color.white.opacity(0.05))
+                        }
+
+                        Button {
+                            showAddSensor = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "plus.circle.fill")
+                                    .foregroundColor(Theme.accent)
+                                Text("Add Sensor")
+                                    .foregroundColor(Theme.textPrimary)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textSecondary)
+                            }
+                        }
+                        .listRowBackground(Color.white.opacity(0.05))
+                    }
+
                     // Help
                     Section("Help") {
                         Button {
@@ -113,6 +149,14 @@ struct SettingsView: View {
                     Button("Done") { dismiss() }
                         .foregroundColor(Theme.accent)
                 }
+            }
+            .task {
+                await sensorViewModel.loadSensors()
+            }
+            .sheet(isPresented: $showAddSensor, onDismiss: {
+                Task { await sensorViewModel.loadSensors() }
+            }) {
+                AddSensorView(viewModel: sensorViewModel, profiles: [])
             }
             .fullScreenCover(isPresented: $showUserGuide) {
                 NavigationStack {

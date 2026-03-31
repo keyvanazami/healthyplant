@@ -1,7 +1,7 @@
 """Pydantic models for plant profiles."""
 
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field
 
@@ -56,6 +56,8 @@ class PlantProfileResponse(BaseModel):
     sun_hours_min: Optional[int] = Field(None, alias="sunHoursMin")
     sun_hours_max: Optional[int] = Field(None, alias="sunHoursMax")
     ai_last_updated: Optional[str] = Field(None, alias="aiLastUpdated")
+    sensor_id: Optional[str] = Field(None, alias="sensorId")
+    sensor_last_reading: Optional[Any] = Field(None, alias="sensorLastReading")
     created_at: str = Field(..., alias="createdAt")
     updated_at: str = Field(..., alias="updatedAt")
 

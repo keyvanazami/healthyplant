@@ -22,6 +22,7 @@
 		4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */; };
 		4BA61E4B6E0B40FD3D97FACB /* GardenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B198D286EF6642EFF35ED /* GardenView.swift */; };
 		50F8B932534BB850696A9B48 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */; };
+		550BA8AE3A5555FAD73B3B0C /* SensorReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803BBF6B1EE21194644410C /* SensorReadingCard.swift */; };
 		56461FA418405FAD6A26A9DE /* ProfileFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */; };
 		61ABAE9EC5CAE06C30697277 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */; };
 		62BC69F35E5769ABE14C91B4 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BEBF554FDF515B95719584 /* HomeUITests.swift */; };
@@ -30,6 +31,7 @@
 		723CE6EBE3E6A78003D42BE9 /* AssistantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */; };
 		747A0AE2F456DBBC024AD6F7 /* CommunityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A9D0F621AEAA3B474CAEBF /* CommunityService.swift */; };
 		75E89F2CC17C5FE41BF0297A /* CalendarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CB77B42A34CDAF39E33564 /* CalendarUITests.swift */; };
+		79573E82BFA2F229BB3F0CD0 /* AddSensorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA94F71B56F94F1FC9292477 /* AddSensorView.swift */; };
 		7C472239CEFB077992103E45 /* GreenOutlineStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */; };
 		7DEE2187DE2129A35CA17F60 /* CommunityPlant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783C79A28A0F21DB73BF179 /* CommunityPlant.swift */; };
 		7F2A5301161F18F873D92C95 /* PlantProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */; };
@@ -56,6 +58,7 @@
 		B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D744FAA423E013E653BFAAF /* CalendarService.swift */; };
 		BA47989B7148E0243E296061 /* ProfilesViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */; };
 		BC9FCB5CA203FADE0ACFB461 /* AssistantViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A040067AE9F1263E0BEA62F3 /* AssistantViewModelTests.swift */; };
+		BEA267F4416F312B3C7E38EA /* SensorReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C6279173B963F4C393A361 /* SensorReading.swift */; };
 		C1D64A0696FDC39CF04AFC8E /* CommunityBrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 153306346B47AC898FF27E12 /* CommunityBrowseView.swift */; };
 		C3360A871998ABFE3F999456 /* PlantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C679A8901BDC330AE672EA /* PlantService.swift */; };
 		C4D081EF952799B08E2DC12B /* PlantServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FB294462B44D894111B7C94 /* PlantServiceTests.swift */; };
@@ -69,6 +72,8 @@
 		F0843E7CEA49500CC81D170A /* HealthyPlantApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */; };
 		F11F9BBE049460496DFE8A5E /* AssistantViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5EE50E043D2ED41A05B34B8 /* AssistantViewModel.swift */; };
 		F35663A1301D2C9739C2F55E /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 567555CC85BCCF67112CEBBB /* SettingsViewModel.swift */; };
+		F37B24E2F1DD569F6901F34E /* SensorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D86088F38AD5D230F50AEC6F /* SensorViewModel.swift */; };
+		F506252A6FD12E658D420965 /* SensorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E6D408F0B74A1A421159CC /* SensorService.swift */; };
 		F7BC8EF4C0E9C496086D7357 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3C7ED42D772A36942662A22C /* FirebaseAuth */; };
 		FC143CA67114AD4CF1AFE04C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26777CFA7F56463810915890 /* AuthService.swift */; };
 /* End PBXBuildFile section */
@@ -108,6 +113,7 @@
 		2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenOutlineStyle.swift; sourceTree = "<group>"; };
 		2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantUITests.swift; sourceTree = "<group>"; };
 		33DCB01F91E7D8BCDAB4B6A2 /* APIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClientTests.swift; sourceTree = "<group>"; };
+		3803BBF6B1EE21194644410C /* SensorReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorReadingCard.swift; sourceTree = "<group>"; };
 		392B39C3E180BBB7A06A41C2 /* HealthyPlantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantTests.swift; sourceTree = "<group>"; };
 		3FD7B146ED0B0E553AF12C8E /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
 		4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CactusAnimationView.swift; sourceTree = "<group>"; };
@@ -126,8 +132,10 @@
 		7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityComment.swift; sourceTree = "<group>"; };
 		7FB294462B44D894111B7C94 /* PlantServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantServiceTests.swift; sourceTree = "<group>"; };
 		81941DE035ADDAFD40DCAD42 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		81C6279173B963F4C393A361 /* SensorReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorReading.swift; sourceTree = "<group>"; };
 		845CDB71DC07082F314356EA /* ProfilesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesViewModel.swift; sourceTree = "<group>"; };
 		84BEBF554FDF515B95719584 /* HomeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUITests.swift; sourceTree = "<group>"; };
+		84E6D408F0B74A1A421159CC /* SensorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorService.swift; sourceTree = "<group>"; };
 		86A9D0F621AEAA3B474CAEBF /* CommunityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityService.swift; sourceTree = "<group>"; };
 		89FECCF7CCD1F668B9692876 /* CommunityPlantDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPlantDetailView.swift; sourceTree = "<group>"; };
 		8D744FAA423E013E653BFAAF /* CalendarService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarService.swift; sourceTree = "<group>"; };
@@ -150,12 +158,14 @@
 		C47699F06DB75EB8598F019D /* HealthyPlantTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
 		CD134568F9E8494A6B50B263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D86088F38AD5D230F50AEC6F /* SensorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorViewModel.swift; sourceTree = "<group>"; };
 		DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EFEF40604144CF7328862DEE /* CalendarEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventTests.swift; sourceTree = "<group>"; };
 		F5B138E1858D2CE35B38EE14 /* CreateCalendarEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCalendarEventView.swift; sourceTree = "<group>"; };
 		F72CC76A1C8A25F49971E2CF /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		FA94F71B56F94F1FC9292477 /* AddSensorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSensorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -218,6 +228,15 @@
 				2446114BCB6649FE8A010280 /* TabBarView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		5774732533ED6E923C98EFC1 /* Sensors */ = {
+			isa = PBXGroup;
+			children = (
+				FA94F71B56F94F1FC9292477 /* AddSensorView.swift */,
+				3803BBF6B1EE21194644410C /* SensorReadingCard.swift */,
+			);
+			path = Sensors;
 			sourceTree = "<group>";
 		};
 		57AFB47F715B12F8D5C8A65E /* Models */ = {
@@ -337,6 +356,7 @@
 				D0F21474502E3F4440BF4963 /* Home */,
 				F4A98052C4B1C6705183508A /* Onboarding */,
 				FEC965DFCB4A30FC1F30B5C3 /* Profiles */,
+				5774732533ED6E923C98EFC1 /* Sensors */,
 				0A322FF21F05814478BE22FE /* Settings */,
 			);
 			path = Views;
@@ -370,6 +390,7 @@
 				7BCAC4EAF03E693F96BEC4A3 /* GardenViewModel.swift */,
 				94A45D715ED3FE8999514B99 /* HomeViewModel.swift */,
 				845CDB71DC07082F314356EA /* ProfilesViewModel.swift */,
+				D86088F38AD5D230F50AEC6F /* SensorViewModel.swift */,
 				567555CC85BCCF67112CEBBB /* SettingsViewModel.swift */,
 			);
 			path = ViewModels;
@@ -396,6 +417,7 @@
 				7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */,
 				2783C79A28A0F21DB73BF179 /* CommunityPlant.swift */,
 				06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */,
+				81C6279173B963F4C393A361 /* SensorReading.swift */,
 				0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */,
 			);
 			path = Models;
@@ -412,6 +434,7 @@
 				5005F68806E7D348C880E825 /* ImageUploadService.swift */,
 				091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */,
 				A6C679A8901BDC330AE672EA /* PlantService.swift */,
+				84E6D408F0B74A1A421159CC /* SensorService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -583,6 +606,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B72EDA2B7FE237D301BA33BB /* APIClient.swift in Sources */,
+				79573E82BFA2F229BB3F0CD0 /* AddSensorView.swift in Sources */,
 				B5136BD48A1F76FFBE3E21C5 /* AppEnvironment.swift in Sources */,
 				02E1F27BED55E9BE4C52D353 /* AppState.swift in Sources */,
 				723CE6EBE3E6A78003D42BE9 /* AssistantView.swift in Sources */,
@@ -623,6 +647,10 @@
 				B203F95F5BC3AC7E20181E60 /* ProfileDetailView.swift in Sources */,
 				29503608C932C61DCA1A2238 /* ProfilesListView.swift in Sources */,
 				9F41780CF011CB9896AAF70E /* ProfilesViewModel.swift in Sources */,
+				BEA267F4416F312B3C7E38EA /* SensorReading.swift in Sources */,
+				550BA8AE3A5555FAD73B3B0C /* SensorReadingCard.swift in Sources */,
+				F506252A6FD12E658D420965 /* SensorService.swift in Sources */,
+				F37B24E2F1DD569F6901F34E /* SensorViewModel.swift in Sources */,
 				0683486046F6D36A09E719F3 /* SettingsView.swift in Sources */,
 				F35663A1301D2C9739C2F55E /* SettingsViewModel.swift in Sources */,
 				18C1831C4364CE9F33D8DBD6 /* TabBarView.swift in Sources */,

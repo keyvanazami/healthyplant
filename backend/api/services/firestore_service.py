@@ -515,3 +515,179 @@ class FirestoreService:
         """Increment the comment count on a community plant."""
         doc_ref = self.db.collection("community_plants").document(community_id)
         await doc_ref.update({"commentCount": firestore.Increment(1)})
+
+    # ──────────────────────────────────────────────
+    # Sensor operations
+    # ──────────────────────────────────────────────
+
+    async def create_sensor(self, user_id: str, sensor_id: str, data: dict) -> dict:
+        """Create a sensor document."""
+        doc_ref = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+        )
+        await doc_ref.set(data)
+        return {"id": doc_ref.id, **data}
+
+    async def get_sensors(self, user_id: str) -> List[dict]:
+        """Get all sensors for a user."""
+        collection = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+        )
+        docs = collection.stream()
+
+        sensors = []
+        async for doc in docs:
+            sensor = doc.to_dict()
+            sensor["id"] = doc.id
+            sensors.append(sensor)
+        return sensors
+
+    async def get_sensor(self, user_id: str, sensor_id: str) -> Optional[dict]:
+        """Get a single sensor by ID."""
+        doc_ref = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+        )
+        doc = await doc_ref.get()
+        if not doc.exists:
+            return None
+        result = doc.to_dict()
+        result["id"] = doc.id
+        return result
+
+    async def get_sensor_by_token(self, device_token: str) -> Optional[dict]:
+        """Look up a sensor by its device token. Returns sensor data with userId."""
+        # Query across all users' sensors subcollections
+        # Using a collection group query on "sensors"
+        query = (
+            self.db.collection_group("sensors")
+            .where("deviceToken", "==", device_token)
+            .limit(1)
+        )
+        docs = query.stream()
+        async for doc in docs:
+            result = doc.to_dict()
+            result["id"] = doc.id
+            # Extract userId from the document path: users/{userId}/sensors/{sensorId}
+            path_parts = doc.reference.path.split("/")
+            result["userId"] = path_parts[1]
+            return result
+        return None
+
+    async def update_sensor(self, user_id: str, sensor_id: str, data: dict) -> dict:
+        """Update sensor fields."""
+        doc_ref = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+        )
+        await doc_ref.update(data)
+        doc = await doc_ref.get()
+        result = doc.to_dict()
+        result["id"] = doc.id
+        return result
+
+    async def delete_sensor(self, user_id: str, sensor_id: str) -> None:
+        """Delete a sensor and all its readings."""
+        sensor_ref = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+        )
+
+        # Delete readings subcollection
+        readings = sensor_ref.collection("readings").stream()
+        batch = self.db.batch()
+        count = 0
+        async for doc in readings:
+            batch.delete(doc.reference)
+            count += 1
+            if count >= 499:
+                await batch.commit()
+                batch = self.db.batch()
+                count = 0
+        if count > 0:
+            await batch.commit()
+
+        await sensor_ref.delete()
+
+    # ──────────────────────────────────────────────
+    # Sensor reading operations
+    # ──────────────────────────────────────────────
+
+    async def create_sensor_reading(
+        self, user_id: str, sensor_id: str, data: dict
+    ) -> dict:
+        """Store a sensor reading."""
+        collection = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+            .collection("readings")
+        )
+        doc_ref = collection.document()
+        await doc_ref.set(data)
+        return {"id": doc_ref.id, **data}
+
+    async def get_latest_sensor_reading(
+        self, user_id: str, sensor_id: str
+    ) -> Optional[dict]:
+        """Get the most recent reading for a sensor."""
+        collection = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+            .collection("readings")
+        )
+        query = (
+            collection
+            .order_by("timestamp", direction=firestore.Query.DESCENDING)
+            .limit(1)
+        )
+        docs = query.stream()
+        async for doc in docs:
+            result = doc.to_dict()
+            result["id"] = doc.id
+            return result
+        return None
+
+    async def get_sensor_readings(
+        self,
+        user_id: str,
+        sensor_id: str,
+        since: str,
+        limit: int = 100,
+    ) -> List[dict]:
+        """Get sensor readings since a given ISO timestamp."""
+        collection = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
+            .collection("readings")
+        )
+        query = (
+            collection
+            .where("timestamp", ">=", since)
+            .order_by("timestamp")
+            .limit(limit)
+        )
+        docs = query.stream()
+
+        readings = []
+        async for doc in docs:
+            reading = doc.to_dict()
+            reading["id"] = doc.id
+            readings.append(reading)
+        return readings

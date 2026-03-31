@@ -17,6 +17,8 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
     var sunHoursMin: Int?
     var sunHoursMax: Int?
     var aiLastUpdated: String?
+    var sensorId: String?
+    var sensorLastReading: SensorLastReading?
     let createdAt: String
     var updatedAt: String
 
@@ -56,6 +58,8 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
         sunHoursMin: 6,
         sunHoursMax: 8,
         aiLastUpdated: "2026-03-22T00:00:00+00:00",
+        sensorId: nil,
+        sensorLastReading: nil,
         createdAt: "2026-02-05T00:00:00+00:00",
         updatedAt: "2026-03-22T00:00:00+00:00"
     )
@@ -79,6 +83,8 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
             sunHoursMin: nil,
             sunHoursMax: nil,
             aiLastUpdated: "2026-03-22T00:00:00+00:00",
+            sensorId: nil,
+            sensorLastReading: nil,
             createdAt: "2026-03-02T00:00:00+00:00",
             updatedAt: "2026-03-22T00:00:00+00:00"
         ),

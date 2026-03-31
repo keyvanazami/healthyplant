@@ -48,6 +48,11 @@ struct ProfileDetailView: View {
                 // AI-managed section
                 aiSection
 
+                // Sensor data (if paired)
+                if profile.sensorId != nil {
+                    SensorReadingCard(reading: profile.sensorLastReading)
+                }
+
                 // Delete button
                 Button {
                     showDeleteAlert = true
