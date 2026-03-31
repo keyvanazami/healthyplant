@@ -5,6 +5,7 @@ struct ProfilesListView: View {
     @State private var showCreateProfile = false
     @State private var profileToDelete: PlantProfile? = nil
     @State private var showDeleteAlert = false
+    @State private var showBooklet = true
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -27,6 +28,8 @@ struct ProfilesListView: View {
                     }
                 } else if viewModel.profiles.isEmpty {
                     emptyState
+                } else if showBooklet {
+                    ProfileBookletView(profiles: viewModel.profiles, viewModel: viewModel)
                 } else {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 16) {
@@ -59,6 +62,16 @@ struct ProfilesListView: View {
                         Image(systemName: "plus")
                             .foregroundColor(Theme.accent)
                             .fontWeight(.semibold)
+                    }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            showBooklet.toggle()
+                        }
+                    } label: {
+                        Image(systemName: showBooklet ? "square.grid.2x2" : "book.fill")
+                            .foregroundColor(Theme.accent)
                     }
                 }
             }

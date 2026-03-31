@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct GardenView: View {
+    var isVisible: Bool = true
     @StateObject private var viewModel = GardenViewModel()
     @StateObject private var profilesViewModel = ProfilesViewModel()
     @StateObject private var communityViewModel = CommunityViewModel()
@@ -41,6 +42,14 @@ struct GardenView: View {
             }
             .task {
                 await profilesViewModel.loadProfiles()
+            }
+            .onChange(of: isVisible) { _, visible in
+                if visible {
+                    Task {
+                        await viewModel.loadGarden()
+                        await profilesViewModel.loadProfiles()
+                    }
+                }
             }
         }
         .tint(Theme.accent)

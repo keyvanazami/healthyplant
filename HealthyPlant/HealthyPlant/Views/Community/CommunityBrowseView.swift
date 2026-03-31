@@ -10,40 +10,46 @@ struct CommunityBrowseView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if viewModel.isLoading && viewModel.communityPlants.isEmpty {
+            if viewModel.isLoading && viewModel.communityPlants.isEmpty && viewModel.plantTypes.isEmpty {
                 Spacer()
                 ProgressView()
                     .scaleEffect(1.5)
                     .tint(Theme.accent)
                 Spacer()
-            } else if viewModel.communityPlants.isEmpty && viewModel.plantTypes.isEmpty {
+            } else if !viewModel.isLoading && viewModel.communityPlants.isEmpty && viewModel.plantTypes.isEmpty {
                 emptyState
             } else {
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 16) {
-                        // Filter chips
-                        filterChips
+                // Filter chips — outside vertical scroll to avoid nested scroll tap issues
+                filterChips
+                    .padding(.top, 16)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 20)
 
-                        // Plant grid
-                        if viewModel.communityPlants.isEmpty {
-                            Text("No plants shared for this type yet")
-                                .font(.subheadline)
-                                .foregroundColor(Theme.textSecondary)
-                                .frame(maxWidth: .infinity)
-                                .padding(.top, 40)
-                        } else {
-                            LazyVGrid(columns: columns, spacing: 16) {
-                                ForEach(viewModel.communityPlants) { plant in
-                                    NavigationLink(value: plant) {
-                                        CommunityPlantCard(plant: plant)
-                                    }
-                                    .buttonStyle(.plain)
+                // Plant grid
+                ScrollView(.vertical, showsIndicators: false) {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .tint(Theme.accent)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 40)
+                    } else if viewModel.communityPlants.isEmpty {
+                        Text("No plants shared for this type yet")
+                            .font(.subheadline)
+                            .foregroundColor(Theme.textSecondary)
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 40)
+                    } else {
+                        LazyVGrid(columns: columns, spacing: 16) {
+                            ForEach(viewModel.communityPlants) { plant in
+                                NavigationLink(value: plant) {
+                                    CommunityPlantCard(plant: plant)
                                 }
+                                .buttonStyle(.plain)
                             }
                         }
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 100)
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 100)
                 }
             }
         }
@@ -74,7 +80,7 @@ struct CommunityBrowseView: View {
 
     private var filterChips: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
+            HStack(spacing: 10) {
                 filterChip(label: "All", isSelected: viewModel.selectedPlantType == nil) {
                     Task { await viewModel.filterByType(nil) }
                 }
@@ -85,23 +91,27 @@ struct CommunityBrowseView: View {
                     }
                 }
             }
+            .padding(.vertical, 4)
         }
+        .scrollClipDisabled()
     }
 
     private func filterChip(label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(label)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundColor(isSelected ? .black : Theme.accent)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
-                .background(isSelected ? Theme.accent : Color.clear)
-                .cornerRadius(16)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .strokeBorder(Theme.accent, lineWidth: Theme.outlineWidth)
-                )
-        }
+        Text(label)
+            .font(.system(size: 15, weight: .semibold))
+            .foregroundColor(isSelected ? .black : Theme.accent)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .background(isSelected ? Theme.accent : Color.clear)
+            .cornerRadius(20)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .strokeBorder(Theme.accent, lineWidth: Theme.outlineWidth)
+            )
+            .contentShape(Rectangle())
+            .onTapGesture {
+                action()
+            }
     }
 }
 

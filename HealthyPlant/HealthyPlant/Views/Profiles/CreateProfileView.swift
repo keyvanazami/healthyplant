@@ -18,6 +18,8 @@ struct CreateProfileView: View {
     @State private var showImageSourcePicker = false
     @State private var showCamera = false
     @State private var showPhotoPicker = false
+    @State private var isIdentifying = false
+    @State private var identifyTrigger = 0  // incremented to trigger identification
 
     var body: some View {
         NavigationStack {
@@ -40,8 +42,15 @@ struct CreateProfileView: View {
                         TextField("Plant Name", text: $name)
                             .foregroundColor(Theme.textPrimary)
 
-                        TextField("Plant Type (e.g. Tomato)", text: $plantType)
-                            .foregroundColor(Theme.textPrimary)
+                        HStack {
+                            TextField("Plant Type (e.g. Tomato)", text: $plantType)
+                                .foregroundColor(Theme.textPrimary)
+                            if isIdentifying {
+                                ProgressView()
+                                    .scaleEffect(0.8)
+                                    .tint(Theme.accent)
+                            }
+                        }
                     }
                     .listRowBackground(Color.white.opacity(0.05))
 
@@ -83,12 +92,30 @@ struct CreateProfileView: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        save()
+                    if isSaving {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                            .tint(Theme.accent)
+                    } else {
+                        Button("Save") {
+                            save()
+                        }
+                        .foregroundColor(canSave ? Theme.accent : Theme.textSecondary)
+                        .disabled(!canSave)
                     }
-                    .foregroundColor(canSave ? Theme.accent : Theme.textSecondary)
-                    .disabled(!canSave || isSaving)
                 }
+            }
+            .onChange(of: selectedPhotoItem) { _, newItem in
+                Task {
+                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                        selectedImageData = data
+                        identifyTrigger += 1
+                    }
+                }
+            }
+            .task(id: identifyTrigger) {
+                guard identifyTrigger > 0, let data = selectedImageData else { return }
+                await identifyPlant(from: data)
             }
         }
     }
@@ -130,28 +157,39 @@ struct CreateProfileView: View {
             }
             Button("Cancel", role: .cancel) {}
         }
-        .fullScreenCover(isPresented: $showCamera) {
+        .fullScreenCover(isPresented: $showCamera, onDismiss: {
+            if selectedImageData != nil {
+                identifyTrigger += 1
+            }
+        }) {
             CameraView(imageData: $selectedImageData)
                 .ignoresSafeArea()
         }
         .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
-        .onChange(of: selectedPhotoItem) { _, newItem in
-            Task {
-                if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                    selectedImageData = data
-                }
-            }
-        }
     }
 
     // MARK: - Logic
 
     private var canSave: Bool {
-        !name.isBlank && !plantType.isBlank
+        !name.isBlank
     }
 
     private var totalAgeDays: Int {
         (ageYears * 365) + (ageMonths * 30) + ageDaysOnly
+    }
+
+    private func identifyPlant(from imageData: Data) async {
+        isIdentifying = true
+        do {
+            let result = try await ImageUploadService().identifyPlant(imageData)
+            if !result.plantType.isEmpty {
+                print("[CreateProfile] Identified plant: \(result.plantType)")
+                plantType = result.plantType
+            }
+        } catch {
+            print("[CreateProfile] Plant identification failed: \(error)")
+        }
+        isIdentifying = false
     }
 
     private func save() {

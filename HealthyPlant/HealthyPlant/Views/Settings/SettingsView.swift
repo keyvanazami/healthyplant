@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Environment(\.dismiss) private var dismiss
+    @State private var showUserGuide = false
 
     var body: some View {
         NavigationStack {
@@ -66,6 +67,25 @@ struct SettingsView: View {
                         }
                     }
 
+                    // Help
+                    Section("Help") {
+                        Button {
+                            showUserGuide = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "book.fill")
+                                    .foregroundColor(Theme.accent)
+                                Text("User Guide")
+                                    .foregroundColor(Theme.textPrimary)
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundColor(Theme.textSecondary)
+                            }
+                        }
+                        .listRowBackground(Color.white.opacity(0.05))
+                    }
+
                     // Notifications
                     Section("Notifications") {
                         Toggle(isOn: $viewModel.notificationsEnabled) {
@@ -92,6 +112,17 @@ struct SettingsView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
                         .foregroundColor(Theme.accent)
+                }
+            }
+            .fullScreenCover(isPresented: $showUserGuide) {
+                NavigationStack {
+                    OnboardingView(isComplete: $showUserGuide, isRevisit: true)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button("Close") { showUserGuide = false }
+                                    .foregroundColor(Theme.accent)
+                            }
+                        }
                 }
             }
         }

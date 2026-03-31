@@ -2,8 +2,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @StateObject private var viewModel = CalendarViewModel()
-    @State private var selectedDate: Date?
-    @State private var showDayEvents = false
+    @State private var selectedDate: IdentifiableDate?
 
     private let weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
@@ -42,16 +41,14 @@ struct CalendarView: View {
             .refreshable {
                 await viewModel.generateSchedule()
             }
-            .sheet(isPresented: $showDayEvents) {
-                if let date = selectedDate {
-                    DayEventsView(
-                        date: date,
-                        events: viewModel.eventsForDay(date),
-                        viewModel: viewModel,
-                        profiles: viewModel.profiles
-                    )
-                    .presentationDetents([.medium, .large])
-                }
+            .sheet(item: $selectedDate) { item in
+                DayEventsView(
+                    date: item.date,
+                    events: viewModel.eventsForDay(item.date),
+                    viewModel: viewModel,
+                    profiles: viewModel.profiles
+                )
+                .presentationDetents([.medium, .large])
             }
             .task {
                 await viewModel.loadEvents(for: viewModel.currentMonth)
@@ -131,8 +128,7 @@ struct CalendarView: View {
                         isToday: date.isSameDay(as: .now)
                     )
                     .onTapGesture {
-                        selectedDate = date
-                        showDayEvents = true
+                        selectedDate = IdentifiableDate(date: date)
                     }
                 } else {
                     Color.clear.frame(height: 50)
@@ -182,6 +178,13 @@ struct DayCellView: View {
         .background(Color.white.opacity(0.03))
         .cornerRadius(8)
     }
+}
+
+// MARK: - Identifiable Date Wrapper
+
+struct IdentifiableDate: Identifiable {
+    let id = UUID()
+    let date: Date
 }
 
 #Preview {

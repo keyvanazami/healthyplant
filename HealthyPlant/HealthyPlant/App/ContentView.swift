@@ -24,11 +24,15 @@ enum AppTab: String, CaseIterable {
 
 struct ContentView: View {
     @State private var selectedTab: AppTab = .home
+    @State private var onboardingComplete = UserDefaults.standard.bool(forKey: "hp_onboarding_complete")
 
     var body: some View {
+        if !onboardingComplete {
+            OnboardingView(isComplete: $onboardingComplete)
+        } else {
         ZStack(alignment: .bottom) {
             // Keep all tab views alive to prevent cancellation of in-flight requests
-            HomeView()
+            HomeView(isVisible: selectedTab == .home)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .opacity(selectedTab == .home ? 1 : 0)
                 .allowsHitTesting(selectedTab == .home)
@@ -38,7 +42,7 @@ struct ContentView: View {
                 .opacity(selectedTab == .profiles ? 1 : 0)
                 .allowsHitTesting(selectedTab == .profiles)
 
-            GardenView()
+            GardenView(isVisible: selectedTab == .garden)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .opacity(selectedTab == .garden ? 1 : 0)
                 .allowsHitTesting(selectedTab == .garden)
@@ -58,6 +62,7 @@ struct ContentView: View {
         }
         .background(Theme.background)
         .ignoresSafeArea(.keyboard)
+        }
     }
 }
 

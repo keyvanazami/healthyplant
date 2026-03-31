@@ -20,6 +20,14 @@ class PhotoUploadResponse(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class PlantIdentifyResponse(BaseModel):
+    plant_type: str = Field(..., alias="plantType", description="Identified plant type")
+    confidence: str = Field(..., description="Confidence level: high, medium, or low")
+    description: str = Field("", description="Brief description of the plant")
+
+    model_config = {"populate_by_name": True}
+
+
 @router.post("/photos/upload", response_model=PhotoUploadResponse, status_code=201)
 async def upload_photo(request: Request, file: UploadFile = File(...)):
     """Upload a plant photo directly. Returns the public URL."""
@@ -46,3 +54,26 @@ async def upload_photo(request: Request, file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"Error uploading photo for user {user_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to upload photo")
+
+
+@router.post("/photos/identify", response_model=PlantIdentifyResponse)
+async def identify_plant(request: Request, file: UploadFile = File(...)):
+    """Identify a plant from an uploaded photo using AI vision."""
+    user_id = getattr(request.state, "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    ai_service = request.app.state.ai_service
+
+    try:
+        contents = await file.read()
+        media_type = file.content_type or "image/jpeg"
+        result = await ai_service.identify_plant_from_image(contents, media_type)
+        return PlantIdentifyResponse(
+            plant_type=result.get("plant_type", ""),
+            confidence=result.get("confidence", "low"),
+            description=result.get("description", ""),
+        )
+    except Exception as e:
+        logger.error(f"Error identifying plant for user {user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to identify plant")

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    var isVisible: Bool = true
     @StateObject private var viewModel = HomeViewModel()
     @State private var showSettings = false
 
@@ -46,6 +47,11 @@ struct HomeView: View {
             }
             .task {
                 await viewModel.loadDashboard()
+            }
+            .onChange(of: isVisible) { _, visible in
+                if visible {
+                    Task { await viewModel.loadDashboard() }
+                }
             }
         }
     }

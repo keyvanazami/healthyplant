@@ -10,7 +10,7 @@ class PlantProfileCreate(BaseModel):
     """Request model for creating a plant profile."""
 
     name: str = Field(..., min_length=1, max_length=100, description="Display name for the plant")
-    plant_type: str = Field(..., alias="plantType", min_length=1, max_length=100, description="Type/species of the plant")
+    plant_type: str = Field("", alias="plantType", max_length=100, description="Type/species of the plant")
     photo_url: Optional[str] = Field(None, alias="photoURL", description="URL of the plant photo")
     age_days: int = Field(..., alias="ageDays", ge=0, description="Age of the plant in days")
     planted_date: str = Field(..., alias="plantedDate", description="Date the plant was planted (YYYY-MM-DD)")

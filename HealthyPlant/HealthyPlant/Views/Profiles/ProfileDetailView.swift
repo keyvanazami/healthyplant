@@ -48,23 +48,20 @@ struct ProfileDetailView: View {
                 // AI-managed section
                 aiSection
 
-                // Community sharing
-                communitySection
-
                 // Delete button
                 Button {
                     showDeleteAlert = true
                 } label: {
-                    HStack {
+                    HStack(spacing: 6) {
                         Image(systemName: "trash")
                         Text("Delete Profile")
                     }
-                    .font(.body.weight(.semibold))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.red)
-                    .cornerRadius(12)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundColor(.red)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.red.opacity(0.12))
+                    .cornerRadius(10)
                 }
 
                 Spacer(minLength: 100)
@@ -76,13 +73,39 @@ struct ProfileDetailView: View {
         .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(isEditing ? "Save" : "Edit") {
-                    if isEditing {
-                        saveChanges()
+                HStack(spacing: 16) {
+                    // Share to community
+                    Button {
+                        if communityViewModel.isProfileShared(profile.id) {
+                            Task { await communityViewModel.unshareProfile(profileId: profile.id) }
+                        } else if communityViewModel.hasSetDisplayName {
+                            Task { await communityViewModel.shareProfile(profileId: profile.id) }
+                        } else {
+                            pendingDisplayName = ""
+                            showDisplayNamePrompt = true
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: communityViewModel.isProfileShared(profile.id)
+                                  ? "globe.badge.chevron.backward"
+                                  : "globe")
+                                .font(.system(size: 18))
+                            if communityViewModel.isProfileShared(profile.id) {
+                                Text("Shared")
+                                    .font(.caption.weight(.semibold))
+                            }
+                        }
+                        .foregroundColor(Theme.accent)
                     }
-                    isEditing.toggle()
+
+                    Button(isEditing ? "Save" : "Edit") {
+                        if isEditing {
+                            saveChanges()
+                        }
+                        isEditing.toggle()
+                    }
+                    .foregroundColor(Theme.accent)
                 }
-                .foregroundColor(Theme.accent)
             }
         }
         .task {
@@ -319,67 +342,6 @@ struct ProfileDetailView: View {
         }
     }
 
-    // MARK: - Community Sharing
-
-    private var communitySection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "person.3.fill")
-                    .foregroundColor(Theme.accent)
-                Text("Community")
-                    .font(.headline)
-                    .foregroundColor(Theme.accent)
-            }
-
-            Text("Let other plant lovers see your plant and share tips!")
-                .font(.caption)
-                .foregroundColor(Theme.textSecondary)
-
-            if communityViewModel.isProfileShared(profile.id) {
-                HStack {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundColor(Theme.accent)
-                    Text("Shared")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundColor(Theme.accent)
-
-                    Spacer()
-
-                    Button {
-                        Task { await communityViewModel.unshareProfile(profileId: profile.id) }
-                    } label: {
-                        Text("Unshare")
-                            .font(.subheadline.weight(.medium))
-                            .foregroundColor(.red)
-                    }
-                }
-            } else {
-                Button {
-                    if communityViewModel.hasSetDisplayName {
-                        Task { await communityViewModel.shareProfile(profileId: profile.id) }
-                    } else {
-                        pendingDisplayName = ""
-                        showDisplayNamePrompt = true
-                    }
-                } label: {
-                    HStack {
-                        Image(systemName: "square.and.arrow.up")
-                        Text("Share to Community")
-                    }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundColor(Theme.accent)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .cornerRadius(10)
-                    .greenOutline(cornerRadius: 10)
-                }
-            }
-        }
-        .padding()
-        .background(Color.white.opacity(0.05))
-        .cornerRadius(16)
-        .greenOutline(cornerRadius: 16)
-    }
 
     private var displayNameSheet: some View {
         NavigationStack {

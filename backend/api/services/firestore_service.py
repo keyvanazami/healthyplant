@@ -416,14 +416,16 @@ class FirestoreService:
     ) -> List[dict]:
         """Get community plants, optionally filtered by plant type."""
         collection = self.db.collection("community_plants")
-        query = collection.order_by("sharedAt", direction=firestore.Query.DESCENDING)
 
         if plant_type:
             query = collection.where(
                 "plantTypeLower", "==", plant_type.lower()
-            ).order_by("sharedAt", direction=firestore.Query.DESCENDING)
+            ).limit(limit)
+        else:
+            query = collection.order_by(
+                "sharedAt", direction=firestore.Query.DESCENDING
+            ).limit(limit)
 
-        query = query.limit(limit)
         docs = query.stream()
 
         plants = []
@@ -431,6 +433,11 @@ class FirestoreService:
             plant = doc.to_dict()
             plant["id"] = doc.id
             plants.append(plant)
+
+        # Sort filtered results by sharedAt since we can't combine where + order_by without composite index
+        if plant_type:
+            plants.sort(key=lambda p: p.get("sharedAt", ""), reverse=True)
+
         return plants
 
     async def get_community_plant(self, community_id: str) -> Optional[dict]:

@@ -1,39 +1,79 @@
-"""AI service using Anthropic Claude for plant care recommendations and chat."""
+"""AI service using Google Gemini for plant care recommendations and chat."""
 
 import json
 import logging
 import os
 from typing import AsyncGenerator
 
-import anthropic
+import google.generativeai as genai
 
 logger = logging.getLogger(__name__)
 
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "gemini-3.1-flash-image-preview"
 MAX_TOKENS = 1024
 CHAT_MAX_TOKENS = 2048
 
 
 class AIService:
-    """Service for AI-powered plant care features using Claude."""
+    """Service for AI-powered plant care features using Gemini."""
 
     def __init__(self):
-        api_key = os.getenv("ANTHROPIC_API_KEY")
+        api_key = os.getenv("GEMINI_API_KEY")
         if not api_key:
-            logger.warning("ANTHROPIC_API_KEY not set. AI features will be unavailable.")
-        self.client = anthropic.AsyncAnthropic(api_key=api_key) if api_key else None
+            logger.warning("GEMINI_API_KEY not set. AI features will be unavailable.")
+            self.model = None
+        else:
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel(MODEL)
+
+    async def identify_plant_from_image(self, image_data: bytes, media_type: str = "image/jpeg") -> dict:
+        """Identify a plant from an image using Gemini vision."""
+        if not self.model:
+            logger.warning("AI model not initialized, cannot identify plant")
+            return {"plant_type": "", "confidence": "low", "description": "AI service unavailable"}
+
+        prompt = (
+            "Identify the plant in this image. Respond with ONLY a JSON object "
+            "(no markdown, no extra text) with these keys:\n"
+            '- "plant_type": the common name of the plant (e.g. "Tomato", "Basil", "Cactus")\n'
+            '- "confidence": "high", "medium", or "low"\n'
+            '- "description": a one-sentence description of the plant\n'
+            "If there is no plant visible, set plant_type to an empty string."
+        )
+
+        try:
+            image_part = {"mime_type": media_type, "data": image_data}
+            response = await self.model.generate_content_async(
+                [image_part, prompt],
+                generation_config=genai.types.GenerationConfig(
+                    max_output_tokens=1024,
+                ),
+            )
+
+            raw_text = _extract_model_text(response)
+            decoder = json.JSONDecoder()
+            obj_start = raw_text.find("{")
+            if obj_start == -1:
+                raise json.JSONDecodeError("No JSON object found", raw_text, 0)
+            result, _ = decoder.raw_decode(raw_text[obj_start:])
+            return {
+                "plant_type": result.get("plant_type", ""),
+                "confidence": result.get("confidence", "low"),
+                "description": result.get("description", ""),
+            }
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse plant identification response: {e}")
+            return {"plant_type": "", "confidence": "low", "description": "Could not identify plant"}
+        except Exception as e:
+            logger.error(f"Plant identification failed: {e}")
+            return {"plant_type": "", "confidence": "low", "description": "Identification failed"}
 
     async def generate_plant_recommendations(
         self, plant_type: str, age_days: int, planted_date: str
     ) -> dict:
-        """
-        Generate care recommendations for a plant.
-
-        Returns:
-            dict with keys: sun_needs, water_needs, harvest_time
-        """
-        if not self.client:
-            logger.warning("AI client not initialized, returning defaults")
+        """Generate care recommendations for a plant."""
+        if not self.model:
+            logger.warning("AI model not initialized, returning defaults")
             return {
                 "sun_needs": "Full sun (6-8 hours)",
                 "water_needs": "Water when top inch of soil is dry",
@@ -57,19 +97,19 @@ Respond with ONLY a JSON object (no markdown, no extra text) with these exact ke
 Be specific to this plant type and its current age."""
 
         try:
-            response = await self.client.messages.create(
-                model=MODEL,
-                max_tokens=MAX_TOKENS,
-                messages=[{"role": "user", "content": prompt}],
+            response = await self.model.generate_content_async(
+                prompt,
+                generation_config=genai.types.GenerationConfig(
+                    max_output_tokens=MAX_TOKENS,
+                ),
             )
 
-            text = response.content[0].text.strip()
-
-            # Parse JSON response, handling potential markdown wrapping
-            if text.startswith("```"):
-                text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-
-            recommendations = json.loads(text)
+            raw_text = _extract_model_text(response)
+            decoder = json.JSONDecoder()
+            obj_start = raw_text.find("{")
+            if obj_start == -1:
+                raise json.JSONDecodeError("No JSON object found", raw_text, 0)
+            recommendations, _ = decoder.raw_decode(raw_text[obj_start:])
             return {
                 "sun_needs": recommendations.get("sun_needs", ""),
                 "water_needs": recommendations.get("water_needs", ""),
@@ -92,18 +132,9 @@ Be specific to this plant type and its current age."""
     async def generate_calendar_events(
         self, profiles: list, current_date: str
     ) -> list:
-        """
-        Generate care calendar events for the next 7 days based on plant profiles.
-
-        Args:
-            profiles: List of plant profile dicts.
-            current_date: Current date as YYYY-MM-DD string.
-
-        Returns:
-            List of event dicts with keys: profileId, plantName, date, eventType, description
-        """
-        if not self.client:
-            logger.warning("AI client not initialized, returning empty events")
+        """Generate care calendar events for the next 7 days based on plant profiles."""
+        if not self.model:
+            logger.warning("AI model not initialized, returning empty events")
             return []
 
         if not profiles:
@@ -118,7 +149,6 @@ Be specific to this plant type and its current age."""
                 f"water needs: {p.get('waterNeeds', 'unknown')}, "
                 f"profile ID: {p.get('id', '')}"
             )
-            # Include structured data when available for precise scheduling
             freq = p.get("wateringFrequencyDays")
             sun_min = p.get("sunHoursMin")
             sun_max = p.get("sunHoursMax")
@@ -153,22 +183,25 @@ Respond with ONLY a JSON array (no markdown, no extra text). Each element must h
 Generate realistic events based on each plant's care requirements."""
 
         try:
-            response = await self.client.messages.create(
-                model=MODEL,
-                max_tokens=CHAT_MAX_TOKENS,
-                messages=[{"role": "user", "content": prompt}],
+            response = await self.model.generate_content_async(
+                prompt,
+                generation_config=genai.types.GenerationConfig(
+                    max_output_tokens=CHAT_MAX_TOKENS,
+                ),
             )
 
-            text = response.content[0].text.strip()
-            if text.startswith("```"):
-                text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
-
-            events = json.loads(text)
+            raw_text = _extract_model_text(response)
+            decoder = json.JSONDecoder()
+            # Find the first [ and decode the array from there
+            arr_start = raw_text.find("[")
+            if arr_start == -1:
+                logger.error("No JSON array found in calendar response")
+                return []
+            events, _ = decoder.raw_decode(raw_text[arr_start:])
             if not isinstance(events, list):
                 logger.error("AI returned non-list for calendar events")
                 return []
 
-            # Validate event structure
             valid_types = {"needs_water", "needs_sun", "needs_treatment"}
             validated = []
             for event in events:
@@ -191,18 +224,8 @@ Generate realistic events based on each plant's care requirements."""
     async def chat_stream(
         self, message: str, history: list, plant_profiles: list
     ) -> AsyncGenerator[str, None]:
-        """
-        Stream a chat response from Claude about plant care.
-
-        Args:
-            message: The user's current message.
-            history: List of previous message dicts with 'role' and 'content'.
-            plant_profiles: List of the user's plant profile dicts for context.
-
-        Yields:
-            Text chunks as they arrive from the AI.
-        """
-        if not self.client:
+        """Stream a chat response from Gemini about plant care."""
+        if not self.model:
             yield "I'm sorry, the AI service is currently unavailable. Please check your API key configuration."
             return
 
@@ -219,7 +242,7 @@ Generate realistic events based on each plant's care requirements."""
         else:
             plant_context = "The user hasn't added any plants yet."
 
-        system_prompt = f"""You are a friendly, knowledgeable plant care assistant for the Healthy Plant app. You help users take care of their plants with practical, science-based advice.
+        system_instruction = f"""You are a friendly, knowledgeable plant care assistant for the Healthy Plant app. You help users take care of their plants with practical, science-based advice.
 
 {plant_context}
 
@@ -230,56 +253,60 @@ Guidelines:
 - For diagnosis questions, ask clarifying questions if needed (e.g., "Can you describe the discoloration?").
 - Keep responses under 300 words unless the user asks for detailed information."""
 
-        # Build message history for Claude (last N messages for context window)
-        claude_messages = []
+        # Build Gemini chat history
+        gemini_history = []
         for msg in history:
             role = msg.get("role", "user")
             content = msg.get("content", "")
-            if role in ("user", "assistant") and content:
-                claude_messages.append({"role": role, "content": content})
+            if not content:
+                continue
+            gemini_role = "user" if role == "user" else "model"
+            # Avoid consecutive same-role messages
+            if gemini_history and gemini_history[-1]["role"] == gemini_role:
+                gemini_history[-1]["parts"][0]["text"] += "\n" + content
+            else:
+                gemini_history.append({"role": gemini_role, "parts": [{"text": content}]})
 
-        # Add current message
-        claude_messages.append({"role": "user", "content": message})
-
-        # Ensure messages alternate properly (Claude requirement)
-        claude_messages = _ensure_alternating_messages(claude_messages)
+        # Ensure history starts with user and alternates
+        if gemini_history and gemini_history[0]["role"] != "user":
+            gemini_history = gemini_history[1:]
 
         try:
-            async with self.client.messages.stream(
-                model=MODEL,
-                max_tokens=CHAT_MAX_TOKENS,
-                system=system_prompt,
-                messages=claude_messages,
-            ) as stream:
-                async for text in stream.text_stream:
-                    yield text
+            chat_model = genai.GenerativeModel(
+                MODEL, system_instruction=system_instruction
+            )
+            chat = chat_model.start_chat(history=gemini_history)
+            response = await chat.send_message_async(
+                message,
+                generation_config=genai.types.GenerationConfig(max_output_tokens=CHAT_MAX_TOKENS),
+                stream=True,
+            )
+            async for chunk in response:
+                if chunk.text:
+                    yield chunk.text
         except Exception as e:
             logger.error(f"Chat stream error: {e}")
-            yield f"I'm sorry, I encountered an error. Please try again."
+            yield "I'm sorry, I encountered an error. Please try again."
 
 
-def _ensure_alternating_messages(messages: list) -> list:
-    """
-    Ensure messages alternate between user and assistant roles.
-    Claude requires strictly alternating roles.
-    """
-    if not messages:
-        return messages
+def _extract_model_text(response) -> str:
+    """Extract the text content from a Gemini response, handling multiple parts."""
+    text = ""
+    try:
+        for part in response.candidates[0].content.parts:
+            if hasattr(part, "text") and part.text:
+                text = part.text.strip()
+    except (IndexError, AttributeError):
+        text = response.text.strip() if response.text else ""
 
-    cleaned = []
-    for msg in messages:
-        if cleaned and cleaned[-1]["role"] == msg["role"]:
-            # Merge consecutive same-role messages
-            cleaned[-1]["content"] += "\n" + msg["content"]
-        else:
-            cleaned.append(msg)
+    if not text:
+        text = response.text.strip() if response.text else ""
 
-    # Ensure first message is from user
-    if cleaned and cleaned[0]["role"] != "user":
-        cleaned = cleaned[1:]
+    logger.info(f"Raw AI response ({len(text)} chars): {text[:300]}")
 
-    # Ensure last message is from user
-    if cleaned and cleaned[-1]["role"] != "user":
-        cleaned = cleaned[:-1]
-
-    return cleaned if cleaned else [{"role": "user", "content": "Hello"}]
+    # Strip markdown code fencing if present
+    import re
+    match = re.search(r"```(?:json)?\s*\n?(.*?)```", text, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+    return text
