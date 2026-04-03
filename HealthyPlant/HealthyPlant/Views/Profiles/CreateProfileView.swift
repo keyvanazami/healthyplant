@@ -3,6 +3,9 @@ import PhotosUI
 
 struct CreateProfileView: View {
     @ObservedObject var viewModel: ProfilesViewModel
+    var prefillName: String = ""
+    var prefillType: String = ""
+    var prefillImageData: Data? = nil
     @Environment(\.dismiss) private var dismiss
 
     @State private var name = ""
@@ -166,6 +169,11 @@ struct CreateProfileView: View {
                 .ignoresSafeArea()
         }
         .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
+        .onAppear {
+            if !prefillName.isEmpty && name.isEmpty { name = prefillName }
+            if !prefillType.isEmpty && plantType.isEmpty { plantType = prefillType }
+            if let data = prefillImageData, selectedImageData == nil { selectedImageData = data }
+        }
     }
 
     // MARK: - Logic

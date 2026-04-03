@@ -28,6 +28,21 @@ class PlantIdentifyResponse(BaseModel):
     model_config = {"populate_by_name": True}
 
 
+class PlantLookupResponse(BaseModel):
+    plant_type: str = Field(..., alias="plantType")
+    confidence: str = Field(...)
+    description: str = Field("")
+    origin: str = Field("", description="Geographic origin of the plant")
+    history: str = Field("", description="Brief history and cultural significance")
+    fun_facts: list[str] = Field(default_factory=list, alias="funFacts")
+    care_summary: str = Field("", alias="careSummary")
+    sun_needs: str = Field("", alias="sunNeeds")
+    water_needs: str = Field("", alias="waterNeeds")
+    difficulty: str = Field("", description="Easy, Moderate, or Hard")
+
+    model_config = {"populate_by_name": True}
+
+
 @router.post("/photos/upload", response_model=PhotoUploadResponse, status_code=201)
 async def upload_photo(request: Request, file: UploadFile = File(...)):
     """Upload a plant photo directly. Returns the public URL."""
@@ -77,3 +92,22 @@ async def identify_plant(request: Request, file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"Error identifying plant for user {user_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to identify plant")
+
+
+@router.post("/photos/lookup", response_model=PlantLookupResponse)
+async def lookup_plant(request: Request, file: UploadFile = File(...)):
+    """Identify a plant from a photo and return detailed info: history, origin, care."""
+    user_id = getattr(request.state, "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+
+    ai_service = request.app.state.ai_service
+
+    try:
+        contents = await file.read()
+        media_type = file.content_type or "image/jpeg"
+        result = await ai_service.lookup_plant_from_image(contents, media_type)
+        return PlantLookupResponse(**result)
+    except Exception as e:
+        logger.error(f"Error looking up plant for user {user_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to look up plant")

@@ -5,6 +5,7 @@ import SwiftUI
 enum AppTab: String, CaseIterable {
     case home = "Home"
     case profiles = "Profiles"
+    case scan = "Scan"
     case garden = "Garden"
     case calendar = "Calendar"
     case assistant = "Assistant"
@@ -13,6 +14,7 @@ enum AppTab: String, CaseIterable {
         switch self {
         case .home: return "house.fill"
         case .profiles: return "leaf.fill"
+        case .scan: return "camera.fill"
         case .garden: return "tree.fill"
         case .calendar: return "calendar"
         case .assistant: return "message.fill"
@@ -41,6 +43,11 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .opacity(selectedTab == .profiles ? 1 : 0)
                 .allowsHitTesting(selectedTab == .profiles)
+
+            PlantScanView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .opacity(selectedTab == .scan ? 1 : 0)
+                .allowsHitTesting(selectedTab == .scan)
 
             GardenView(isVisible: selectedTab == .garden)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

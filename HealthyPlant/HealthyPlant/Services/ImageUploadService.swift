@@ -71,6 +71,39 @@ struct ImageUploadService {
 
         return try JSONDecoder().decode(PlantIdentifyResult.self, from: responseData)
     }
+    /// Identifies the plant and returns detailed info: history, origin, care, fun facts.
+    func lookupPlant(_ data: Data) async throws -> PlantLookupResult {
+        guard let url = URL(string: "\(baseURL)/api/v1/photos/lookup") else {
+            throw APIError.invalidURL
+        }
+
+        let boundary = UUID().uuidString
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 45
+
+        let userId = UserDefaults.standard.string(forKey: "hp_user_id") ?? "unknown"
+        request.setValue(userId, forHTTPHeaderField: "X-User-ID")
+
+        var body = Data()
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"file\"; filename=\"plant.jpg\"\r\n".data(using: .utf8)!)
+        body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        body.append(data)
+        body.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+
+        request.httpBody = body
+
+        let (responseData, response) = try await URLSession.shared.data(for: request)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(PlantLookupResult.self, from: responseData)
+    }
 }
 
 private struct PhotoUploadResponse: Decodable {
@@ -81,4 +114,17 @@ struct PlantIdentifyResult: Decodable {
     let plantType: String
     let confidence: String
     let description: String
+}
+
+struct PlantLookupResult: Decodable {
+    let plantType: String
+    let confidence: String
+    let description: String
+    let origin: String
+    let history: String
+    let funFacts: [String]
+    let careSummary: String
+    let sunNeeds: String
+    let waterNeeds: String
+    let difficulty: String
 }

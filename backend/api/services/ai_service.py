@@ -68,6 +68,71 @@ class AIService:
             logger.error(f"Plant identification failed: {e}")
             return {"plant_type": "", "confidence": "low", "description": "Identification failed"}
 
+    async def lookup_plant_from_image(self, image_data: bytes, media_type: str = "image/jpeg") -> dict:
+        """Identify a plant from an image and return detailed info: history, origin, care."""
+        if not self.model:
+            return {
+                "plant_type": "", "confidence": "low", "description": "AI service unavailable",
+                "origin": "", "history": "", "fun_facts": [], "care_summary": "",
+                "sun_needs": "", "water_needs": "", "difficulty": "",
+            }
+
+        prompt = (
+            "Identify the plant in this image. Then provide detailed information about it.\n\n"
+            "Respond with ONLY a JSON object (no markdown, no extra text) with these keys:\n"
+            '- "plant_type": the common name (e.g. "Monstera Deliciosa", "Basil")\n'
+            '- "confidence": "high", "medium", or "low"\n'
+            '- "description": a one-sentence description of the plant\n'
+            '- "origin": where this plant originally comes from geographically (1-2 sentences)\n'
+            '- "history": brief history and cultural significance (2-3 sentences)\n'
+            '- "fun_facts": an array of 2-3 interesting facts about this plant\n'
+            '- "care_summary": a short paragraph on how to care for this plant\n'
+            '- "sun_needs": concise sun requirements (e.g. "Bright indirect light")\n'
+            '- "water_needs": concise watering needs (e.g. "Water every 1-2 weeks")\n'
+            '- "difficulty": "Easy", "Moderate", or "Hard"\n\n'
+            "If there is no plant visible, set plant_type to an empty string and leave other fields empty."
+        )
+
+        try:
+            image_part = {"mime_type": media_type, "data": image_data}
+            response = await self.model.generate_content_async(
+                [image_part, prompt],
+                generation_config=genai.types.GenerationConfig(max_output_tokens=2048),
+            )
+
+            raw_text = _extract_model_text(response)
+            decoder = json.JSONDecoder()
+            obj_start = raw_text.find("{")
+            if obj_start == -1:
+                raise json.JSONDecodeError("No JSON object found", raw_text, 0)
+            result, _ = decoder.raw_decode(raw_text[obj_start:])
+            return {
+                "plant_type": result.get("plant_type", ""),
+                "confidence": result.get("confidence", "low"),
+                "description": result.get("description", ""),
+                "origin": result.get("origin", ""),
+                "history": result.get("history", ""),
+                "fun_facts": result.get("fun_facts", []),
+                "care_summary": result.get("care_summary", ""),
+                "sun_needs": result.get("sun_needs", ""),
+                "water_needs": result.get("water_needs", ""),
+                "difficulty": result.get("difficulty", ""),
+            }
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse plant lookup response: {e}")
+            return {
+                "plant_type": "", "confidence": "low", "description": "Could not identify plant",
+                "origin": "", "history": "", "fun_facts": [], "care_summary": "",
+                "sun_needs": "", "water_needs": "", "difficulty": "",
+            }
+        except Exception as e:
+            logger.error(f"Plant lookup failed: {e}")
+            return {
+                "plant_type": "", "confidence": "low", "description": "Lookup failed",
+                "origin": "", "history": "", "fun_facts": [], "care_summary": "",
+                "sun_needs": "", "water_needs": "", "difficulty": "",
+            }
+
     async def generate_plant_recommendations(
         self, plant_type: str, age_days: int, planted_date: str
     ) -> dict:
