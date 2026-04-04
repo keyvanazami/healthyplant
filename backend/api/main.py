@@ -1,12 +1,16 @@
 """Healthy Plant API - FastAPI application."""
 
 import logging
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import profiles, garden, calendar, chat, photos, community, sensors
+import firebase_admin
+from firebase_admin import auth as firebase_auth, credentials
+
+from routers import profiles, garden, calendar, chat, photos, community, sensors, auth
 from services.firestore_service import FirestoreService
 from services.ai_service import AIService
 from services.storage_service import StorageService
@@ -20,6 +24,15 @@ logging.basicConfig(level=logging.INFO)
 async def lifespan(app: FastAPI):
     """Startup and shutdown lifecycle handler."""
     logger.info("Starting Healthy Plant API...")
+    # Initialize Firebase Admin SDK
+    if not firebase_admin._apps:
+        cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+        if cred_path:
+            cred = credentials.Certificate(cred_path)
+            firebase_admin.initialize_app(cred)
+        else:
+            firebase_admin.initialize_app()
+        logger.info("Firebase Admin SDK initialized")
     app.state.firestore_service = FirestoreService()
     app.state.ai_service = AIService()
     app.state.storage_service = StorageService()
@@ -77,15 +90,27 @@ async def auth_middleware(request: Request, call_next):
             media_type="application/json",
         )
 
+    # Try Firebase Bearer token first
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        token = auth_header[7:]
+        try:
+            decoded = firebase_auth.verify_id_token(token)
+            request.state.user_id = decoded["uid"]
+            return await call_next(request)
+        except Exception as e:
+            logger.warning(f"Firebase token verification failed: {e}")
+            # Fall through to X-User-ID
+
+    # Fall back to anonymous X-User-ID header
     user_id = request.headers.get("X-User-ID")
     if not user_id:
         return Response(
-            content='{"detail": "Missing X-User-ID header"}',
+            content='{"detail": "Missing authentication"}',
             status_code=401,
             media_type="application/json",
         )
 
-    # Attach userId to request state for downstream use
     request.state.user_id = user_id
     response = await call_next(request)
     return response
@@ -99,6 +124,7 @@ app.include_router(chat.router, prefix="/api/v1", tags=["chat"])
 app.include_router(photos.router, prefix="/api/v1", tags=["photos"])
 app.include_router(community.router, prefix="/api/v1", tags=["community"])
 app.include_router(sensors.router, prefix="/api/v1", tags=["sensors"])
+app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
 
 
 @app.get("/health")

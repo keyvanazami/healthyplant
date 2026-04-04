@@ -25,12 +25,21 @@ enum AppTab: String, CaseIterable {
 // MARK: - ContentView
 
 struct ContentView: View {
+    @EnvironmentObject var authService: AuthService
     @State private var selectedTab: AppTab = .home
     @State private var onboardingComplete = UserDefaults.standard.bool(forKey: "hp_onboarding_complete")
+    @State private var showSignInPrompt = false
 
     var body: some View {
         if !onboardingComplete {
             OnboardingView(isComplete: $onboardingComplete)
+                .onChange(of: onboardingComplete) { _, done in
+                    if done && !authService.isGoogleLinked {
+                        showSignInPrompt = true
+                    }
+                }
+        } else if showSignInPrompt {
+            SignInPromptView(isPresented: $showSignInPrompt)
         } else {
         ZStack(alignment: .bottom) {
             // Keep all tab views alive to prevent cancellation of in-flight requests

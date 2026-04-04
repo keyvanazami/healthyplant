@@ -17,6 +17,7 @@
 		18C1831C4364CE9F33D8DBD6 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2446114BCB6649FE8A010280 /* TabBarView.swift */; };
 		28DFB7FA140B6268E4C9C5B0 /* AssistantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F6F31B622CD41480936BFE9 /* AssistantUITests.swift */; };
 		29503608C932C61DCA1A2238 /* ProfilesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D425E8CAE3E3024DD7E7C4E /* ProfilesListView.swift */; };
+		2B6FFEC545C12BC6BE0BF6CA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 067D709C36D68D8C39630FEE /* GoogleService-Info.plist */; };
 		2C8B4B48AC048F31DED79B93 /* CactusAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */; };
 		3AEDBD88A996D5AD9E3431FB /* CommunityComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */; };
 		4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */; };
@@ -35,6 +36,7 @@
 		7C472239CEFB077992103E45 /* GreenOutlineStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */; };
 		7DEE2187DE2129A35CA17F60 /* CommunityPlant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2783C79A28A0F21DB73BF179 /* CommunityPlant.swift */; };
 		7F2A5301161F18F873D92C95 /* PlantProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */; };
+		84CAA8337138AA49E0B57493 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = F1689F6D663A4210EAD75F69 /* GoogleSignIn */; };
 		8CE4EE31410ED174DC969F78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD134568F9E8494A6B50B263 /* Assets.xcassets */; };
 		8D98010E61DD49B51E406B55 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81941DE035ADDAFD40DCAD42 /* OnboardingView.swift */; };
 		92D55262C66FD5D0574201BB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */; };
@@ -53,6 +55,7 @@
 		B20A01D757943591D9EAD452 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */; };
 		B26BA7F008D323245B539223 /* HealthyPlantUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F40EE250A44656A679243D /* HealthyPlantUITests.swift */; };
 		B5136BD48A1F76FFBE3E21C5 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE684B95C821409BA8BFA258 /* AppEnvironment.swift */; };
+		B6EA15388111CCF8C7874D2B /* SignInPromptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7CE5FE3D1D3CE1518D5BBBB /* SignInPromptView.swift */; };
 		B72EDA2B7FE237D301BA33BB /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B92143B409EDE1D9F6F6B2 /* APIClient.swift */; };
 		B78C0B162BCB086B9EFDCF69 /* CalendarEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEF40604144CF7328862DEE /* CalendarEventTests.swift */; };
 		B8E0A7D1CF7F66B6C04CF2C9 /* CalendarService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D744FAA423E013E653BFAAF /* CalendarService.swift */; };
@@ -77,6 +80,7 @@
 		F506252A6FD12E658D420965 /* SensorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E6D408F0B74A1A421159CC /* SensorService.swift */; };
 		F7BC8EF4C0E9C496086D7357 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3C7ED42D772A36942662A22C /* FirebaseAuth */; };
 		FC143CA67114AD4CF1AFE04C /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26777CFA7F56463810915890 /* AuthService.swift */; };
+		FDEFEFEE6FD75DE100107570 /* HP-GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A8FBC763810C7DC0F397382 /* HP-GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,10 +101,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		067D709C36D68D8C39630FEE /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		06AB9EFA9A89B9B87A8018C9 /* PlantProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantProfile.swift; sourceTree = "<group>"; };
 		071CEF25C072B0C32E90AF94 /* CalendarEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEvent.swift; sourceTree = "<group>"; };
 		084985ABBA2D98D58C254F1B /* HealthyPlantApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantApp.swift; sourceTree = "<group>"; };
 		091DA4EAF4AA9A3AC5414998 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		0A8FBC763810C7DC0F397382 /* HP-GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "HP-GoogleService-Info.plist"; sourceTree = "<group>"; };
 		0EED3C5D15A21DFA508E29F6 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		153306346B47AC898FF27E12 /* CommunityBrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityBrowseView.swift; sourceTree = "<group>"; };
 		1903D2A5CB5F209E0E5AA64D /* AssistantView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistantView.swift; sourceTree = "<group>"; };
@@ -160,6 +166,7 @@
 		CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
 		CCF0C9A3ACAAE477EC60C422 /* PlantScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantScanView.swift; sourceTree = "<group>"; };
 		CD134568F9E8494A6B50B263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D7CE5FE3D1D3CE1518D5BBBB /* SignInPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromptView.swift; sourceTree = "<group>"; };
 		D86088F38AD5D230F50AEC6F /* SensorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorViewModel.swift; sourceTree = "<group>"; };
 		DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
 		E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
@@ -178,6 +185,7 @@
 				0BF5CE3905060AB73F02452C /* Lottie in Frameworks */,
 				F7BC8EF4C0E9C496086D7357 /* FirebaseAuth in Frameworks */,
 				B188BF11C3EDBB420C97E2CA /* FirebaseMessaging in Frameworks */,
+				84CAA8337138AA49E0B57493 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +308,8 @@
 			isa = PBXGroup;
 			children = (
 				CD134568F9E8494A6B50B263 /* Assets.xcassets */,
+				067D709C36D68D8C39630FEE /* GoogleService-Info.plist */,
+				0A8FBC763810C7DC0F397382 /* HP-GoogleService-Info.plist */,
 				6EA1DBAA1F5648DEF43AAEB3 /* Info.plist */,
 				8624D379856AF6E56DD9EB20 /* Animations */,
 			);
@@ -355,10 +365,19 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		BD9895A41466192B3D86B373 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				D7CE5FE3D1D3CE1518D5BBBB /* SignInPromptView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
 		D0B4886E77FD6A7BC78E28B7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				54982AED2750F200A938B015 /* Assistant */,
+				BD9895A41466192B3D86B373 /* Auth */,
 				1DBBA60B147E0B33089D2C1C /* Calendar */,
 				BC8EAC93E956E60B07278DE6 /* Community */,
 				55108A8585C60A6E16263928 /* Components */,
@@ -525,6 +544,7 @@
 				6B92AE8783AA3DC0A01D9157 /* Lottie */,
 				3C7ED42D772A36942662A22C /* FirebaseAuth */,
 				AA748F85000C00FA578D64A7 /* FirebaseMessaging */,
+				F1689F6D663A4210EAD75F69 /* GoogleSignIn */,
 			);
 			productName = HealthyPlant;
 			productReference = B478A49C3CB0CAF9335598E1 /* HealthyPlant.app */;
@@ -558,6 +578,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				2CB43F461237B66DD2812522 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				C8983EAFC044A3B4F89D81F6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				C6F407BB16B3737D7168250D /* XCRemoteSwiftPackageReference "lottie-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -578,6 +599,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CE4EE31410ED174DC969F78 /* Assets.xcassets in Resources */,
+				2B6FFEC545C12BC6BE0BF6CA /* GoogleService-Info.plist in Resources */,
+				FDEFEFEE6FD75DE100107570 /* HP-GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,6 +688,7 @@
 				F37B24E2F1DD569F6901F34E /* SensorViewModel.swift in Sources */,
 				0683486046F6D36A09E719F3 /* SettingsView.swift in Sources */,
 				F35663A1301D2C9739C2F55E /* SettingsViewModel.swift in Sources */,
+				B6EA15388111CCF8C7874D2B /* SignInPromptView.swift in Sources */,
 				18C1831C4364CE9F33D8DBD6 /* TabBarView.swift in Sources */,
 				CD0CEEEF34867F7DBA117F8A /* Theme.swift in Sources */,
 				D597800B89FE88FE754DD286 /* UserSettings.swift in Sources */,
@@ -980,6 +1004,14 @@
 				minimumVersion = 4.4.0;
 			};
 		};
+		C8983EAFC044A3B4F89D81F6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -997,6 +1029,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2CB43F461237B66DD2812522 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		F1689F6D663A4210EAD75F69 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C8983EAFC044A3B4F89D81F6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

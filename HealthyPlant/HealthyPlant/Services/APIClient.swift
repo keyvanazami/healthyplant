@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseAuth
 
 // MARK: - API Errors
 
@@ -54,14 +55,14 @@ actor APIClient {
     // MARK: - GET
 
     func get<T: Decodable>(path: String) async throws -> T {
-        let request = try buildRequest(path: path, method: "GET")
+        let request = try await buildRequest(path: path, method: "GET")
         return try await execute(request)
     }
 
     // MARK: - POST
 
     func post<T: Decodable, B: Encodable>(path: String, body: B) async throws -> T {
-        var request = try buildRequest(path: path, method: "POST")
+        var request = try await buildRequest(path: path, method: "POST")
         request.httpBody = try encoder.encode(body)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         return try await execute(request)
@@ -70,7 +71,7 @@ actor APIClient {
     // MARK: - PUT
 
     func put<T: Decodable, B: Encodable>(path: String, body: B) async throws -> T {
-        var request = try buildRequest(path: path, method: "PUT")
+        var request = try await buildRequest(path: path, method: "PUT")
         request.httpBody = try encoder.encode(body)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         return try await execute(request)
@@ -79,7 +80,7 @@ actor APIClient {
     // MARK: - DELETE
 
     func delete(path: String) async throws {
-        let request = try buildRequest(path: path, method: "DELETE")
+        let request = try await buildRequest(path: path, method: "DELETE")
         let (_, response) = try await session.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -94,7 +95,7 @@ actor APIClient {
 
     // MARK: - Helpers
 
-    private func buildRequest(path: String, method: String) throws -> URLRequest {
+    private func buildRequest(path: String, method: String) async throws -> URLRequest {
         guard let url = URL(string: baseURL + path) else {
             throw APIError.invalidURL
         }
@@ -102,7 +103,13 @@ actor APIClient {
         var request = URLRequest(url: url)
         request.httpMethod = method
 
-        // Add auth header using persisted userId from UserDefaults
+        // Use Firebase ID token if signed in, otherwise fall back to anonymous UUID
+        if let user = Auth.auth().currentUser,
+           let token = try? await user.getIDToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        // Always send X-User-ID as fallback for anonymous users
         let userId = UserDefaults.standard.string(forKey: "hp_user_id") ?? "unknown"
         request.setValue(userId, forHTTPHeaderField: "X-User-ID")
 

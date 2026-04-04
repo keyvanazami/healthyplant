@@ -3,9 +3,12 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @StateObject private var sensorViewModel = SensorViewModel()
+    @EnvironmentObject var authService: AuthService
     @Environment(\.dismiss) private var dismiss
     @State private var showUserGuide = false
     @State private var showAddSensor = false
+    @State private var isSigningIn = false
+    @State private var showSignOutAlert = false
 
     var body: some View {
         NavigationStack {
@@ -13,6 +16,82 @@ struct SettingsView: View {
                 Theme.background.ignoresSafeArea()
 
                 List {
+                    // Account
+                    Section("Account") {
+                        if authService.isGoogleLinked {
+                            HStack(spacing: 12) {
+                                if let photoURL = authService.photoURL {
+                                    AsyncImage(url: photoURL) { image in
+                                        image.resizable().scaledToFill()
+                                    } placeholder: {
+                                        Image(systemName: "person.circle.fill")
+                                            .font(.system(size: 36))
+                                            .foregroundColor(Theme.accent)
+                                    }
+                                    .frame(width: 40, height: 40)
+                                    .clipShape(Circle())
+                                } else {
+                                    Image(systemName: "person.circle.fill")
+                                        .font(.system(size: 36))
+                                        .foregroundColor(Theme.accent)
+                                }
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(authService.displayName ?? "Google User")
+                                        .font(.subheadline.weight(.semibold))
+                                        .foregroundColor(Theme.textPrimary)
+                                    Text(authService.email ?? "")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
+                                }
+
+                                Spacer()
+
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                            }
+                            .listRowBackground(Color.white.opacity(0.05))
+
+                            Button(role: .destructive) {
+                                showSignOutAlert = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                                        .foregroundColor(.red)
+                                    Text("Sign Out")
+                                        .foregroundColor(.red)
+                                }
+                            }
+                            .listRowBackground(Color.white.opacity(0.05))
+                        } else {
+                            Button {
+                                Task {
+                                    isSigningIn = true
+                                    try? await authService.signInWithGoogle()
+                                    isSigningIn = false
+                                }
+                            } label: {
+                                HStack {
+                                    if isSigningIn {
+                                        ProgressView().tint(Theme.accent)
+                                    } else {
+                                        Image(systemName: "g.circle.fill")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(Theme.accent)
+                                    }
+                                    Text("Sign in with Google")
+                                        .foregroundColor(Theme.textPrimary)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
+                                }
+                            }
+                            .disabled(isSigningIn)
+                            .listRowBackground(Color.white.opacity(0.05))
+                        }
+                    }
+
                     // App Info
                     Section("App Info") {
                         HStack {
@@ -169,6 +248,15 @@ struct SettingsView: View {
                         }
                 }
             }
+            .alert("Sign Out", isPresented: $showSignOutAlert) {
+                Button("Sign Out", role: .destructive) {
+                    authService.signOut()
+                    dismiss()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Your data will remain on this device but won't sync to other devices until you sign in again.")
+            }
         }
     }
 }
@@ -176,4 +264,5 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(AppState())
+        .environmentObject(AuthService())
 }

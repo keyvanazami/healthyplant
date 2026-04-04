@@ -13,6 +13,9 @@ packages:
   FirebaseSDK:
     url: https://github.com/firebase/firebase-ios-sdk
     from: "10.22.0"
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: "7.0.0"
 
 targets:
   HealthyPlant:
@@ -39,6 +42,7 @@ targets:
         product: FirebaseAuth
       - package: FirebaseSDK
         product: FirebaseMessaging
+      - package: GoogleSignIn
 
   HealthyPlantTests:
     type: bundle.unit-test

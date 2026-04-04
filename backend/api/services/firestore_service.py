@@ -116,6 +116,19 @@ class FirestoreService:
         )
         await doc_ref.delete()
 
+    async def create_profile_with_id(
+        self, user_id: str, profile_id: str, data: dict
+    ) -> dict:
+        """Create a profile with a specific document ID (used for migration)."""
+        doc_ref = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("profiles")
+            .document(profile_id)
+        )
+        await doc_ref.set(data)
+        return {"id": profile_id, **data}
+
     # ──────────────────────────────────────────────
     # Calendar event operations
     # ──────────────────────────────────────────────
@@ -160,6 +173,22 @@ class FirestoreService:
             await batch.commit()
 
         return created
+
+    async def get_all_events(self, user_id: str, limit: int = 500) -> List[dict]:
+        """Get all calendar events for a user (used for migration)."""
+        collection = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("calendar_events")
+        )
+        docs = collection.limit(limit).stream()
+
+        events = []
+        async for doc in docs:
+            event = doc.to_dict()
+            event["id"] = doc.id
+            events.append(event)
+        return events
 
     async def get_events_by_month(self, user_id: str, month: str) -> List[dict]:
         """
