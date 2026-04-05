@@ -1,4 +1,4 @@
-# HealthyPlant
+# HealthyPlant 🌱
 
 An AI-powered plant care companion for iOS. Track your garden, get personalized care recommendations from Claude, chat with a plant expert assistant, and never miss a watering day.
 
