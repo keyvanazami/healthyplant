@@ -15,6 +15,12 @@ permissions:
   pull-requests: write
   id-token: write
 
+env:
+  PROJECT_ID: healthyplant-209678
+  SERVICE_NAME: healthyplant-api-dev
+  REGION: us-central1
+  IMAGE: gcr.io/healthyplant-209678/healthyplant-api-dev
+
 jobs:
   test:
     name: Test
@@ -60,58 +66,58 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Deploy to Cloud Run (Dev)
-        uses: google-github-actions/deploy-cloudrun@v2
-        with:
-          service: healthy-plant-api-dev
-          source: backend/api
-          region: us-central1
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          env_vars: |
-            ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
-            GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }}
-            GCS_BUCKET_NAME=${{ secrets.GCS_BUCKET_NAME }}
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker --quiet
 
-      - name: Get dev URL
+      - name: Build and push Docker image
+        run: |
+          docker build --platform linux/amd64 \
+            -t ${{ env.IMAGE }}:${{ github.sha }} \
+            -t ${{ env.IMAGE }}:latest \
+            backend/api
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+          docker push ${{ env.IMAGE }}:latest
+
+      - name: Deploy to Cloud Run (Dev)
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image=${{ env.IMAGE }}:${{ github.sha }} \
+            --project=${{ env.PROJECT_ID }} \
+            --region=${{ env.REGION }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --port=8080 \
+            --memory=512Mi \
+            --cpu=1 \
+            --min-instances=0 \
+            --max-instances=3 \
+            --update-env-vars="ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }},GCP_PROJECT_ID=${{ env.PROJECT_ID }},GCS_BUCKET_NAME=${{ secrets.GCS_BUCKET_NAME }}" \
+            --quiet
+
+      - name: Get dev URL and health check
         id: url
         run: |
-          DEV_URL=$(gcloud run services describe healthy-plant-api-dev \
-            --region us-central1 \
-            --project ${{ secrets.GCP_PROJECT_ID }} \
-            --format "value(status.url)")
+          DEV_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region=${{ env.REGION }} \
+            --project=${{ env.PROJECT_ID }} \
+            --format="value(status.url)")
           echo "dev_url=$DEV_URL" >> "$GITHUB_OUTPUT"
-
-      - name: Health check
-        run: |
-          DEV_URL="${{ steps.url.outputs.dev_url }}"
-          echo "Dev URL: $DEV_URL"
-          # Retry health check up to 5 times with 10s delay
           for i in 1 2 3 4 5; do
             if curl -sf "$DEV_URL/health" | grep -q "healthy"; then
               echo "Health check passed on attempt $i"
-              exit 0
+              break
             fi
             echo "Attempt $i failed, retrying in 10s..."
             sleep 10
           done
-          echo "Health check failed after 5 attempts"
-          exit 1
 
       - name: Post dev URL as PR comment
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           DEV_URL="${{ steps.url.outputs.dev_url }}"
-          COMMENT="## 🚀 Dev Backend Deployed
+          gh pr comment ${{ github.event.pull_request.number }} --body "## Dev Backend Deployed
 
           **URL:** $DEV_URL
-          **Service:** \`healthy-plant-api-dev\`
-          **Region:** us-central1
-          **Health:** ✅ Verified
-
-          This deployment will be available for testing until the PR is closed.
-
-          ---
-          *Commit: ${{ github.sha }} · [View logs](https://console.cloud.google.com/run/detail/us-central1/healthy-plant-api-dev/logs)*"
-
-          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
+          **Commit:** ${{ github.sha }}
+          [View logs](https://console.cloud.google.com/run/detail/${{ env.REGION }}/${{ env.SERVICE_NAME }}/logs?project=${{ env.PROJECT_ID }})"

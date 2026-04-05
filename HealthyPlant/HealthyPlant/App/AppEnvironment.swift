@@ -7,9 +7,9 @@ enum AppEnvironment: String, CaseIterable {
     var baseURL: String {
         switch self {
         case .production:
-            return "https://healthyplant-api-prod-236276754022.us-central1.run.app"
+            return "https://healthyplant-api-prod-fajtqt5o2a-uc.a.run.app"
         case .development:
-            return "https://healthy-plant-api-dev-680872497777.us-central1.run.app"
+            return "https://healthyplant-api-dev-fajtqt5o2a-uc.a.run.app"
         }
     }
 

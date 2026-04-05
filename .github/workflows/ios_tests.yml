@@ -26,6 +26,9 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
 
+      - name: Install xcpretty
+        run: gem install xcpretty --no-document
+
       - name: Generate Xcode project
         working-directory: HealthyPlant
         run: xcodegen generate
@@ -50,10 +53,11 @@ jobs:
       - name: Build and test
         working-directory: HealthyPlant
         run: |
+          SIMULATOR=$(xcrun simctl list devices available | grep "iPhone" | grep -v "unavailable" | tail -1 | sed 's/.*(\(.*\)).*/\1/')
           xcodebuild test \
             -project HealthyPlant.xcodeproj \
             -scheme HealthyPlant \
-            -destination "platform=iOS Simulator,name=iPhone 15,OS=17.5" \
+            -destination "platform=iOS Simulator,id=$SIMULATOR" \
             -resultBundlePath TestResults \
             -enableCodeCoverage YES \
             CODE_SIGNING_ALLOWED=NO | xcpretty --color
