@@ -30,6 +30,7 @@ class CommunityPlantResponse(BaseModel):
     sun_needs: Optional[str] = Field(None, alias="sunNeeds")
     water_needs: Optional[str] = Field(None, alias="waterNeeds")
     harvest_time: Optional[str] = Field(None, alias="harvestTime")
+    gardener_avatar_url: Optional[str] = Field(None, alias="gardenerAvatarURL")
     shared_at: str = Field(..., alias="sharedAt")
     comment_count: int = Field(0, alias="commentCount")
     is_mine: bool = Field(False, alias="isMine")

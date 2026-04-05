@@ -89,6 +89,12 @@ async def migrate_account(request: Request, body: MigrateRequest):
             sensor.pop("id", None)
             await firestore.create_sensor(new_user_id, sensor_id, sensor)
 
+        # Migrate gardener profile (root users/{userId} document)
+        old_gardener = await firestore.get_gardener_profile(old_user_id)
+        if old_gardener:
+            old_gardener.pop("createdAt", None)  # let upsert set it only if absent
+            await firestore.upsert_gardener_profile(new_user_id, old_gardener)
+
         logger.info(
             f"Migrated data from {old_user_id} to {new_user_id}: "
             f"{profiles_moved} profiles, {events_moved} events, "

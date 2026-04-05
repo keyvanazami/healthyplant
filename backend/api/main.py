@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import firebase_admin
 from firebase_admin import auth as firebase_auth, credentials
 
-from routers import profiles, garden, calendar, chat, photos, community, sensors, auth
+from routers import profiles, garden, calendar, chat, photos, community, sensors, auth, gardeners
 from services.firestore_service import FirestoreService
 from services.ai_service import AIService
 from services.storage_service import StorageService
@@ -125,6 +125,7 @@ app.include_router(photos.router, prefix="/api/v1", tags=["photos"])
 app.include_router(community.router, prefix="/api/v1", tags=["community"])
 app.include_router(sensors.router, prefix="/api/v1", tags=["sensors"])
 app.include_router(auth.router, prefix="/api/v1", tags=["auth"])
+app.include_router(gardeners.router, prefix="/api/v1", tags=["gardeners"])
 
 
 @app.get("/health")

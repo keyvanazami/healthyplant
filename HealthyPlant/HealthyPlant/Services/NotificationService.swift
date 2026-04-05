@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import UserNotifications
 
 final class NotificationService {
@@ -9,6 +10,11 @@ final class NotificationService {
     func requestPermission() async -> Bool {
         do {
             let granted = try await center.requestAuthorization(options: [.alert, .badge, .sound])
+            if granted {
+                await MainActor.run {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
             return granted
         } catch {
             print("[NotificationService] Permission error: \(error)")

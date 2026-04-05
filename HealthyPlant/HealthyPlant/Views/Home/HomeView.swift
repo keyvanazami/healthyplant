@@ -2,8 +2,10 @@ import SwiftUI
 
 struct HomeView: View {
     var isVisible: Bool = true
+    @EnvironmentObject var authService: AuthService
     @StateObject private var viewModel = HomeViewModel()
     @State private var showSettings = false
+    @State private var showGardenerProfile = false
 
     var body: some View {
         NavigationStack {
@@ -41,9 +43,37 @@ struct HomeView: View {
                         }
                     }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showGardenerProfile = true
+                    } label: {
+                        ZStack {
+                            if let photoURL = authService.photoURL {
+                                AsyncImage(url: photoURL) { img in
+                                    img.resizable().scaledToFill()
+                                } placeholder: {
+                                    Circle().fill(Theme.accent.opacity(0.15))
+                                }
+                                .frame(width: 34, height: 34)
+                                .clipShape(Circle())
+                                .overlay(Circle().strokeBorder(Theme.accent, lineWidth: Theme.outlineWidth))
+                            } else {
+                                Circle()
+                                    .strokeBorder(Theme.accent, lineWidth: Theme.outlineWidth)
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: "person.fill")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(Theme.accent)
+                            }
+                        }
+                    }
+                }
             }
             .sheet(isPresented: $showSettings) {
                 SettingsView()
+            }
+            .sheet(isPresented: $showGardenerProfile) {
+                GardenerProfileView()
             }
             .task {
                 await viewModel.loadDashboard()

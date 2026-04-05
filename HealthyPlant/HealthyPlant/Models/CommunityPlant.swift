@@ -8,6 +8,7 @@ struct CommunityPlant: Codable, Identifiable, Hashable {
     let name: String
     let plantType: String
     let photoURL: String?
+    let gardenerAvatarURL: String?
     let ageDays: Int
     let heightFeet: Int
     let heightInches: Int

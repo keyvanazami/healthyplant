@@ -4,6 +4,7 @@ struct CommunityPlantDetailView: View {
     let plant: CommunityPlant
     @ObservedObject var viewModel: CommunityViewModel
     @State private var commentText = ""
+    @State private var showGardenerProfile = false
 
     var body: some View {
         ZStack {
@@ -75,9 +76,39 @@ struct CommunityPlantDetailView: View {
 
                 Spacer()
 
-                Text("by \(plant.displayName)")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.textSecondary)
+                if plant.isMine {
+                    Text("by \(plant.displayName)")
+                        .font(.subheadline)
+                        .foregroundColor(Theme.textSecondary)
+                } else {
+                    Button {
+                        showGardenerProfile = true
+                    } label: {
+                        HStack(spacing: 6) {
+                            if let urlStr = plant.gardenerAvatarURL, let url = URL(string: urlStr) {
+                                AsyncImage(url: url) { img in
+                                    img.resizable().scaledToFill()
+                                } placeholder: {
+                                    Circle().fill(Theme.accent.opacity(0.3))
+                                }
+                                .frame(width: 20, height: 20)
+                                .clipShape(Circle())
+                            }
+                            Text("by \(plant.displayName)")
+                                .font(.subheadline)
+                                .foregroundColor(Theme.accent)
+                                .underline()
+                        }
+                    }
+                    .sheet(isPresented: $showGardenerProfile) {
+                        NavigationStack {
+                            PublicGardenerProfileView(
+                                userId: plant.sourceUserId,
+                                displayName: plant.displayName
+                            )
+                        }
+                    }
+                }
             }
 
             HStack(spacing: 20) {

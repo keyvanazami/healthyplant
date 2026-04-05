@@ -1,5 +1,6 @@
 """Router for community plant sharing and comments."""
 
+import asyncio
 import logging
 from datetime import datetime, timezone
 from typing import List, Optional
@@ -44,6 +45,15 @@ async def share_profile(request: Request, body: ShareRequest):
         if not profile:
             raise HTTPException(status_code=404, detail="Profile not found")
 
+        # Fetch gardener profile to get avatar URL (best-effort)
+        gardener_avatar_url = None
+        try:
+            gardener = await firestore.get_gardener_profile(user_id)
+            if gardener:
+                gardener_avatar_url = gardener.get("avatarURL")
+        except Exception:
+            pass
+
         now = datetime.now(timezone.utc).isoformat()
         community_data = {
             "sourceUserId": user_id,
@@ -59,6 +69,7 @@ async def share_profile(request: Request, body: ShareRequest):
             "sunNeeds": profile.get("sunNeeds"),
             "waterNeeds": profile.get("waterNeeds"),
             "harvestTime": profile.get("harvestTime"),
+            "gardenerAvatarURL": gardener_avatar_url,
             "sharedAt": now,
             "updatedAt": now,
             "commentCount": 0,
@@ -66,6 +77,13 @@ async def share_profile(request: Request, body: ShareRequest):
 
         result = await firestore.create_community_plant(community_data)
         result["isMine"] = True
+
+        # Notify followers (fire-and-forget)
+        plant_name = profile.get("name", "a plant")
+        asyncio.create_task(
+            firestore.notify_followers_of_share(user_id, plant_name, body.display_name)
+        )
+
         return result
 
     except HTTPException:

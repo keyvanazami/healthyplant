@@ -30,7 +30,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.healthyplant.app
         MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
+        CURRENT_PROJECT_VERSION: "4"
         SWIFT_VERSION: "5.9"
         INFOPLIST_FILE: HealthyPlant/Resources/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

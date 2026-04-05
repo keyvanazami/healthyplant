@@ -650,6 +650,140 @@ class FirestoreService:
         await sensor_ref.delete()
 
     # ──────────────────────────────────────────────
+    # Gardener profile operations
+    # ──────────────────────────────────────────────
+
+    async def get_gardener_profile(self, user_id: str) -> Optional[dict]:
+        """Read users/{user_id} root document. Returns None if not set yet."""
+        doc_ref = self.db.collection("users").document(user_id)
+        doc = await doc_ref.get()
+        if not doc.exists:
+            return None
+        return doc.to_dict()
+
+    async def upsert_gardener_profile(self, user_id: str, data: dict) -> dict:
+        """Create or update the gardener profile fields on the users root doc."""
+        now = datetime.now(timezone.utc).isoformat()
+        doc_ref = self.db.collection("users").document(user_id)
+        doc = await doc_ref.get()
+        if not doc.exists:
+            data["createdAt"] = now
+        data["updatedAt"] = now
+        await doc_ref.set(data, merge=True)
+        updated = await doc_ref.get()
+        return updated.to_dict() or {}
+
+    async def update_fcm_token(self, user_id: str, token: str) -> None:
+        """Store or refresh the FCM device token on the user document."""
+        doc_ref = self.db.collection("users").document(user_id)
+        now = datetime.now(timezone.utc).isoformat()
+        await doc_ref.set({"fcmToken": token, "updatedAt": now}, merge=True)
+
+    # ──────────────────────────────────────────────
+    # Follow / follower operations
+    # ──────────────────────────────────────────────
+
+    async def get_follower_count(self, user_id: str) -> int:
+        collection = (
+            self.db.collection("users").document(user_id).collection("followers")
+        )
+        count = 0
+        async for _ in collection.stream():
+            count += 1
+        return count
+
+    async def get_following_count(self, user_id: str) -> int:
+        collection = (
+            self.db.collection("users").document(user_id).collection("following")
+        )
+        count = 0
+        async for _ in collection.stream():
+            count += 1
+        return count
+
+    async def is_following(self, follower_id: str, target_id: str) -> bool:
+        doc_ref = (
+            self.db.collection("users")
+            .document(follower_id)
+            .collection("following")
+            .document(target_id)
+        )
+        doc = await doc_ref.get()
+        return doc.exists
+
+    async def follow_gardener(self, follower_id: str, target_id: str) -> None:
+        """Symmetric batch write: follower's following/ and target's followers/."""
+        now = datetime.now(timezone.utc).isoformat()
+        batch = self.db.batch()
+        following_ref = (
+            self.db.collection("users")
+            .document(follower_id)
+            .collection("following")
+            .document(target_id)
+        )
+        followers_ref = (
+            self.db.collection("users")
+            .document(target_id)
+            .collection("followers")
+            .document(follower_id)
+        )
+        batch.set(following_ref, {"followedAt": now})
+        batch.set(followers_ref, {"followedAt": now})
+        await batch.commit()
+
+    async def unfollow_gardener(self, follower_id: str, target_id: str) -> None:
+        """Symmetric batch delete."""
+        batch = self.db.batch()
+        following_ref = (
+            self.db.collection("users")
+            .document(follower_id)
+            .collection("following")
+            .document(target_id)
+        )
+        followers_ref = (
+            self.db.collection("users")
+            .document(target_id)
+            .collection("followers")
+            .document(follower_id)
+        )
+        batch.delete(following_ref)
+        batch.delete(followers_ref)
+        await batch.commit()
+
+    async def get_following_list(self, user_id: str) -> List[str]:
+        """Return list of user_ids the given user follows."""
+        collection = (
+            self.db.collection("users").document(user_id).collection("following")
+        )
+        ids = []
+        async for doc in collection.stream():
+            ids.append(doc.id)
+        return ids
+
+    async def get_follower_fcm_tokens(self, user_id: str) -> List[str]:
+        """Collect FCM tokens from all followers of user_id."""
+        followers_col = (
+            self.db.collection("users").document(user_id).collection("followers")
+        )
+        tokens = []
+        async for doc in followers_col.stream():
+            follower_id = doc.id
+            user_doc = await self.db.collection("users").document(follower_id).get()
+            if user_doc.exists:
+                token = user_doc.to_dict().get("fcmToken")
+                if token:
+                    tokens.append(token)
+        return tokens
+
+    async def notify_followers_of_share(
+        self, sharer_id: str, plant_name: str, gardener_display_name: str
+    ) -> None:
+        """Fire-and-forget: fetch follower FCM tokens and send push notifications."""
+        from services.fcm_service import send_new_plant_notification
+        tokens = await self.get_follower_fcm_tokens(sharer_id)
+        await send_new_plant_notification(tokens, gardener_display_name, plant_name)
+
+    # ──────────────────────────────────────────────
     # Sensor reading operations
     # ──────────────────────────────────────────────
 

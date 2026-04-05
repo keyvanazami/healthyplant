@@ -1,11 +1,14 @@
 import SwiftUI
 
+enum ProfileViewMode { case booklet, grid, garden }
+
 struct ProfilesListView: View {
     @StateObject private var viewModel = ProfilesViewModel()
+    @StateObject private var gardenViewModel = GardenViewModel()
     @State private var showCreateProfile = false
     @State private var profileToDelete: PlantProfile? = nil
     @State private var showDeleteAlert = false
-    @State private var showBooklet = true
+    @State private var viewMode: ProfileViewMode = .booklet
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -26,35 +29,56 @@ struct ProfilesListView: View {
                             .font(.subheadline)
                             .foregroundColor(Theme.textSecondary)
                     }
-                } else if viewModel.profiles.isEmpty {
+                } else if viewModel.profiles.isEmpty && viewMode != .garden {
                     emptyState
-                } else if showBooklet {
-                    ProfileBookletView(profiles: viewModel.profiles, viewModel: viewModel)
                 } else {
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(viewModel.profiles) { profile in
-                                NavigationLink(value: profile) {
-                                    ProfileCardView(profile: profile)
-                                }
-                                .contextMenu {
-                                    Button(role: .destructive) {
-                                        profileToDelete = profile
-                                        showDeleteAlert = true
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
+                    switch viewMode {
+                    case .booklet:
+                        ProfileBookletView(profiles: viewModel.profiles, viewModel: viewModel)
+                    case .grid:
+                        ScrollView {
+                            LazyVGrid(columns: columns, spacing: 16) {
+                                ForEach(viewModel.profiles) { profile in
+                                    NavigationLink(value: profile) {
+                                        ProfileCardView(profile: profile)
+                                    }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            profileToDelete = profile
+                                            showDeleteAlert = true
+                                        } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
                                     }
                                 }
                             }
+                            .padding()
+                            .padding(.bottom, 100)
                         }
-                        .padding()
-                        .padding(.bottom, 100) // Space for tab bar
+                    case .garden:
+                        gardenContent
                     }
                 }
             }
-            .navigationTitle("Profiles")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    let rank = GardeningRank.compute(profiles: viewModel.profiles)
+                    VStack(spacing: 1) {
+                        Text("Profiles")
+                            .font(.headline)
+                            .foregroundColor(Theme.textPrimary)
+                        HStack(spacing: 4) {
+                            Image(systemName: rank.icon)
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundColor(rank.color)
+                            Text(rank.name)
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundColor(rank.color)
+                        }
+                    }
+                }
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
                         showCreateProfile = true
@@ -67,10 +91,16 @@ struct ProfilesListView: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         withAnimation(.easeInOut(duration: 0.25)) {
-                            showBooklet.toggle()
+                            switch viewMode {
+                            case .booklet: viewMode = .grid
+                            case .grid:    viewMode = .garden
+                            case .garden:  viewMode = .booklet
+                            }
                         }
                     } label: {
-                        Image(systemName: showBooklet ? "square.grid.2x2" : "book.fill")
+                        Image(systemName: viewMode == .booklet ? "square.grid.2x2"
+                                        : viewMode == .grid    ? "tree.fill"
+                                        :                        "book.fill")
                             .foregroundColor(Theme.accent)
                     }
                 }
@@ -103,8 +133,60 @@ struct ProfilesListView: View {
             .task {
                 await viewModel.loadProfiles()
             }
+            .onChange(of: viewMode) { _, mode in
+                if mode == .garden {
+                    Task { await gardenViewModel.loadGarden() }
+                }
+            }
         }
         .tint(Theme.accent)
+    }
+
+    private var gardenContent: some View {
+        Group {
+            if gardenViewModel.isLoading && gardenViewModel.plants.isEmpty {
+                VStack(spacing: 12) {
+                    Spacer()
+                    ProgressView()
+                        .scaleEffect(1.5)
+                        .tint(Theme.accent)
+                    Text("Loading garden...")
+                        .font(.subheadline)
+                        .foregroundColor(Theme.textSecondary)
+                    Spacer()
+                }
+            } else if gardenViewModel.plants.isEmpty {
+                VStack(spacing: 16) {
+                    Spacer()
+                    Image(systemName: "tree.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(Theme.accent.opacity(0.4))
+                    Text("Your Garden is Empty")
+                        .font(.title2.bold())
+                        .foregroundColor(Theme.textPrimary)
+                    Text("Add plants in Profiles to see your garden")
+                        .font(.subheadline)
+                        .foregroundColor(Theme.textSecondary)
+                        .multilineTextAlignment(.center)
+                    Spacer()
+                }
+                .padding()
+            } else {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 24) {
+                        ForEach(gardenViewModel.plants) { plant in
+                            NavigationLink(value: plant) {
+                                GardenPlantCard(plant: plant)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 16)
+                    .padding(.bottom, 100)
+                }
+            }
+        }
     }
 
     private var emptyState: some View {

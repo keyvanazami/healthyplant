@@ -52,13 +52,20 @@ final class AuthService: ObservableObject {
 
     func signInWithGoogle() async throws {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-              let rootVC = windowScene.windows.first?.rootViewController else {
+              let window = windowScene.windows.first,
+              let rootVC = window.rootViewController else {
             throw AuthError.noRootViewController
+        }
+
+        // Walk up to the topmost presented controller
+        var topVC = rootVC
+        while let presented = topVC.presentedViewController {
+            topVC = presented
         }
 
         let oldAnonId = UserDefaults.standard.string(forKey: Self.userIdKey)
 
-        let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootVC)
+        let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: topVC)
         guard let idToken = result.user.idToken?.tokenString else {
             throw AuthError.missingToken
         }

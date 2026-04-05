@@ -1,114 +1,28 @@
 import SwiftUI
 
-struct GardenView: View {
+// MARK: - Community Tab (standalone tab wrapping CommunityBrowseView)
+
+struct CommunityTabView: View {
     var isVisible: Bool = true
-    @StateObject private var viewModel = GardenViewModel()
-    @StateObject private var profilesViewModel = ProfilesViewModel()
-    @StateObject private var communityViewModel = CommunityViewModel()
-    @State private var selectedSegment = 0
+    @StateObject private var viewModel = CommunityViewModel()
 
     var body: some View {
         NavigationStack {
             ZStack {
                 Theme.background.ignoresSafeArea()
-
-                VStack(spacing: 0) {
-                    // Segmented control
-                    Picker("", selection: $selectedSegment) {
-                        Text("My Garden").tag(0)
-                        Text("Community").tag(1)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-
-                    if selectedSegment == 0 {
-                        myGardenContent
-                    } else {
-                        CommunityBrowseView(viewModel: communityViewModel)
-                    }
-                }
+                CommunityBrowseView(viewModel: viewModel)
             }
-            .navigationTitle("Garden")
+            .navigationTitle("Community")
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationDestination(for: PlantProfile.self) { profile in
-                ProfileDetailView(profile: profile, viewModel: profilesViewModel)
-            }
             .navigationDestination(for: CommunityPlant.self) { plant in
-                CommunityPlantDetailView(plant: plant, viewModel: communityViewModel)
-            }
-            .task {
-                await viewModel.loadGarden()
-            }
-            .task {
-                await profilesViewModel.loadProfiles()
-            }
-            .onChange(of: isVisible) { _, visible in
-                if visible {
-                    Task {
-                        await viewModel.loadGarden()
-                        await profilesViewModel.loadProfiles()
-                    }
-                }
+                CommunityPlantDetailView(plant: plant, viewModel: viewModel)
             }
         }
         .tint(Theme.accent)
     }
-
-    private var myGardenContent: some View {
-        Group {
-            if viewModel.isLoading && viewModel.plants.isEmpty {
-                VStack(spacing: 12) {
-                    Spacer()
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .tint(Theme.accent)
-                    Text("Loading garden...")
-                        .font(.subheadline)
-                        .foregroundColor(Theme.textSecondary)
-                    Spacer()
-                }
-            } else if viewModel.plants.isEmpty {
-                emptyState
-            } else {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 24) {
-                        ForEach(viewModel.plants) { plant in
-                            NavigationLink(value: plant) {
-                                GardenPlantCard(plant: plant)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 16)
-                }
-            }
-        }
-    }
-
-    private var emptyState: some View {
-        VStack(spacing: 16) {
-            Spacer()
-            Image(systemName: "tree.fill")
-                .font(.system(size: 60))
-                .foregroundColor(Theme.accent.opacity(0.4))
-
-            Text("Your Garden is Empty")
-                .font(.title2.bold())
-                .foregroundColor(Theme.textPrimary)
-
-            Text("Add plants in Profiles to see your garden")
-                .font(.subheadline)
-                .foregroundColor(Theme.textSecondary)
-                .multilineTextAlignment(.center)
-            Spacer()
-        }
-        .padding()
-    }
 }
 
-// MARK: - Garden Plant Card
+// MARK: - Garden Plant Card (shared component used in Profiles garden view)
 
 struct GardenPlantCard: View {
     let plant: PlantProfile
@@ -194,7 +108,7 @@ struct GardenPlantCard: View {
 }
 
 #Preview {
-    GardenView()
+    CommunityTabView()
         .environmentObject(AppState())
         .environmentObject(AuthService())
 }
