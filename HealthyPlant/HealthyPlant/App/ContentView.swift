@@ -43,10 +43,10 @@ struct ContentView: View {
             SignInPromptView(isPresented: $showSignInPrompt)
         } else if !gardenerSetupComplete {
             GardenerProfileSetupView(isComplete: $gardenerSetupComplete)
-                .onChange(of: gardenerSetupComplete) { _, done in
-                    if done {
-                        UserDefaults.standard.set(true, forKey: "hp_gardener_setup_complete")
-                    }
+                .onAppear {
+                    // Persist immediately so restarts never show this screen again,
+                    // regardless of whether the user saves or skips this session.
+                    UserDefaults.standard.set(true, forKey: "hp_gardener_setup_complete")
                 }
         } else {
         ZStack(alignment: .bottom) {

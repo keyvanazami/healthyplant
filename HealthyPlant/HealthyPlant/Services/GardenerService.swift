@@ -9,7 +9,7 @@ struct GardenerService {
     private let api = APIClient.shared
 
     func fetchMyProfile() async throws -> GardenerProfile {
-        try await api.get(path: "/gardeners/me")
+        try await api.get(path: "/api/v1/gardeners/me")
     }
 
     func upsertMyProfile(
@@ -24,17 +24,17 @@ struct GardenerService {
             avatarURL: avatarURL,
             isPublic: isPublic
         )
-        return try await api.put(path: "/gardeners/me", body: body)
+        return try await api.put(path: "/api/v1/gardeners/me", body: body)
     }
 
     func registerFCMToken(_ token: String) async throws {
         let body = FCMTokenBody(fcmToken: token)
-        let _: NoContentResponse = try await api.put(path: "/gardeners/me/fcm-token", body: body)
+        let _: NoContentResponse = try await api.put(path: "/api/v1/gardeners/me/fcm-token", body: body)
     }
 
     func fetchProfile(userId: String) async throws -> GardenerProfile {
         do {
-            return try await api.get(path: "/gardeners/\(userId)")
+            return try await api.get(path: "/api/v1/gardeners/\(userId)")
         } catch APIError.httpError(let code, _) where code == 403 {
             throw GardenerServiceError.signInRequired
         } catch APIError.httpError(let code, _) where code == 404 {
@@ -43,23 +43,23 @@ struct GardenerService {
     }
 
     func fetchGardenerPlants(userId: String) async throws -> [CommunityPlant] {
-        try await api.get(path: "/gardeners/\(userId)/plants")
+        try await api.get(path: "/api/v1/gardeners/\(userId)/plants")
     }
 
     func followGardener(userId: String) async throws -> FollowResponse {
         do {
-            return try await api.post(path: "/gardeners/\(userId)/follow", body: EmptyBody())
+            return try await api.post(path: "/api/v1/gardeners/\(userId)/follow", body: EmptyBody())
         } catch APIError.httpError(let code, _) where code == 403 {
             throw GardenerServiceError.signInRequired
         }
     }
 
     func unfollowGardener(userId: String) async throws {
-        try await api.delete(path: "/gardeners/\(userId)/follow")
+        try await api.delete(path: "/api/v1/gardeners/\(userId)/follow")
     }
 
     func fetchMyFollowing() async throws -> [GardenerProfile] {
-        try await api.get(path: "/gardeners/me/following")
+        try await api.get(path: "/api/v1/gardeners/me/following")
     }
 }
 

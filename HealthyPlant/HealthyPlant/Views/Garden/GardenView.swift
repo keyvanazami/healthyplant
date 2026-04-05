@@ -19,6 +19,9 @@ struct CommunityTabView: View {
             }
         }
         .tint(Theme.accent)
+        .onChange(of: isVisible) { _, visible in
+            if visible { Task { await viewModel.loadCommunity() } }
+        }
     }
 }
 
