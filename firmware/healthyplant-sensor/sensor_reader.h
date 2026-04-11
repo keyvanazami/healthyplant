@@ -21,7 +21,20 @@ struct SensorData {
 class SensorReader {
 public:
   void begin() {
-    // I2C bus
+    // I2C bus recovery — clock out 9 SCL pulses to unstick any slave
+    // that may have been left mid-transaction by a previous deep sleep.
+    pinMode(PIN_I2C_SCL, OUTPUT);
+    pinMode(PIN_I2C_SDA, INPUT_PULLUP);
+    for (int i = 0; i < 9; i++) {
+      digitalWrite(PIN_I2C_SCL, HIGH); delayMicroseconds(5);
+      digitalWrite(PIN_I2C_SCL, LOW);  delayMicroseconds(5);
+    }
+    // STOP condition
+    pinMode(PIN_I2C_SDA, OUTPUT);
+    digitalWrite(PIN_I2C_SDA, LOW);  delayMicroseconds(5);
+    digitalWrite(PIN_I2C_SCL, HIGH); delayMicroseconds(5);
+    digitalWrite(PIN_I2C_SDA, HIGH); delayMicroseconds(5);
+
     Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL);
 
     // BH1750 light sensor

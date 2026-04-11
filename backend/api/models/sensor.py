@@ -88,5 +88,6 @@ class SensorResponse(BaseModel):
     status: str = "offline"
     thresholds: Optional[SensorAlertThresholds] = None
     created_at: str = Field(..., alias="createdAt")
+    device_token: Optional[str] = Field(None, alias="deviceToken")
 
     model_config = {"populate_by_name": True, "from_attributes": True}

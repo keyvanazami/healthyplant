@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONFIG_ESP32_H
+#define CONFIG_ESP32_H
 
 // ──────────────────────────────────────────────
 // Board: HiLetgo ESP32 ESP-32D (38-pin, USB-C)
@@ -42,7 +42,7 @@
 #define SENSOR_SAMPLES        3     // Number of samples to average
 
 // ── API ─────────────────────────────────────────
-#define API_DEFAULT_URL  "https://healthyplant-api-prod-236276754022.us-central1.run.app"
+#define API_DEFAULT_URL  "https://healthyplant-api-prod-fajtqt5o2a-uc.a.run.app"
 #define API_READINGS_PATH  "/api/v1/sensors/readings"
 
 // ── WiFi AP (provisioning mode) ─────────────────
@@ -55,4 +55,4 @@
 #define NVS_DEVICE_TOKEN   "dev_token"
 #define NVS_API_URL        "api_url"
 
-#endif // CONFIG_H
+#endif // CONFIG_ESP32_H

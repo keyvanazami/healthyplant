@@ -5,7 +5,20 @@ final class SettingsViewModel: ObservableObject {
     @Published var notificationsEnabled: Bool
     @Published var devModeUnlocked: Bool = UserDefaults.standard.bool(forKey: "hp_dev_mode_unlocked")
     @Published var isDevelopment: Bool = AppEnvironment.current == .development
-    let appVersion = "1.0"
+    let appVersion: String = {
+        let v = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?"
+        let b = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "?"
+        return "\(v) (\(b))"
+    }()
+
+    let buildDate: String = {
+        guard let url = Bundle.main.executableURL,
+              let attrs = try? FileManager.default.attributesOfItem(atPath: url.path),
+              let date = attrs[.modificationDate] as? Date else { return "Unknown" }
+        let f = DateFormatter()
+        f.dateFormat = "MMM d yyyy, HH:mm"
+        return f.string(from: date)
+    }()
 
     private let notificationService = NotificationService()
     private var versionTapCount = 0

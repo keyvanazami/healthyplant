@@ -1,5 +1,9 @@
 import Foundation
 
+extension Notification.Name {
+    static let sensorDeleted = Notification.Name("SensorDeleted")
+}
+
 @MainActor
 final class ProfilesViewModel: ObservableObject {
     @Published var profiles: [PlantProfile] = []
@@ -7,6 +11,21 @@ final class ProfilesViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let plantService = PlantService()
+    private var sensorDeletedObserver: Any?
+
+    init() {
+        sensorDeletedObserver = NotificationCenter.default.addObserver(
+            forName: .sensorDeleted, object: nil, queue: .main
+        ) { [weak self] _ in
+            Task { await self?.loadProfiles() }
+        }
+    }
+
+    deinit {
+        if let observer = sensorDeletedObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
 
     // MARK: - Load
 

@@ -6,8 +6,10 @@
 // ──────────────────────────────────────────────
 // Uncomment ONE of the lines below to match your board:
 
-#define BOARD_ESP32S3    // Espressif ESP32-S3 DevKitC-1 (N8R2)
-// #define BOARD_ESP32   // HiLetgo ESP32 ESP-32D (amazon.com/dp/B0CNYK7WT2)
+// Board is selected via platformio.ini build_flags (-DBOARD_ESP32 or -DBOARD_ESP32S3).
+// To build outside PlatformIO, uncomment one line below:
+// #define BOARD_ESP32S3    // Espressif ESP32-S3 DevKitC-1 (N8R2)
+// #define BOARD_ESP32      // HiLetgo ESP32 ESP-32D / NodeMCU ESP-32S
 
 // ──────────────────────────────────────────────
 

@@ -83,6 +83,7 @@ final class SensorViewModel: ObservableObject {
             try await service.deleteSensor(sensorId: sensorId)
             sensors.removeAll { $0.sensorId == sensorId }
             latestReadings.removeValue(forKey: sensorId)
+            NotificationCenter.default.post(name: .sensorDeleted, object: nil)
         } catch {
             print("[SensorVM] Failed to delete: \(error)")
         }

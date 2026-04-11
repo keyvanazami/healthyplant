@@ -29,7 +29,7 @@ private let pages: [OnboardingPage] = [
     OnboardingPage(
         icon: "tree.fill",
         title: "Community Garden",
-        description: "Share your plants with other growers, browse what others are growing, and exchange tips in the comments.",
+        description: "Share your plants with other growers, browse what others are growing, and follow public gardeners to see their latest plants.",
         accentIcon: true
     ),
     OnboardingPage(
@@ -42,6 +42,18 @@ private let pages: [OnboardingPage] = [
         icon: "message.fill",
         title: "AI Assistant",
         description: "Ask anything about your plants. The assistant knows your profiles and gives personalized advice in real time.",
+        accentIcon: true
+    ),
+    OnboardingPage(
+        icon: "sensor.tag.radiowaves.forward.fill",
+        title: "IoT Sensors",
+        description: "Connect an ESP32 soil sensor to monitor moisture, temperature, humidity, and light in real time. Pair it to a plant profile from Settings.",
+        accentIcon: true
+    ),
+    OnboardingPage(
+        icon: "trophy.fill",
+        title: "Gardening Rank",
+        description: "Earn points for every plant you add and keep alive. Level up from Seedling to Master Gardener — tap your rank on the Profiles tab to see the ladder.",
         accentIcon: true
     ),
 ]

@@ -61,6 +61,10 @@ struct GardenerService {
     func fetchMyFollowing() async throws -> [GardenerProfile] {
         try await api.get(path: "/api/v1/gardeners/me/following")
     }
+
+    func fetchPublicGardeners() async throws -> [GardenerProfile] {
+        try await api.get(path: "/api/v1/gardeners")
+    }
 }
 
 // MARK: - Private request bodies

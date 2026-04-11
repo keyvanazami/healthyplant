@@ -9,6 +9,7 @@ struct ProfilesListView: View {
     @State private var profileToDelete: PlantProfile? = nil
     @State private var showDeleteAlert = false
     @State private var viewMode: ProfileViewMode = .booklet
+    @State private var showRankLadder = false
 
     private let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -65,18 +66,22 @@ struct ProfilesListView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     let rank = GardeningRank.compute(profiles: viewModel.profiles)
-                    VStack(spacing: 1) {
-                        Text("Profiles")
-                            .font(.headline)
-                            .foregroundColor(Theme.textPrimary)
-                        HStack(spacing: 4) {
+                    Button { showRankLadder = true } label: {
+                        HStack(spacing: 6) {
                             Image(systemName: rank.icon)
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(rank.color)
                             Text(rank.name)
-                                .font(.system(size: 10, weight: .semibold))
+                                .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(rank.color)
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 9, weight: .semibold))
+                                .foregroundColor(rank.color.opacity(0.7))
                         }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 5)
+                        .background(rank.color.opacity(0.12))
+                        .cornerRadius(20)
                     }
                 }
                 ToolbarItem(placement: .topBarLeading) {
@@ -129,6 +134,11 @@ struct ProfilesListView: View {
                 if let profile = profileToDelete {
                     Text("Are you sure you want to delete \"\(profile.name)\"? This action cannot be undone.")
                 }
+            }
+            .sheet(isPresented: $showRankLadder) {
+                let rank = GardeningRank.compute(profiles: viewModel.profiles)
+                let score = viewModel.profiles.reduce(0) { $0 + $1.ageDays } + viewModel.profiles.count * 30
+                RankLadderView(currentRank: rank, score: score)
             }
             .task {
                 await viewModel.loadProfiles()

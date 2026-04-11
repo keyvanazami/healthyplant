@@ -187,6 +187,24 @@ struct AddSensorView: View {
                 .font(.title2.weight(.bold))
                 .foregroundColor(Theme.textPrimary)
 
+            if let token = registeredSensor?.deviceToken {
+                VStack(spacing: 4) {
+                    Text("Device Token")
+                        .font(.caption)
+                        .foregroundColor(Theme.textSecondary)
+                    Text(token)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundColor(Theme.accent)
+                        .multilineTextAlignment(.center)
+                        .padding(8)
+                        .background(Color.white.opacity(0.05))
+                        .cornerRadius(8)
+                    Text("Enter this token in the sensor's WiFi setup page")
+                        .font(.caption2)
+                        .foregroundColor(Theme.textSecondary)
+                }
+            }
+
             Text("Your sensor will start sending data once it connects to WiFi with the device token.")
                 .font(.subheadline)
                 .foregroundColor(Theme.textSecondary)

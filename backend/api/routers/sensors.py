@@ -62,6 +62,13 @@ async def register_sensor(request: Request, body: SensorRegister):
         }
 
         result = await firestore.create_sensor(user_id, body.sensor_id, sensor_data)
+
+        # Write to top-level sensor_tokens index for fast O(1) lookup
+        await request.app.state.firestore_service.db \
+            .collection("sensor_tokens") \
+            .document(device_token) \
+            .set({"userId": user_id, "sensorId": body.sensor_id})
+
         # Include deviceToken in response only on registration
         result["deviceToken"] = device_token
         return result
@@ -120,6 +127,14 @@ async def delete_sensor(request: Request, sensor_id: str):
             user_id, sensor["profileId"],
             {"sensorId": None, "sensorLastReading": None},
         )
+
+    # Remove token index entry
+    token = sensor.get("deviceToken")
+    if token:
+        await request.app.state.firestore_service.db \
+            .collection("sensor_tokens") \
+            .document(token) \
+            .delete()
 
     await firestore.delete_sensor(user_id, sensor_id)
 

@@ -130,6 +130,21 @@ async def list_my_following(request: Request):
         raise HTTPException(status_code=500, detail="Failed to list following")
 
 
+# ── public gardener list ───────────────────────────────────────────────────────
+
+
+@router.get("/gardeners", response_model=List[GardenerProfileResponse])
+async def list_public_gardeners(request: Request):
+    """List all public gardener profiles."""
+    firestore = request.app.state.firestore_service
+    try:
+        gardeners = await firestore.get_public_gardeners()
+        return gardeners
+    except Exception as e:
+        logger.error(f"Error listing public gardeners: {e}")
+        raise HTTPException(status_code=500, detail="Failed to list gardeners")
+
+
 # ── public profiles ────────────────────────────────────────────────────────────
 
 

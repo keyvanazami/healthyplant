@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONFIG_ESP32S3_H
+#define CONFIG_ESP32S3_H
 
 // ──────────────────────────────────────────────
 // Board: ESP32-S3 DevKitC-1 (N8R2, USB-C)
@@ -52,4 +52,4 @@
 #define NVS_DEVICE_TOKEN   "dev_token"
 #define NVS_API_URL        "api_url"
 
-#endif // CONFIG_H
+#endif // CONFIG_ESP32S3_H

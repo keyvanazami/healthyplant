@@ -5,12 +5,28 @@ import SwiftUI
 struct CommunityTabView: View {
     var isVisible: Bool = true
     @StateObject private var viewModel = CommunityViewModel()
+    @State private var selectedTab = 0
 
     var body: some View {
         NavigationStack {
             ZStack {
                 Theme.background.ignoresSafeArea()
-                CommunityBrowseView(viewModel: viewModel)
+                VStack(spacing: 0) {
+                    Picker("", selection: $selectedTab) {
+                        Text("Plants").tag(0)
+                        Text("Gardeners").tag(1)
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    .padding(.bottom, 4)
+
+                    if selectedTab == 0 {
+                        CommunityBrowseView(viewModel: viewModel)
+                    } else {
+                        GardenersListView()
+                    }
+                }
             }
             .navigationTitle("Community")
             .toolbarColorScheme(.dark, for: .navigationBar)

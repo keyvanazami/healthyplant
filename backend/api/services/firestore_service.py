@@ -592,23 +592,29 @@ class FirestoreService:
         return result
 
     async def get_sensor_by_token(self, device_token: str) -> Optional[dict]:
-        """Look up a sensor by its device token. Returns sensor data with userId."""
-        # Query across all users' sensors subcollections
-        # Using a collection group query on "sensors"
-        query = (
-            self.db.collection_group("sensors")
-            .where("deviceToken", "==", device_token)
-            .limit(1)
+        """Look up a sensor by its device token using the top-level sensor_tokens index."""
+        token_ref = self.db.collection("sensor_tokens").document(device_token)
+        token_doc = await token_ref.get()
+        if not token_doc.exists:
+            return None
+        token_data = token_doc.to_dict()
+        user_id = token_data.get("userId")
+        sensor_id = token_data.get("sensorId")
+        if not user_id or not sensor_id:
+            return None
+        sensor_ref = (
+            self.db.collection("users")
+            .document(user_id)
+            .collection("sensors")
+            .document(sensor_id)
         )
-        docs = query.stream()
-        async for doc in docs:
-            result = doc.to_dict()
-            result["id"] = doc.id
-            # Extract userId from the document path: users/{userId}/sensors/{sensorId}
-            path_parts = doc.reference.path.split("/")
-            result["userId"] = path_parts[1]
-            return result
-        return None
+        sensor_doc = await sensor_ref.get()
+        if not sensor_doc.exists:
+            return None
+        result = sensor_doc.to_dict()
+        result["id"] = sensor_doc.id
+        result["userId"] = user_id
+        return result
 
     async def update_sensor(self, user_id: str, sensor_id: str, data: dict) -> dict:
         """Update sensor fields."""
@@ -652,6 +658,20 @@ class FirestoreService:
     # ──────────────────────────────────────────────
     # Gardener profile operations
     # ──────────────────────────────────────────────
+
+    async def get_public_gardeners(self, limit: int = 50) -> List[dict]:
+        """List public gardener profiles (users root docs where isPublic=true)."""
+        query = (
+            self.db.collection("users")
+            .where("isPublic", "==", True)
+            .limit(limit)
+        )
+        results = []
+        async for doc in query.stream():
+            data = doc.to_dict()
+            data["userId"] = doc.id
+            results.append(data)
+        return results
 
     async def get_gardener_profile(self, user_id: str) -> Optional[dict]:
         """Read users/{user_id} root document. Returns None if not set yet."""
