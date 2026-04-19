@@ -19,6 +19,52 @@ from services.storage_service import StorageService
 # Mock Services
 # ---------------------------------------------------------------------------
 
+class MockFirestoreDB:
+    """Minimal mock of the Firestore async client used by the rate limiter."""
+
+    def collection(self, name):
+        return self
+
+    def document(self, doc_id):
+        return self
+
+    async def get(self, transaction=None):
+        snap = MagicMock()
+        snap.exists = False
+        snap.to_dict.return_value = {}
+        return snap
+
+    async def get_all(self, refs):
+        snaps = []
+        for _ in refs:
+            snap = MagicMock()
+            snap.exists = False
+            snap.to_dict.return_value = {}
+            snaps.append(snap)
+        return snaps
+
+    async def run_async_transaction(self, callback):
+        txn = MagicMock()
+        # get() inside transaction returns a non-premium, zero-count snapshot
+        async def _get(ref, transaction=None):
+            snap = MagicMock()
+            snap.exists = False
+            snap.to_dict.return_value = {}
+            return snap
+        async def _get_all(refs):
+            snaps = []
+            for _ in refs:
+                snap = MagicMock()
+                snap.exists = False
+                snap.to_dict.return_value = {}
+                snaps.append(snap)
+            return snaps
+        txn.get = _get
+        txn.get_all = _get_all
+        txn.set = MagicMock()
+        await callback(txn)
+
+
 class MockFirestoreService:
     """In-memory mock of FirestoreService for testing."""
 
@@ -29,6 +75,7 @@ class MockFirestoreService:
         self._profile_counter = 0
         self._event_counter = 0
         self._message_counter = 0
+        self.db = MockFirestoreDB()  # used by rate_limiter
 
     # -- Profiles --
 
