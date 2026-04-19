@@ -27,13 +27,21 @@ struct CalendarView: View {
                     Button {
                         Task { await viewModel.generateSchedule() }
                     } label: {
-                        if viewModel.isGenerating {
-                            ProgressView()
-                                .tint(Theme.accent)
-                        } else {
-                            Label("Generate Schedule", systemImage: "sparkles")
-                                .foregroundColor(Theme.accent)
+                        HStack(spacing: 5) {
+                            if viewModel.isGenerating {
+                                ProgressView()
+                                    .tint(Theme.accent)
+                                    .scaleEffect(0.85)
+                                Text("Generating…")
+                                    .font(.subheadline.weight(.medium))
+                                    .foregroundColor(Theme.accent)
+                            } else {
+                                Image(systemName: "sparkles")
+                                Text("Generate")
+                                    .font(.subheadline.weight(.medium))
+                            }
                         }
+                        .foregroundColor(Theme.accent)
                     }
                     .disabled(viewModel.isGenerating)
                 }
