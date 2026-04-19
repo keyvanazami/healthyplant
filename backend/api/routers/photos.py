@@ -9,6 +9,8 @@ from pydantic import BaseModel, Field
 
 from google.cloud import storage
 
+from services.rate_limiter import check_and_increment
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -80,6 +82,9 @@ async def identify_plant(request: Request, file: UploadFile = File(...)):
 
     ai_service = request.app.state.ai_service
 
+    firestore = request.app.state.firestore_service
+    await check_and_increment(firestore.db, user_id, "scan")
+
     try:
         contents = await file.read()
         media_type = file.content_type or "image/jpeg"
@@ -102,6 +107,9 @@ async def lookup_plant(request: Request, file: UploadFile = File(...)):
         raise HTTPException(status_code=401, detail="User not authenticated")
 
     ai_service = request.app.state.ai_service
+
+    firestore = request.app.state.firestore_service
+    await check_and_increment(firestore.db, user_id, "scan")
 
     try:
         contents = await file.read()

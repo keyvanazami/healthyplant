@@ -8,6 +8,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException, Query, Request
 
 from models.calendar_event import CalendarEventCompleteResponse, CalendarEventCreate, CalendarEventResponse
+from services.rate_limiter import check_and_increment
 from services.schedule_service import generate_deterministic_events
 
 logger = logging.getLogger(__name__)
@@ -100,6 +101,7 @@ async def generate_calendar(
         # Fall back to AI only for profiles missing structured data
         ai_events = []
         if ai_profiles:
+            await check_and_increment(firestore.db, user_id, "calendar")
             ai_events = await ai_service.generate_calendar_events(
                 ai_profiles, current_date
             )

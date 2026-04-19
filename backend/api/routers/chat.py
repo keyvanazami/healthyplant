@@ -8,6 +8,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
 from models.chat import ChatHistoryResponse, ChatMessageRequest, ChatMessageResponse
+from services.rate_limiter import check_and_increment, get_usage
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,8 @@ async def send_chat_message(request: Request, body: ChatMessageRequest):
 
     firestore = request.app.state.firestore_service
     ai_service = request.app.state.ai_service
+
+    await check_and_increment(firestore.db, user_id, "chat")
 
     try:
         # Save user message
@@ -88,6 +91,16 @@ async def send_chat_message(request: Request, body: ChatMessageRequest):
     except Exception as e:
         logger.error(f"Error in chat endpoint for user {user_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to process chat message")
+
+
+@router.get("/chat/ai-usage")
+async def get_ai_usage(request: Request):
+    """Return today's AI usage counts and limits for the authenticated user."""
+    user_id = getattr(request.state, "user_id", None)
+    if not user_id:
+        raise HTTPException(status_code=401, detail="User not authenticated")
+    firestore = request.app.state.firestore_service
+    return await get_usage(firestore.db, user_id)
 
 
 @router.get("/chat/history", response_model=ChatHistoryResponse)
