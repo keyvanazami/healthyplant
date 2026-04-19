@@ -45,6 +45,12 @@ private let pages: [OnboardingPage] = [
         accentIcon: true
     ),
     OnboardingPage(
+        icon: "camera.viewfinder",
+        title: "Plant Scanner",
+        description: "Point your camera at any plant and AI will identify it instantly — including origin, history, care tips, and difficulty. Add it to your garden in one tap.",
+        accentIcon: true
+    ),
+    OnboardingPage(
         icon: "sensor.tag.radiowaves.forward.fill",
         title: "IoT Sensors",
         description: "Connect an ESP32 soil sensor to monitor moisture, temperature, humidity, and light in real time. Pair it to a plant profile from Settings.",
