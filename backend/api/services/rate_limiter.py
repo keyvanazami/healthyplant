@@ -1,14 +1,21 @@
-"""AI request rate limiting — per-user daily counters stored in Firestore.
+"""AI request rate limiting — per-user daily and lifetime counters in Firestore.
 
-Limits are read from environment variables so you can adjust them in Cloud Run
-without redeploying code:
+All limits are env vars — adjust in Cloud Run without redeploying:
 
     AI_CHAT_DAILY_LIMIT      — chat messages per user per day    (default: 20)
     AI_SCAN_DAILY_LIMIT      — plant scans per user per day      (default: 10)
     AI_CALENDAR_DAILY_LIMIT  — calendar generations per day      (default: 5)
 
-Usage is tracked in:
-    users/{userId}/ai_usage/{YYYY-MM-DD}
+    AI_CHAT_MAX_LIMIT        — lifetime chat cap for free users  (default: 500)
+    AI_SCAN_MAX_LIMIT        — lifetime scan cap for free users  (default: 500)
+    AI_CALENDAR_MAX_LIMIT    — lifetime calendar cap             (default: 500)
+
+Premium users (isPremium: true on the user root doc) bypass all limits.
+
+Firestore layout:
+    users/{userId}                         — isPremium: bool
+    users/{userId}/ai_usage/{YYYY-MM-DD}   — daily counters
+    users/{userId}/ai_usage/total          — lifetime counters
         chatCount:     int
         scanCount:     int
         calendarCount: int
@@ -22,11 +29,18 @@ from fastapi import HTTPException
 
 logger = logging.getLogger(__name__)
 
-# ── Configurable limits (set via Cloud Run env vars) ────────────────────────
-LIMITS: dict[str, int] = {
+# ── Daily limits ─────────────────────────────────────────────────────────────
+DAILY_LIMITS: dict[str, int] = {
     "chat":     int(os.getenv("AI_CHAT_DAILY_LIMIT",     "20")),
     "scan":     int(os.getenv("AI_SCAN_DAILY_LIMIT",     "10")),
     "calendar": int(os.getenv("AI_CALENDAR_DAILY_LIMIT", "5")),
+}
+
+# ── Lifetime caps (free tier) ─────────────────────────────────────────────────
+MAX_LIMITS: dict[str, int] = {
+    "chat":     int(os.getenv("AI_CHAT_MAX_LIMIT",     "500")),
+    "scan":     int(os.getenv("AI_SCAN_MAX_LIMIT",     "500")),
+    "calendar": int(os.getenv("AI_CALENDAR_MAX_LIMIT", "500")),
 }
 
 FIELD: dict[str, str] = {
@@ -41,60 +55,87 @@ def _today() -> str:
 
 
 async def check_and_increment(db, user_id: str, category: str) -> None:
-    """Check the daily limit for *category* and atomically increment the counter.
+    """Check daily + lifetime limits, then atomically increment both counters.
 
-    Raises HTTP 429 if the limit is already reached.
+    Premium users (isPremium=true on user doc) bypass all checks.
+    Raises HTTP 429 when a limit is reached.
     """
-    limit = LIMITS[category]
+    daily_limit = DAILY_LIMITS[category]
+    max_limit = MAX_LIMITS[category]
     field = FIELD[category]
-    doc_ref = (
-        db.collection("users")
-        .document(user_id)
-        .collection("ai_usage")
-        .document(_today())
-    )
 
-    # Captured outside the transaction callback so we can raise after
-    limit_exceeded = False
+    user_ref = db.collection("users").document(user_id)
+    daily_ref = user_ref.collection("ai_usage").document(_today())
+    total_ref = user_ref.collection("ai_usage").document("total")
+
+    exceeded: str | None = None  # "daily" | "max" | None
 
     async def _txn(transaction):
-        nonlocal limit_exceeded
-        snapshot = await doc_ref.get(transaction=transaction)
-        current = (snapshot.to_dict() or {}).get(field, 0)
+        nonlocal exceeded
+        user_snap, daily_snap, total_snap = await transaction.get_all(
+            [user_ref, daily_ref, total_ref]
+        )
 
-        if current >= limit:
-            limit_exceeded = True
-            return  # Can't raise inside a transaction callback
+        # Premium users skip all limits
+        if (user_snap.to_dict() or {}).get("isPremium", False):
+            transaction.set(daily_ref, {field: (daily_snap.to_dict() or {}).get(field, 0) + 1}, merge=True)
+            transaction.set(total_ref, {field: (total_snap.to_dict() or {}).get(field, 0) + 1}, merge=True)
+            return
 
-        transaction.set(doc_ref, {field: current + 1}, merge=True)
+        daily_count = (daily_snap.to_dict() or {}).get(field, 0)
+        total_count = (total_snap.to_dict() or {}).get(field, 0)
+
+        if total_count >= max_limit:
+            exceeded = "max"
+            return
+        if daily_count >= daily_limit:
+            exceeded = "daily"
+            return
+
+        transaction.set(daily_ref, {field: daily_count + 1}, merge=True)
+        transaction.set(total_ref, {field: total_count + 1}, merge=True)
 
     await db.run_async_transaction(_txn)
 
-    if limit_exceeded:
+    if exceeded == "max":
         raise HTTPException(
             status_code=429,
-            detail=f"Daily {category} limit of {limit} reached. Try again tomorrow.",
+            detail=f"Lifetime {category} limit of {max_limit} reached. Upgrade to premium for unlimited access.",
+        )
+    if exceeded == "daily":
+        raise HTTPException(
+            status_code=429,
+            detail=f"Daily {category} limit of {daily_limit} reached. Try again tomorrow.",
         )
 
-    logger.debug(f"[RateLimit] {user_id} {category} incremented (limit={limit})")
+    logger.debug(f"[RateLimit] {user_id} {category} incremented")
 
 
 async def get_usage(db, user_id: str) -> dict:
-    """Return today's usage counts and limits for all AI categories."""
-    doc_ref = (
-        db.collection("users")
-        .document(user_id)
-        .collection("ai_usage")
-        .document(_today())
-    )
-    snapshot = await doc_ref.get()
-    data = snapshot.to_dict() if snapshot.exists else {}
+    """Return today's usage, lifetime usage, limits, and premium status."""
+    user_ref = db.collection("users").document(user_id)
+    daily_ref = user_ref.collection("ai_usage").document(_today())
+    total_ref = user_ref.collection("ai_usage").document("total")
+
+    user_snap, daily_snap, total_snap = await db.get_all([user_ref, daily_ref, total_ref])
+
+    daily = daily_snap.to_dict() if daily_snap.exists else {}
+    total = total_snap.to_dict() if total_snap.exists else {}
+    is_premium = (user_snap.to_dict() or {}).get("isPremium", False)
+
     return {
         "date": _today(),
-        "limits": LIMITS,
-        "usage": {
-            "chat":     data.get("chatCount", 0),
-            "scan":     data.get("scanCount", 0),
-            "calendar": data.get("calendarCount", 0),
+        "isPremium": is_premium,
+        "dailyLimits": DAILY_LIMITS,
+        "maxLimits": MAX_LIMITS,
+        "dailyUsage": {
+            "chat":     daily.get("chatCount", 0),
+            "scan":     daily.get("scanCount", 0),
+            "calendar": daily.get("calendarCount", 0),
+        },
+        "totalUsage": {
+            "chat":     total.get("chatCount", 0),
+            "scan":     total.get("scanCount", 0),
+            "calendar": total.get("calendarCount", 0),
         },
     }
