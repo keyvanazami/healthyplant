@@ -10,8 +10,26 @@ struct GardeningRank {
     let minScore: Int
 
     static func compute(profiles: [PlantProfile]) -> GardeningRank {
-        let score = profiles.reduce(0) { $0 + $1.ageDays } + profiles.count * 30
+        let now = Date()
+        let formatter = ISO8601DateFormatter()
+        let daysInApp = profiles.reduce(0) { sum, profile in
+            guard let date = formatter.date(from: profile.createdAt) else { return sum }
+            let days = Calendar.current.dateComponents([.day], from: date, to: now).day ?? 0
+            return sum + max(0, days)
+        }
+        let score = daysInApp + profiles.count * 30
         return all.last(where: { score >= $0.minScore }) ?? all[0]
+    }
+
+    static func score(profiles: [PlantProfile]) -> Int {
+        let now = Date()
+        let formatter = ISO8601DateFormatter()
+        let daysInApp = profiles.reduce(0) { sum, profile in
+            guard let date = formatter.date(from: profile.createdAt) else { return sum }
+            let days = Calendar.current.dateComponents([.day], from: date, to: now).day ?? 0
+            return sum + max(0, days)
+        }
+        return daysInApp + profiles.count * 30
     }
 
     static let all: [GardeningRank] = [

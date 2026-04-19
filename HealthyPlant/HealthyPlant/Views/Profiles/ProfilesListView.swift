@@ -137,7 +137,7 @@ struct ProfilesListView: View {
             }
             .sheet(isPresented: $showRankLadder) {
                 let rank = GardeningRank.compute(profiles: viewModel.profiles)
-                let score = viewModel.profiles.reduce(0) { $0 + $1.ageDays } + viewModel.profiles.count * 30
+                let score = GardeningRank.score(profiles: viewModel.profiles)
                 RankLadderView(currentRank: rank, score: score)
             }
             .task {
