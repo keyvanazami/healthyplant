@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — HealthyPlant</title>
+  <meta name="description" content="HealthyPlant privacy policy — how we collect, use, and protect your data.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00C853;
+      --accent-dim: rgba(0,200,83,0.12);
+      --bg: #000;
+      --surface: #0f0f0f;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #f0f0f0;
+      --text-muted: #888;
+      --radius: 16px;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.7; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 64px;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    .page-header {
+      padding: 72px 5% 56px; text-align: center;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,200,83,0.07) 0%, transparent 70%);
+    }
+    .page-header .label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
+    .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 14px; }
+    .page-header p { color: var(--text-muted); font-size: 0.9rem; }
+
+    .content { max-width: 720px; margin: 0 auto; padding: 60px 5% 100px; }
+
+    .policy-section { margin-bottom: 44px; }
+    .policy-section h2 { font-size: 1.15rem; font-weight: 700; color: var(--text); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .policy-section p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px; }
+    .policy-section ul { color: var(--text-muted); font-size: 0.9rem; padding-left: 20px; margin-bottom: 12px; }
+    .policy-section ul li { margin-bottom: 6px; }
+    .policy-section strong { color: var(--text); }
+
+    .effective-date { display: inline-block; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 40px; }
+
+    footer { text-align: center; padding: 40px 5%; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+    footer .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; }
+    footer .footer-links a { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="rgba(0,200,83,0.12)"/>
+      <path d="M14 22c0 0-7-5.5-7-10a7 7 0 0 1 14 0c0 4.5-7 10-7 10z" fill="#00C853"/>
+    </svg>
+    HealthyPlant
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="label">Legal</div>
+  <h1>Privacy Policy</h1>
+  <p>Last updated: April 19, 2026</p>
+</div>
+
+<div class="content">
+  <div class="effective-date">Effective date: April 19, 2026</div>
+
+  <div class="policy-section">
+    <h2>1. Overview</h2>
+    <p>HealthyPlant ("we", "our", or "us") is committed to protecting your privacy. This policy explains what data we collect when you use the HealthyPlant iOS app, how we use it, and your rights regarding that data.</p>
+    <p>By using HealthyPlant, you agree to the practices described in this policy.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>2. Data We Collect</h2>
+
+    <p><strong>Account information</strong></p>
+    <p>You can use HealthyPlant without creating an account. In that case we assign you an anonymous random ID stored on your device. If you sign in with Google, we receive your Google account email address and display name via Firebase Authentication.</p>
+
+    <p><strong>Plant profiles</strong></p>
+    <p>Plant names, types, photos, age, height, and the AI-generated care recommendations we create for them. Photos are stored in Google Cloud Storage.</p>
+
+    <p><strong>Gardener profile</strong></p>
+    <p>Optional: a display name, bio, experience level, and avatar photo. You choose whether your profile is public or private.</p>
+
+    <p><strong>Calendar events</strong></p>
+    <p>Care tasks (watering, sunlight, harvest reminders) generated for your plants.</p>
+
+    <p><strong>Chat messages</strong></p>
+    <p>Conversations with the AI assistant, including your messages and the assistant's responses. These are stored to provide conversation history context.</p>
+
+    <p><strong>Sensor readings</strong></p>
+    <p>If you connect an IoT sensor, we store timestamped soil moisture, temperature, humidity, and light readings from that device.</p>
+
+    <p><strong>Device token (push notifications)</strong></p>
+    <p>We store your device's FCM token to send care reminders and community notifications. You can disable notifications in iOS Settings at any time.</p>
+
+    <p><strong>Usage data</strong></p>
+    <p>Daily counters of AI feature usage (chat, scan, calendar generation) to enforce fair-use limits. These counters reset daily and are not used for profiling.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>3. How We Use Your Data</h2>
+    <ul>
+      <li>To provide and improve the app's features (profiles, calendar, assistant, community)</li>
+      <li>To generate personalized plant care recommendations via AI</li>
+      <li>To send push notifications for care reminders and community activity (with your permission)</li>
+      <li>To enforce daily and lifetime AI usage limits for free accounts</li>
+      <li>To display your public profile and shared plants to other users (only if you enable public mode)</li>
+    </ul>
+    <p>We do not sell your data to third parties. We do not use your data for advertising.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>4. Third-Party Services</h2>
+    <p>HealthyPlant uses the following third-party services to operate:</p>
+    <ul>
+      <li><strong>Google Firebase</strong> — authentication, Firestore database, Cloud Storage, push notifications (FCM). Governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      <li><strong>Google Cloud Run</strong> — our backend API runs on Google Cloud infrastructure.</li>
+      <li><strong>Google Gemini AI</strong> — plant image identification and scanning features send your uploaded photo to Google's Gemini API for processing. Images are not retained by Google beyond the API request per Google's data usage policies.</li>
+      <li><strong>Anthropic Claude AI</strong> — the AI assistant and plant care recommendations use Anthropic's Claude API. Your plant profile data and chat messages are sent to Anthropic's API during requests. Anthropic does not use API inputs to train models by default.</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>5. Data Storage and Security</h2>
+    <p>All data is stored in Google Cloud infrastructure (Firestore and Cloud Storage) in the United States. We use HTTPS for all data in transit. Access to your data is restricted to authenticated requests.</p>
+    <p>Anonymous user data is tied to a device-local UUID. If you uninstall the app without signing in with Google, this data becomes orphaned and will be deleted after 90 days of inactivity.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>6. Data Sharing</h2>
+    <p>We share your data only in the following limited circumstances:</p>
+    <ul>
+      <li>With the third-party services listed in Section 4, solely to operate the app</li>
+      <li>If you enable a public profile, your display name, bio, experience level, and shared plants are visible to other HealthyPlant users</li>
+      <li>If required by law or to protect our legal rights</li>
+    </ul>
+    <p>We never sell your personal data.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>7. Your Rights and Choices</h2>
+    <ul>
+      <li><strong>Access:</strong> You can view all your plant profiles, chat history, and sensor data within the app.</li>
+      <li><strong>Deletion:</strong> To delete your account and all associated data, email <a href="mailto:support@healthyplant.app">support@healthyplant.app</a> with the subject "Delete my account". We will process your request within 30 days.</li>
+      <li><strong>Notifications:</strong> You can disable push notifications at any time in iOS Settings → HealthyPlant → Notifications.</li>
+      <li><strong>Public profile:</strong> You can make your profile private at any time in Settings → Edit Gardener Profile.</li>
+    </ul>
+  </div>
+
+  <div class="policy-section">
+    <h2>8. Children's Privacy</h2>
+    <p>HealthyPlant is not directed at children under 13. We do not knowingly collect personal information from children under 13. If you believe a child has provided us with personal information, please contact us at <a href="mailto:support@healthyplant.app">support@healthyplant.app</a>.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>9. Changes to This Policy</h2>
+    <p>We may update this policy from time to time. We will post the updated policy on this page with a new effective date. For significant changes, we will notify you via push notification or in-app message.</p>
+  </div>
+
+  <div class="policy-section">
+    <h2>10. Contact</h2>
+    <p>If you have questions or concerns about this privacy policy or your data, please contact us at:</p>
+    <p><a href="mailto:support@healthyplant.app">support@healthyplant.app</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="support.html">Support</a>
+  </div>
+  <p>© 2026 HealthyPlant. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

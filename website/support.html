@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — HealthyPlant</title>
+  <meta name="description" content="Get help with HealthyPlant. Browse FAQs or contact us directly.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: #00C853;
+      --accent-dim: rgba(0,200,83,0.12);
+      --bg: #000;
+      --surface: #0f0f0f;
+      --surface2: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #f0f0f0;
+      --text-muted: #888;
+      --radius: 16px;
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; line-height: 1.6; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 64px;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; color: var(--text); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; transition: color .2s; }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+
+    .page-header {
+      padding: 72px 5% 56px; text-align: center;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,200,83,0.07) 0%, transparent 70%);
+    }
+    .page-header .label { color: var(--accent); font-size: 0.8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 12px; }
+    .page-header h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; margin-bottom: 14px; }
+    .page-header p { color: var(--text-muted); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+
+    .content { max-width: 760px; margin: 0 auto; padding: 60px 5% 100px; }
+
+    /* Contact card */
+    .contact-card {
+      background: var(--surface); border: 1px solid rgba(0,200,83,0.25);
+      border-radius: var(--radius); padding: 32px; margin-bottom: 56px;
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .contact-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--accent-dim); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+    }
+    .contact-card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+    .contact-card p { color: var(--text-muted); font-size: 0.9rem; }
+    .contact-card a { font-weight: 600; }
+
+    /* FAQ */
+    .faq-section h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 24px; }
+    .faq-item { border-bottom: 1px solid var(--border); padding: 24px 0; }
+    .faq-item:first-of-type { border-top: 1px solid var(--border); }
+    .faq-item h3 { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+    .faq-item p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; }
+    .faq-item p + p { margin-top: 8px; }
+
+    footer { text-align: center; padding: 40px 5%; color: var(--text-muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
+    footer .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; }
+    footer .footer-links a { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo" style="text-decoration:none;">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="rgba(0,200,83,0.12)"/>
+      <path d="M14 22c0 0-7-5.5-7-10a7 7 0 0 1 14 0c0 4.5-7 10-7 10z" fill="#00C853"/>
+    </svg>
+    HealthyPlant
+  </a>
+  <div class="nav-links">
+    <a href="index.html#features">Features</a>
+    <a href="support.html">Support</a>
+    <a href="privacy.html">Privacy</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="label">Help Center</div>
+  <h1>Support</h1>
+  <p>Find answers to common questions, or reach out to us directly.</p>
+</div>
+
+<div class="content">
+
+  <div class="contact-card">
+    <div class="contact-icon">✉️</div>
+    <div>
+      <h2>Contact Us</h2>
+      <p>Can't find your answer below? We're happy to help.<br>
+      Email us at <a href="mailto:support@healthyplant.app">support@healthyplant.app</a> and we'll get back to you within 1–2 business days.</p>
+    </div>
+  </div>
+
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+
+    <div class="faq-item">
+      <h3>How do I add a plant?</h3>
+      <p>Tap the <strong>Profiles</strong> tab, then tap the <strong>+</strong> button in the top right. Enter your plant's name, type, age, and height. You can also add a photo. Our AI will generate personalized sun, water, and harvest recommendations within a few seconds.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How does the AI assistant work?</h3>
+      <p>The AI assistant on the <strong>Assistant</strong> tab knows all your plant profiles. Just ask a question in plain English — "Why are my tomato leaves yellowing?" or "When should I harvest my basil?" — and it will respond with advice tailored to your specific plants.</p>
+      <p>Free accounts include a daily message limit. Usage resets every day at midnight UTC.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I set up an IoT sensor?</h3>
+      <p>HealthyPlant supports ESP32-based soil sensors. Here's the setup flow:</p>
+      <p>1. Flash the HealthyPlant firmware onto your ESP32 and open the serial monitor to find the Sensor ID.<br>
+      2. Go to <strong>Settings → Add Sensor</strong> in the app, enter the Sensor ID, and tap Register to receive a Device Token.<br>
+      3. Power-cycle the ESP32, connect to the <strong>HealthyPlant-XXXX</strong> WiFi access point, and enter your WiFi credentials and Device Token in the captive portal.<br>
+      4. Your sensor will begin sending readings every 15 minutes. Link it to a plant profile from the sensor detail screen.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I link a sensor to a plant?</h3>
+      <p>In <strong>Settings</strong>, tap the chart icon next to your sensor to open the sensor detail view. Switch to the <strong>Link Plant</strong> tab and choose a plant profile to pair it with. The linked plant's profile will then show live sensor readings.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I view my sensor history?</h3>
+      <p>In <strong>Settings</strong>, tap the chart icon next to any sensor. The <strong>History</strong> tab shows the last 24 hours of readings for soil moisture, temperature, humidity, and light. You can switch between metrics using the picker at the top.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>What is the gardening rank system?</h3>
+      <p>Your rank is calculated from your garden activity: the total age of all your plants plus 30 points per plant. Ranks progress from <strong>Seedling → Sprout → Grower → Gardener → Green Thumb → Expert → Master Gardener</strong>. Tap your rank badge on the Profiles tab to see the full ladder and your progress toward the next tier.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I make my profile public?</h3>
+      <p>Go to <strong>Settings → Edit Gardener Profile</strong> and toggle <strong>Public Profile</strong> on. Once public, your profile and shared plants will appear in the Community tab's Gardeners section. Other users can follow you to see your latest plants.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I sign in or migrate my data to a Google account?</h3>
+      <p>HealthyPlant lets you start without an account — all your data is saved locally with an anonymous ID. When you're ready to back up your garden and sync across devices, go to <strong>Settings → Sign In with Google</strong>. Your existing plants, calendar events, and sensor history will be migrated automatically.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>How do I delete my account and data?</h3>
+      <p>To request account deletion and removal of all your data, email us at <a href="mailto:support@healthyplant.app">support@healthyplant.app</a> with the subject line "Delete my account". We will process your request within 30 days.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>The AI scan didn't identify my plant correctly. What should I do?</h3>
+      <p>Try taking a clearer, well-lit photo focusing on the leaves or distinctive features of the plant. Avoid blurry or heavily shadowed images. If identification is still off, you can manually enter the plant name when creating a profile.</p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+  <p>© 2026 HealthyPlant. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
