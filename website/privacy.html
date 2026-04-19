@@ -93,10 +93,10 @@
     <h2>2. Data We Collect</h2>
 
     <p><strong>Account information</strong></p>
-    <p>You can use HealthyPlant without creating an account. In that case we assign you an anonymous random ID stored on your device. If you sign in with Google, we receive your Google account email address and display name via Firebase Authentication.</p>
+    <p>You can use HealthyPlant without creating an account. If you choose to sign in with Google, we receive your email address and display name.</p>
 
     <p><strong>Plant profiles</strong></p>
-    <p>Plant names, types, photos, age, height, and the AI-generated care recommendations we create for them. Photos are stored in Google Cloud Storage.</p>
+    <p>Plant names, types, photos, age, height, and the care recommendations we generate for them.</p>
 
     <p><strong>Gardener profile</strong></p>
     <p>Optional: a display name, bio, experience level, and avatar photo. You choose whether your profile is public or private.</p>
@@ -105,45 +105,43 @@
     <p>Care tasks (watering, sunlight, harvest reminders) generated for your plants.</p>
 
     <p><strong>Chat messages</strong></p>
-    <p>Conversations with the AI assistant, including your messages and the assistant's responses. These are stored to provide conversation history context.</p>
+    <p>Conversations with the AI assistant, stored to maintain your conversation history.</p>
 
     <p><strong>Sensor readings</strong></p>
-    <p>If you connect an IoT sensor, we store timestamped soil moisture, temperature, humidity, and light readings from that device.</p>
+    <p>If you connect a soil sensor, we store its readings (moisture, temperature, humidity, and light) over time.</p>
 
-    <p><strong>Device token (push notifications)</strong></p>
-    <p>We store your device's FCM token to send care reminders and community notifications. You can disable notifications in iOS Settings at any time.</p>
+    <p><strong>Notifications</strong></p>
+    <p>A device identifier used to send you care reminders and community updates. You can disable notifications in your phone's Settings at any time.</p>
 
     <p><strong>Usage data</strong></p>
-    <p>Daily counters of AI feature usage (chat, scan, calendar generation) to enforce fair-use limits. These counters reset daily and are not used for profiling.</p>
+    <p>Counts of AI feature usage to maintain fair access for all users. Not used for profiling or advertising.</p>
   </div>
 
   <div class="policy-section">
     <h2>3. How We Use Your Data</h2>
     <ul>
-      <li>To provide and improve the app's features (profiles, calendar, assistant, community)</li>
-      <li>To generate personalized plant care recommendations via AI</li>
-      <li>To send push notifications for care reminders and community activity (with your permission)</li>
-      <li>To enforce daily and lifetime AI usage limits for free accounts</li>
-      <li>To display your public profile and shared plants to other users (only if you enable public mode)</li>
+      <li>To provide the app's features — plant profiles, calendar, AI assistant, and community</li>
+      <li>To generate personalized plant care recommendations</li>
+      <li>To send care reminders and community notifications (with your permission)</li>
+      <li>To display your profile and shared plants to other users (only if you enable public mode)</li>
     </ul>
-    <p>We do not sell your data to third parties. We do not use your data for advertising.</p>
+    <p>We do not sell your data. We do not use your data for advertising.</p>
   </div>
 
   <div class="policy-section">
     <h2>4. Third-Party Services</h2>
-    <p>HealthyPlant uses the following third-party services to operate:</p>
+    <p>HealthyPlant relies on trusted third-party services to operate. Each is bound by its own privacy policy:</p>
     <ul>
-      <li><strong>Google Firebase</strong> — authentication, Firestore database, Cloud Storage, push notifications (FCM). Governed by <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
-      <li><strong>Google Cloud Run</strong> — our backend API runs on Google Cloud infrastructure.</li>
-      <li><strong>Google Gemini AI</strong> — plant image identification and scanning features send your uploaded photo to Google's Gemini API for processing. Images are not retained by Google beyond the API request per Google's data usage policies.</li>
-      <li><strong>Anthropic Claude AI</strong> — the AI assistant and plant care recommendations use Anthropic's Claude API. Your plant profile data and chat messages are sent to Anthropic's API during requests. Anthropic does not use API inputs to train models by default.</li>
+      <li><strong>Google</strong> — account sign-in, data storage, push notifications, and cloud infrastructure. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      <li><strong>Google Gemini AI</strong> — plant image identification. Photos you scan are sent to Google's AI for processing and are not retained after the request completes.</li>
+      <li><strong>Anthropic</strong> — AI assistant and care recommendations. Your plant data and messages are sent to Anthropic's AI during requests. Anthropic does not use API inputs to train its models.</li>
     </ul>
   </div>
 
   <div class="policy-section">
     <h2>5. Data Storage and Security</h2>
-    <p>All data is stored in Google Cloud infrastructure (Firestore and Cloud Storage) in the United States. We use HTTPS for all data in transit. Access to your data is restricted to authenticated requests.</p>
-    <p>Anonymous user data is tied to a device-local UUID. If you uninstall the app without signing in with Google, this data becomes orphaned and will be deleted after 90 days of inactivity.</p>
+    <p>Your data is stored securely in the United States. All communication between the app and our servers is encrypted. Only authenticated users can access their own data.</p>
+    <p>If you use the app without signing in and later uninstall it, your data will be automatically deleted after 90 days of inactivity.</p>
   </div>
 
   <div class="policy-section">
