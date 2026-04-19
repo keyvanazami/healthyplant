@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+from datetime import datetime, timezone
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Request
@@ -18,6 +19,43 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # ── helpers ────────────────────────────────────────────────────────────────────
+
+_RANK_TIERS = [
+    ("Seedling", 0),
+    ("Sprout", 50),
+    ("Grower", 200),
+    ("Gardener", 500),
+    ("Green Thumb", 1000),
+    ("Expert", 2000),
+    ("Master Gardener", 4000),
+]
+
+
+async def _compute_rank(firestore, user_id: str) -> str:
+    """Compute gardening rank from plant profile creation dates."""
+    try:
+        profiles = await firestore.get_profiles(user_id)
+        now = datetime.now(timezone.utc)
+        score = 0
+        for p in profiles:
+            created_at = p.get("createdAt", "")
+            if created_at:
+                try:
+                    dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=timezone.utc)
+                    days = (now - dt).days
+                    score += max(0, days)
+                except (ValueError, TypeError):
+                    pass
+        score += len(profiles) * 30
+        rank_name = _RANK_TIERS[0][0]
+        for name, min_score in _RANK_TIERS:
+            if score >= min_score:
+                rank_name = name
+        return rank_name
+    except Exception:
+        return _RANK_TIERS[0][0]
 
 
 def _get_user_id(request: Request) -> str:
@@ -46,6 +84,7 @@ async def _build_response(
         if requester_id == user_id
         else await firestore.is_following(requester_id, user_id)
     )
+    rank_name = await _compute_rank(firestore, user_id)
     return GardenerProfileResponse(
         userId=user_id,
         displayName=profile.get("displayName"),
@@ -56,6 +95,7 @@ async def _build_response(
         followerCount=follower_count,
         followingCount=following_count,
         isFollowing=is_following,
+        rankName=rank_name,
         createdAt=profile.get("createdAt"),
         updatedAt=profile.get("updatedAt"),
     )
@@ -137,9 +177,14 @@ async def list_my_following(request: Request):
 async def list_public_gardeners(request: Request):
     """List all public gardener profiles."""
     firestore = request.app.state.firestore_service
+    requester_id = getattr(request.state, "user_id", "") or ""
     try:
-        gardeners = await firestore.get_public_gardeners()
-        return gardeners
+        raw = await firestore.get_public_gardeners()
+        results = await asyncio.gather(
+            *[_build_response(firestore, g["userId"], requester_id) for g in raw if "userId" in g],
+            return_exceptions=True,
+        )
+        return [r for r in results if isinstance(r, GardenerProfileResponse)]
     except Exception as e:
         logger.error(f"Error listing public gardeners: {e}")
         raise HTTPException(status_code=500, detail="Failed to list gardeners")

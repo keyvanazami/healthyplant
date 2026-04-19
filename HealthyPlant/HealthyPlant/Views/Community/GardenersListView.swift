@@ -83,13 +83,25 @@ struct GardenersListView: View {
 
             Spacer()
 
-            HStack(spacing: 4) {
-                Image(systemName: "person.2.fill")
-                    .font(.caption2)
-                Text("\(gardener.followerCount)")
-                    .font(.caption)
+            VStack(alignment: .trailing, spacing: 4) {
+                let rank = gardener.rank
+                HStack(spacing: 3) {
+                    Image(systemName: rank.icon)
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(rank.color)
+                    Text(rank.name)
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(rank.color)
+                }
+
+                HStack(spacing: 3) {
+                    Image(systemName: "person.2.fill")
+                        .font(.caption2)
+                    Text("\(gardener.followerCount)")
+                        .font(.caption)
+                }
+                .foregroundColor(Theme.textSecondary)
             }
-            .foregroundColor(Theme.textSecondary)
 
             Image(systemName: "chevron.right")
                 .font(.caption2)

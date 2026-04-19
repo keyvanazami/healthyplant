@@ -20,6 +20,7 @@ struct GardenerProfileView: View {
                     ScrollView {
                         VStack(spacing: 28) {
                             avatarSection
+                            rankBadge
                             statsRow
                             bioSection
                             experienceSection
@@ -89,6 +90,22 @@ struct GardenerProfileView: View {
                 }
             }
         }
+    }
+
+    private var rankBadge: some View {
+        let rank = viewModel.myProfile.rank
+        return HStack(spacing: 6) {
+            Image(systemName: rank.icon)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(rank.color)
+            Text(rank.name)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(rank.color)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+        .background(rank.color.opacity(0.12))
+        .cornerRadius(20)
     }
 
     private var avatarPlaceholder: some View {

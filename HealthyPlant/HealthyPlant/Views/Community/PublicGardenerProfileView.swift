@@ -78,23 +78,39 @@ struct PublicGardenerProfileView: View {
             .clipShape(Circle())
             .overlay(Circle().strokeBorder(Theme.accent, lineWidth: Theme.outlineWidth))
 
-            // Name + experience
+            // Name + experience + rank
             VStack(spacing: 6) {
                 Text(displayName)
                     .font(.title3.bold())
                     .foregroundColor(Theme.textPrimary)
 
-                if let exp = profile.experienceLevel {
-                    HStack(spacing: 4) {
-                        Image(systemName: exp.icon)
-                            .font(.caption)
-                        Text(exp.label)
-                            .font(.caption.weight(.medium))
+                HStack(spacing: 8) {
+                    if let exp = profile.experienceLevel {
+                        HStack(spacing: 4) {
+                            Image(systemName: exp.icon)
+                                .font(.caption)
+                            Text(exp.label)
+                                .font(.caption.weight(.medium))
+                        }
+                        .foregroundColor(Theme.accent)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Theme.accent.opacity(0.15))
+                        .cornerRadius(8)
                     }
-                    .foregroundColor(Theme.accent)
+
+                    let rank = profile.rank
+                    HStack(spacing: 4) {
+                        Image(systemName: rank.icon)
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(rank.color)
+                        Text(rank.name)
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(rank.color)
+                    }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 4)
-                    .background(Theme.accent.opacity(0.15))
+                    .background(rank.color.opacity(0.12))
                     .cornerRadius(8)
                 }
             }

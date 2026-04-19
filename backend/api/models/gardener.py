@@ -24,6 +24,7 @@ class GardenerProfileResponse(BaseModel):
     follower_count: int = Field(0, alias="followerCount")
     following_count: int = Field(0, alias="followingCount")
     is_following: bool = Field(False, alias="isFollowing")
+    rank_name: Optional[str] = Field(None, alias="rankName")
     created_at: Optional[str] = Field(None, alias="createdAt")
     updated_at: Optional[str] = Field(None, alias="updatedAt")
 

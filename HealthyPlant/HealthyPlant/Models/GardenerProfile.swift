@@ -85,6 +85,12 @@ struct GardenerProfile: Codable, Equatable {
     var followerCount: Int
     var followingCount: Int
     var isFollowing: Bool
+    var rankName: String?
+
+    var rank: GardeningRank {
+        guard let name = rankName else { return GardeningRank.all[0] }
+        return GardeningRank.all.first(where: { $0.name == name }) ?? GardeningRank.all[0]
+    }
 
     static let empty = GardenerProfile(
         userId: "",
@@ -95,7 +101,8 @@ struct GardenerProfile: Codable, Equatable {
         isPublic: true,
         followerCount: 0,
         followingCount: 0,
-        isFollowing: false
+        isFollowing: false,
+        rankName: nil
     )
 }
 
