@@ -90,7 +90,7 @@ struct HomeView: View {
 
     private var headerSection: some View {
         HStack(spacing: 16) {
-            CactusAnimationView()
+            PlantAnimationView()
                 .scaleEffect(0.45)
                 .frame(width: 80, height: 120)
                 .clipped()
