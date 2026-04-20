@@ -36,9 +36,11 @@ async def get_calendar_events(
 
     firestore = request.app.state.firestore_service
 
+    valid_event_types = {"needs_water", "needs_treatment", "move_inside", "move_outside"}
+
     try:
         events = await firestore.get_events_by_month(user_id, month)
-        return events
+        return [e for e in events if e.get("eventType") in valid_event_types]
     except Exception as e:
         logger.error(f"Error fetching calendar for user {user_id}, month {month}: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve calendar events")
