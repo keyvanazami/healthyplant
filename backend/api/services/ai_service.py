@@ -233,12 +233,8 @@ Be specific to this plant type and its current age."""
                 f"profile ID: {p.get('id', '')}"
             )
             freq = p.get("wateringFrequencyDays")
-            sun_min = p.get("sunHoursMin")
-            sun_max = p.get("sunHoursMax")
             if freq is not None:
                 line += f", watering every {freq} days"
-            if sun_min is not None and sun_max is not None:
-                line += f", {sun_min}-{sun_max}h sun/day"
             plants_lines.append(line)
 
         plants_summary = "\n".join(plants_lines)
@@ -252,15 +248,14 @@ Generate care events for the next 7 days. For each event, consider the plant's s
 
 IMPORTANT scheduling rules:
 - If a plant has a "watering every N days" value, schedule watering events exactly every N days starting from {current_date}. Do NOT guess a different frequency.
-- If a plant has sun hour requirements, generate "needs_sun" events on days when sun exposure reminders would be helpful.
-- If no structured frequency data is provided, infer a reasonable schedule from the text-based water/sun needs.
+- If no structured frequency data is provided, infer a reasonable watering schedule from the text-based water needs.
 - Not every plant needs attention every day.
 
 Respond with ONLY a JSON array (no markdown, no extra text). Each element must have:
 - "profileId": the profile ID string from above
 - "plantName": the plant name
 - "date": date string in YYYY-MM-DD format (must be within next 7 days from {current_date})
-- "eventType": one of "needs_water", "needs_sun", "needs_treatment"
+- "eventType": one of "needs_water", "needs_treatment"
 - "description": a brief, actionable description (e.g., "Water thoroughly at base, avoid leaves")
 
 Generate realistic events based on each plant's care requirements."""
@@ -285,7 +280,7 @@ Generate realistic events based on each plant's care requirements."""
                 logger.error("AI returned non-list for calendar events")
                 return []
 
-            valid_types = {"needs_water", "needs_sun", "needs_treatment"}
+            valid_types = {"needs_water", "needs_treatment"}
             validated = []
             for event in events:
                 if (

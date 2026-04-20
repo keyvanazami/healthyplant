@@ -16,7 +16,6 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
 
     enum EventType: String, Codable, CaseIterable {
         case needsWater = "needs_water"
-        case needsSun = "needs_sun"
         case needsTreatment = "needs_treatment"
         case moveInside = "move_inside"
         case moveOutside = "move_outside"
@@ -24,7 +23,6 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
         var color: Color {
             switch self {
             case .needsWater: return .blue
-            case .needsSun: return .yellow
             case .needsTreatment: return .red
             case .moveInside: return .purple
             case .moveOutside: return .orange
@@ -34,7 +32,6 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
         var label: String {
             switch self {
             case .needsWater: return "Water"
-            case .needsSun: return "Sunlight"
             case .needsTreatment: return "Treatment"
             case .moveInside: return "Move Inside"
             case .moveOutside: return "Move Outside"
@@ -44,7 +41,6 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
         var icon: String {
             switch self {
             case .needsWater: return "drop.fill"
-            case .needsSun: return "sun.max.fill"
             case .needsTreatment: return "cross.circle.fill"
             case .moveInside: return "house.fill"
             case .moveOutside: return "sun.and.horizon.fill"
@@ -67,16 +63,6 @@ struct CalendarEvent: Codable, Identifiable, Equatable {
 
     static let mockList: [CalendarEvent] = [
         mock,
-        CalendarEvent(
-            id: "evt-002",
-            userId: "user-001",
-            profileId: "mock-001",
-            plantName: "Tommy Tomato",
-            date: "2026-03-23",
-            eventType: .needsSun,
-            description: "Move to a sunnier spot for at least 6 hours.",
-            completed: false
-        ),
         CalendarEvent(
             id: "evt-003",
             userId: "user-001",

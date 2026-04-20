@@ -10,7 +10,6 @@ class EventType(str, Enum):
     """Types of care events for plants."""
 
     NEEDS_WATER = "needs_water"
-    NEEDS_SUN = "needs_sun"
     NEEDS_TREATMENT = "needs_treatment"
     MOVE_INSIDE = "move_inside"
     MOVE_OUTSIDE = "move_outside"
