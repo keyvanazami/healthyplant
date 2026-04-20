@@ -23,8 +23,8 @@ async def test_get_calendar_events_valid_month(client, mock_firestore):
         "profileId": "profile-001",
         "plantName": "Tommy Tomato",
         "date": "2026-03-20",
-        "eventType": "needs_sun",
-        "description": "Move to sunny spot",
+        "eventType": "needs_treatment",
+        "description": "Apply neem oil treatment",
         "completed": False,
     }
 
