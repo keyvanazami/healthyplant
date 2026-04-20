@@ -56,8 +56,14 @@ struct CreateProfileView: View {
                             }
                         }
 
+                    }
+                    .listRowBackground(Color.white.opacity(0.05))
+
+                    // Indoor / Outdoor
+                    Section("Environment") {
                         Toggle(isOn: $isIndoor) {
-                            Label("Indoor Plant", systemImage: isIndoor ? "house.fill" : "sun.max.fill")
+                            Label(isIndoor ? "Indoor Plant" : "Outdoor Plant",
+                                  systemImage: isIndoor ? "house.fill" : "sun.max.fill")
                                 .foregroundColor(Theme.textPrimary)
                         }
                         .tint(Theme.accent)
