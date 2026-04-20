@@ -237,9 +237,9 @@ struct GardenerProfileView: View {
         defer { isDetectingLocation = false }
         do {
             let location = try await locationHelper.getLocation()
-            let lat = location.coordinate.latitude
-            let lon = location.coordinate.longitude
-            let url = URL(string: "https://phzmapi.org/\(lat)/\(lon).json")!
+            let placemarks = try await CLGeocoder().reverseGeocodeLocation(location)
+            guard let postalCode = placemarks.first?.postalCode else { return }
+            let url = URL(string: "https://phzmapi.org/\(postalCode).json")!
             let (data, _) = try await URLSession.shared.data(from: url)
             struct ZoneResponse: Decodable { let zone: String }
             let response = try JSONDecoder().decode(ZoneResponse.self, from: data)
