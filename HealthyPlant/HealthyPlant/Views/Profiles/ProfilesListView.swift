@@ -56,6 +56,9 @@ struct ProfilesListView: View {
                             .padding()
                             .padding(.bottom, 100)
                         }
+                        .refreshable {
+                            await viewModel.loadProfiles()
+                        }
                     case .garden:
                         gardenContent
                     }

@@ -35,14 +35,21 @@ struct GardenersListView: View {
                     }
                     .padding(.bottom, 100)
                 }
+                .refreshable {
+                    await load()
+                }
             }
         }
         .task {
             guard gardeners.isEmpty else { return }
-            isLoading = true
-            gardeners = (try? await service.fetchPublicGardeners()) ?? []
-            isLoading = false
+            await load()
         }
+    }
+
+    private func load() async {
+        isLoading = true
+        gardeners = (try? await service.fetchPublicGardeners()) ?? []
+        isLoading = false
     }
 
     private func gardenerRow(_ gardener: GardenerProfile) -> some View {

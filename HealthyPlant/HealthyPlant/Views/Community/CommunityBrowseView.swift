@@ -51,6 +51,9 @@ struct CommunityBrowseView: View {
                         .padding(.bottom, 100)
                     }
                 }
+                .refreshable {
+                    await viewModel.loadCommunity()
+                }
             }
         }
         .task {
