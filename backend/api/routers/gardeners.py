@@ -92,6 +92,7 @@ async def _build_response(
         experienceLevel=profile.get("experienceLevel"),
         avatarURL=profile.get("avatarURL"),
         isPublic=profile.get("isPublic", True),
+        climateZone=profile.get("climateZone"),
         followerCount=follower_count,
         followingCount=following_count,
         isFollowing=is_following,
@@ -127,6 +128,7 @@ async def upsert_my_profile(request: Request, body: GardenerProfileUpsertRequest
             "experienceLevel": body.experience_level,
             "avatarURL": body.avatar_url,
             "isPublic": body.is_public,
+            "climateZone": body.climate_zone,
         }
         # Remove None values so they don't overwrite existing fields on merge
         data = {k: v for k, v in data.items() if v is not None}

@@ -54,7 +54,8 @@ final class ProfilesViewModel: ObservableObject {
         ageDays: Int,
         heightFeet: Int,
         heightInches: Int,
-        imageData: Data?
+        imageData: Data?,
+        isIndoor: Bool = false
     ) async {
         isLoading = true
         errorMessage = nil
@@ -78,7 +79,8 @@ final class ProfilesViewModel: ObservableObject {
                 ageDays: ageDays,
                 heightFeet: heightFeet,
                 heightInches: heightInches,
-                photoURL: photoURL
+                photoURL: photoURL,
+                isIndoor: isIndoor
             )
             print("[ProfilesVM] Created profile: \(profile.id) - \(profile.name)")
             profiles.append(profile)
@@ -98,7 +100,8 @@ final class ProfilesViewModel: ObservableObject {
         plantType: String,
         ageDays: Int,
         heightFeet: Int,
-        heightInches: Int
+        heightInches: Int,
+        isIndoor: Bool
     ) async {
         isLoading = true
         errorMessage = nil
@@ -110,7 +113,8 @@ final class ProfilesViewModel: ObservableObject {
                 plantType: plantType,
                 ageDays: ageDays,
                 heightFeet: heightFeet,
-                heightInches: heightInches
+                heightInches: heightInches,
+                isIndoor: isIndoor
             )
             if let index = profiles.firstIndex(where: { $0.id == id }) {
                 profiles[index] = updated

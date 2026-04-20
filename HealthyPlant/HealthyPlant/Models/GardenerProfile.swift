@@ -82,6 +82,7 @@ struct GardenerProfile: Codable, Equatable {
     var experienceLevel: GardeningExperience?
     var avatarURL: String?
     var isPublic: Bool
+    var climateZone: String?
     var followerCount: Int
     var followingCount: Int
     var isFollowing: Bool
@@ -99,6 +100,7 @@ struct GardenerProfile: Codable, Equatable {
         experienceLevel: nil,
         avatarURL: nil,
         isPublic: true,
+        climateZone: nil,
         followerCount: 0,
         followingCount: 0,
         isFollowing: false,

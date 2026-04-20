@@ -17,6 +17,7 @@ struct CreateProfileView: View {
     @State private var heightInches = 0
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var selectedImageData: Data?
+    @State private var isIndoor: Bool = false
     @State private var isSaving = false
     @State private var showImageSourcePicker = false
     @State private var showCamera = false
@@ -54,6 +55,12 @@ struct CreateProfileView: View {
                                     .tint(Theme.accent)
                             }
                         }
+
+                        Toggle(isOn: $isIndoor) {
+                            Label("Indoor Plant", systemImage: isIndoor ? "house.fill" : "sun.max.fill")
+                                .foregroundColor(Theme.textPrimary)
+                        }
+                        .tint(Theme.accent)
                     }
                     .listRowBackground(Color.white.opacity(0.05))
 
@@ -211,7 +218,8 @@ struct CreateProfileView: View {
                 ageDays: totalAgeDays,
                 heightFeet: heightFeet,
                 heightInches: heightInches,
-                imageData: selectedImageData
+                imageData: selectedImageData,
+                isIndoor: isIndoor
             )
             dismiss()
         }

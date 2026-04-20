@@ -10,6 +10,7 @@ class GardenerProfileUpsertRequest(BaseModel):
     experience_level: Optional[str] = Field(None, alias="experienceLevel")
     avatar_url: Optional[str] = Field(None, alias="avatarURL")
     is_public: bool = Field(True, alias="isPublic")
+    climate_zone: Optional[str] = Field(None, alias="climateZone", max_length=100)
 
     model_config = {"populate_by_name": True}
 
@@ -21,6 +22,7 @@ class GardenerProfileResponse(BaseModel):
     experience_level: Optional[str] = Field(None, alias="experienceLevel")
     avatar_url: Optional[str] = Field(None, alias="avatarURL")
     is_public: bool = Field(True, alias="isPublic")
+    climate_zone: Optional[str] = Field(None, alias="climateZone")
     follower_count: int = Field(0, alias="followerCount")
     following_count: int = Field(0, alias="followingCount")
     is_following: bool = Field(False, alias="isFollowing")

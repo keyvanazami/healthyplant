@@ -23,6 +23,7 @@ struct ProfileDetailView: View {
     @State private var ageDays: Int
     @State private var heightFeet: Int
     @State private var heightInches: Int
+    @State private var isIndoor: Bool
 
     init(profile: PlantProfile, viewModel: ProfilesViewModel) {
         self.profile = profile
@@ -32,6 +33,7 @@ struct ProfileDetailView: View {
         _ageDays = State(initialValue: profile.ageDays)
         _heightFeet = State(initialValue: profile.heightFeet)
         _heightInches = State(initialValue: profile.heightInches)
+        _isIndoor = State(initialValue: profile.isIndoor)
     }
 
     var body: some View {
@@ -246,6 +248,12 @@ struct ProfileDetailView: View {
         VStack(spacing: 12) {
             detailRow(label: "Name", value: profile.name)
             detailRow(label: "Type", value: profile.plantType)
+            HStack {
+                Label(profile.isIndoor ? "Indoor" : "Outdoor", systemImage: profile.isIndoor ? "house.fill" : "sun.max.fill")
+                    .font(.subheadline)
+                    .foregroundColor(profile.isIndoor ? .blue : Theme.accent)
+                Spacer()
+            }
             detailRow(label: "Age", value: profile.formattedAge)
             detailRow(label: "Height", value: profile.formattedHeight)
             detailRow(label: "Planted", value: profile.plantedDate)
@@ -256,6 +264,12 @@ struct ProfileDetailView: View {
         VStack(spacing: 12) {
             editField(label: "Name", text: $name)
             editField(label: "Type", text: $plantType)
+
+            Toggle(isOn: $isIndoor) {
+                Label("Indoor Plant", systemImage: isIndoor ? "house.fill" : "sun.max.fill")
+                    .foregroundColor(Theme.textPrimary)
+            }
+            .tint(Theme.accent)
 
             HStack {
                 Text("Age (days)")
@@ -405,7 +419,8 @@ struct ProfileDetailView: View {
                 plantType: plantType,
                 ageDays: ageDays,
                 heightFeet: heightFeet,
-                heightInches: heightInches
+                heightInches: heightInches,
+                isIndoor: isIndoor
             )
         }
     }

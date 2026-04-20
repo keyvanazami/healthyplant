@@ -134,7 +134,8 @@ class AIService:
             }
 
     async def generate_plant_recommendations(
-        self, plant_type: str, age_days: int, planted_date: str
+        self, plant_type: str, age_days: int, planted_date: str,
+        is_indoor: bool = False, climate_zone: str = None
     ) -> dict:
         """Generate care recommendations for a plant."""
         if not self.model:
@@ -145,14 +146,31 @@ class AIService:
                 "harvest_time": "Varies by variety",
             }
 
+        location_line = f'Location: {"Indoors" if is_indoor else "Outdoors"}'
+        climate_line = f"Climate zone: {climate_zone}" if climate_zone else ""
+        extra_context = f"\n{location_line}"
+        if climate_line:
+            extra_context += f"\n{climate_line}"
+
+        if is_indoor:
+            sun_guidance = (
+                '- "sun_needs": A concise description of light requirements; since this is an indoor plant, '
+                "account for artificial/window light (e.g., \"Bright indirect light from a south-facing window, 4-6 hours\")"
+            )
+        else:
+            sun_guidance = (
+                '- "sun_needs": A concise description of sunlight requirements in standard outdoor sun hours '
+                '(e.g., "Full sun, 6-8 hours daily")'
+            )
+
         prompt = f"""You are an expert botanist and gardener. Given the following plant information, provide specific care recommendations.
 
 Plant type: {plant_type}
 Age: {age_days} days
-Planted date: {planted_date}
+Planted date: {planted_date}{extra_context}
 
 Respond with ONLY a JSON object (no markdown, no extra text) with these exact keys:
-- "sun_needs": A concise description of sunlight requirements (e.g., "Full sun, 6-8 hours daily")
+- {sun_guidance}
 - "water_needs": A concise watering schedule and tips (e.g., "Water deeply every 3-4 days, keep soil moist but not waterlogged")
 - "harvest_time": When to expect harvest or peak bloom, relative to the planted date (e.g., "Ready to harvest in approximately 60-75 days from planting")
 - "watering_frequency_days": An integer for how often to water in days (e.g., 3 means every 3 days)

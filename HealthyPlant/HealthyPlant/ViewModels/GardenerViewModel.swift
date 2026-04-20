@@ -13,6 +13,7 @@ final class GardenerViewModel: ObservableObject {
     @Published var editBio: String = ""
     @Published var editExperience: GardeningExperience? = nil
     @Published var editIsPublic: Bool = true
+    @Published var editClimateZone: String = ""
     @Published var pendingAvatarData: Data? = nil
     @Published var pendingAvatarImage: UIImage? = nil
 
@@ -27,6 +28,7 @@ final class GardenerViewModel: ObservableObject {
             editBio = myProfile.bio ?? ""
             editExperience = myProfile.experienceLevel
             editIsPublic = myProfile.isPublic
+            editClimateZone = myProfile.climateZone ?? ""
         } catch {
             // Profile may not exist yet — that's fine
         }
@@ -44,11 +46,13 @@ final class GardenerViewModel: ObservableObject {
                 pendingAvatarImage = nil
             }
             let bio = editBio.trimmingCharacters(in: .whitespacesAndNewlines)
+            let trimmedClimateZone = editClimateZone.trimmingCharacters(in: .whitespacesAndNewlines)
             myProfile = try await service.upsertMyProfile(
                 bio: bio.isEmpty ? nil : bio,
                 experienceLevel: editExperience,
                 avatarURL: avatarURL,
-                isPublic: editIsPublic
+                isPublic: editIsPublic,
+                climateZone: trimmedClimateZone.isEmpty ? nil : trimmedClimateZone
             )
         } catch {
             errorMessage = error.localizedDescription

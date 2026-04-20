@@ -10,6 +10,7 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
     var plantedDate: String
     var heightFeet: Int
     var heightInches: Int
+    var isIndoor: Bool = false
     var sunNeeds: String?
     var waterNeeds: String?
     var harvestTime: String?
@@ -51,6 +52,7 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
         plantedDate: "2026-02-05",
         heightFeet: 1,
         heightInches: 8,
+        isIndoor: false,
         sunNeeds: "Full sun (6-8 hours)",
         waterNeeds: "Water every 2-3 days",
         harvestTime: "60-80 days from transplant",

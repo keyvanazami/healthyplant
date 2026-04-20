@@ -15,7 +15,7 @@ from models.plant_profile import (
 logger = logging.getLogger(__name__)
 
 # Fields that affect care recommendations — changes trigger AI re-generation
-CARE_RELEVANT_FIELDS = {"plantType", "ageDays", "plantedDate"}
+CARE_RELEVANT_FIELDS = {"plantType", "ageDays", "plantedDate", "isIndoor"}
 
 router = APIRouter()
 
@@ -73,10 +73,14 @@ async def _generate_and_update_recommendations(
 ):
     """Background task to generate AI recommendations, update the profile, and regenerate calendar."""
     try:
+        gardener = await firestore.get_gardener_profile(user_id) or {}
+        climate_zone = gardener.get("climateZone")
         recommendations = await ai_service.generate_plant_recommendations(
             plant_type=profile.get("plantType", ""),
             age_days=profile.get("ageDays", 0),
             planted_date=profile.get("plantedDate", ""),
+            is_indoor=profile.get("isIndoor", False),
+            climate_zone=climate_zone,
         )
         await firestore.update_profile(user_id, profile_id, {
             "sunNeeds": recommendations.get("sun_needs"),

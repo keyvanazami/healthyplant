@@ -1,5 +1,6 @@
 import SwiftUI
 import PhotosUI
+import CoreLocation
 
 struct GardenerProfileView: View {
     @EnvironmentObject var authService: AuthService
@@ -7,6 +8,7 @@ struct GardenerProfileView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     @State private var showFollowing = false
     @State private var showSavedToast = false
+    @State private var isDetectingLocation = false
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -23,6 +25,7 @@ struct GardenerProfileView: View {
                             rankBadge
                             statsRow
                             bioSection
+                            climateZoneSection
                             experienceSection
                             privacySection
                             saveButton
@@ -184,6 +187,65 @@ struct GardenerProfileView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
         .padding(.horizontal, 20)
+    }
+
+    private var climateZoneSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("Climate Zone", systemImage: "thermometer.sun")
+                .font(.subheadline.weight(.semibold))
+                .foregroundColor(Theme.textSecondary)
+                .padding(.horizontal, 20)
+
+            HStack(spacing: 8) {
+                TextField("e.g. USDA Zone 9b, Tropical, Mediterranean", text: $viewModel.editClimateZone)
+                    .foregroundColor(Theme.textPrimary)
+                    .padding(12)
+                    .background(Color.white.opacity(0.05))
+                    .cornerRadius(10)
+                    .greenOutline(cornerRadius: 10)
+
+                Button {
+                    Task { await detectClimateZone() }
+                } label: {
+                    Image(systemName: isDetectingLocation ? "location.fill" : "location")
+                        .font(.system(size: 18))
+                        .foregroundColor(Theme.accent)
+                        .frame(width: 44, height: 44)
+                        .background(Theme.accent.opacity(0.12))
+                        .cornerRadius(10)
+                }
+                .disabled(isDetectingLocation)
+            }
+            .padding(.horizontal, 20)
+
+            Text("Used to tailor outdoor plant advice to your local conditions")
+                .font(.caption)
+                .foregroundColor(Theme.textSecondary)
+                .padding(.horizontal, 20)
+        }
+    }
+
+    private func detectClimateZone() async {
+        isDetectingLocation = true
+        defer { isDetectingLocation = false }
+
+        let manager = CLLocationManager()
+        manager.requestWhenInUseAuthorization()
+
+        guard let location = manager.location else { return }
+
+        do {
+            let placemarks = try await CLGeocoder().reverseGeocodeLocation(location)
+            if let p = placemarks.first {
+                var parts: [String] = []
+                if let city = p.locality { parts.append(city) }
+                if let state = p.administrativeArea { parts.append(state) }
+                if let country = p.isoCountryCode { parts.append(country) }
+                if !parts.isEmpty {
+                    viewModel.editClimateZone = parts.joined(separator: ", ")
+                }
+            }
+        } catch {}
     }
 
     private var experienceSection: some View {

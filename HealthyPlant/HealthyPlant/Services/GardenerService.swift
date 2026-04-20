@@ -16,13 +16,15 @@ struct GardenerService {
         bio: String?,
         experienceLevel: GardeningExperience?,
         avatarURL: String?,
-        isPublic: Bool
+        isPublic: Bool,
+        climateZone: String? = nil
     ) async throws -> GardenerProfile {
         let body = GardenerUpsertBody(
             bio: bio,
             experienceLevel: experienceLevel?.rawValue,
             avatarURL: avatarURL,
-            isPublic: isPublic
+            isPublic: isPublic,
+            climateZone: climateZone
         )
         return try await api.put(path: "/api/v1/gardeners/me", body: body)
     }
@@ -74,6 +76,7 @@ private struct GardenerUpsertBody: Encodable {
     let experienceLevel: String?
     let avatarURL: String?
     let isPublic: Bool
+    let climateZone: String?
 }
 
 private struct FCMTokenBody: Encodable {
