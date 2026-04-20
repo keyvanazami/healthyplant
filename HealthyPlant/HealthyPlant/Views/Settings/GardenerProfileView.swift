@@ -9,6 +9,7 @@ struct GardenerProfileView: View {
     @State private var showFollowing = false
     @State private var showSavedToast = false
     @State private var isDetectingLocation = false
+    @State private var locationHelper = LocationHelper()
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -191,13 +192,13 @@ struct GardenerProfileView: View {
 
     private var climateZoneSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Label("Climate Zone", systemImage: "thermometer.sun")
+            Label("USDA Hardiness Zone", systemImage: "thermometer.sun")
                 .font(.subheadline.weight(.semibold))
                 .foregroundColor(Theme.textSecondary)
                 .padding(.horizontal, 20)
 
             HStack(spacing: 8) {
-                TextField("e.g. USDA Zone 9b, Tropical, Mediterranean", text: $viewModel.editClimateZone)
+                TextField("e.g. 9b", text: $viewModel.editClimateZone)
                     .foregroundColor(Theme.textPrimary)
                     .padding(12)
                     .background(Color.white.opacity(0.05))
@@ -207,18 +208,24 @@ struct GardenerProfileView: View {
                 Button {
                     Task { await detectClimateZone() }
                 } label: {
-                    Image(systemName: isDetectingLocation ? "location.fill" : "location")
-                        .font(.system(size: 18))
-                        .foregroundColor(Theme.accent)
-                        .frame(width: 44, height: 44)
-                        .background(Theme.accent.opacity(0.12))
-                        .cornerRadius(10)
+                    Group {
+                        if isDetectingLocation {
+                            ProgressView().tint(Theme.accent).scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "location.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(Theme.accent)
+                        }
+                    }
+                    .frame(width: 44, height: 44)
+                    .background(Theme.accent.opacity(0.12))
+                    .cornerRadius(10)
                 }
                 .disabled(isDetectingLocation)
             }
             .padding(.horizontal, 20)
 
-            Text("Used to tailor outdoor plant advice to your local conditions")
+            Text("Tap to detect your zone from location")
                 .font(.caption)
                 .foregroundColor(Theme.textSecondary)
                 .padding(.horizontal, 20)
@@ -228,23 +235,15 @@ struct GardenerProfileView: View {
     private func detectClimateZone() async {
         isDetectingLocation = true
         defer { isDetectingLocation = false }
-
-        let manager = CLLocationManager()
-        manager.requestWhenInUseAuthorization()
-
-        guard let location = manager.location else { return }
-
         do {
-            let placemarks = try await CLGeocoder().reverseGeocodeLocation(location)
-            if let p = placemarks.first {
-                var parts: [String] = []
-                if let city = p.locality { parts.append(city) }
-                if let state = p.administrativeArea { parts.append(state) }
-                if let country = p.isoCountryCode { parts.append(country) }
-                if !parts.isEmpty {
-                    viewModel.editClimateZone = parts.joined(separator: ", ")
-                }
-            }
+            let location = try await locationHelper.getLocation()
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            let url = URL(string: "https://phzmapi.org/\(lat)/\(lon).json")!
+            let (data, _) = try await URLSession.shared.data(from: url)
+            struct ZoneResponse: Decodable { let zone: String }
+            let response = try JSONDecoder().decode(ZoneResponse.self, from: data)
+            viewModel.editClimateZone = response.zone
         } catch {}
     }
 
@@ -446,6 +445,37 @@ struct GardenerRowView: View {
             }
         }
         .padding(.vertical, 4)
+    }
+}
+
+// MARK: - Location Helper
+
+final class LocationHelper: NSObject, CLLocationManagerDelegate {
+    private let manager = CLLocationManager()
+    private var continuation: CheckedContinuation<CLLocation, Error>?
+
+    override init() {
+        super.init()
+        manager.delegate = self
+        manager.desiredAccuracy = kCLLocationAccuracyKilometer
+    }
+
+    func getLocation() async throws -> CLLocation {
+        manager.requestWhenInUseAuthorization()
+        return try await withCheckedThrowingContinuation { cont in
+            self.continuation = cont
+            self.manager.requestLocation()
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        continuation?.resume(returning: locations[0])
+        continuation = nil
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        continuation?.resume(throwing: error)
+        continuation = nil
     }
 }
 
