@@ -260,7 +260,7 @@ struct PublicGardenerProfileView: View {
         let isCurrentlyFollowing = profile?.isFollowing ?? false
 
         // Anonymous user guard
-        if !isCurrentlyFollowing && !authService.isGoogleLinked {
+        if !isCurrentlyFollowing && !authService.isAccountLinked {
             showSignInAlert = true
             return
         }

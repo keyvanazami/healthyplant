@@ -35,7 +35,7 @@ struct ContentView: View {
         if !onboardingComplete {
             OnboardingView(isComplete: $onboardingComplete)
                 .onChange(of: onboardingComplete) { _, done in
-                    if done && !authService.isGoogleLinked {
+                    if done && !authService.isAccountLinked {
                         showSignInPrompt = true
                     }
                 }

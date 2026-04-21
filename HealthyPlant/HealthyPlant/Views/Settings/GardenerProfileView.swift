@@ -17,7 +17,7 @@ struct GardenerProfileView: View {
             ZStack {
                 Theme.background.ignoresSafeArea()
 
-                if !authService.isGoogleLinked {
+                if !authService.isAccountLinked {
                     signInBanner
                 } else {
                     ScrollView {
@@ -349,21 +349,39 @@ struct GardenerProfileView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
 
-            Button {
-                Task { try? await authService.signInWithGoogle() }
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "g.circle.fill")
-                    Text("Continue with Google")
-                        .fontWeight(.semibold)
+            VStack(spacing: 10) {
+                Button {
+                    Task { try? await authService.signInWithGoogle() }
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "g.circle.fill")
+                        Text("Continue with Google")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Theme.accent)
+                    .foregroundColor(.black)
+                    .cornerRadius(14)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Theme.accent)
-                .foregroundColor(.black)
-                .cornerRadius(14)
-                .padding(.horizontal, 32)
+
+                NavigationLink {
+                    EmailAuthView(isPresented: .constant(true))
+                        .navigationBarHidden(true)
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "envelope.fill")
+                        Text("Continue with Email")
+                            .fontWeight(.semibold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .foregroundColor(Theme.accent)
+                    .cornerRadius(14)
+                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.accent, lineWidth: 1.5))
+                }
             }
+            .padding(.horizontal, 32)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

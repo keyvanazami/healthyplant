@@ -5,6 +5,7 @@ struct SignInPromptView: View {
     @Binding var isPresented: Bool
     @State private var isSigningIn = false
     @State private var errorMessage: String?
+    @State private var showEmailAuth = false
 
     var body: some View {
         ZStack {
@@ -22,15 +23,17 @@ struct SignInPromptView: View {
                         .foregroundColor(Theme.accent)
                 }
 
-                Text("Sign In to Sync")
-                    .font(.title2.weight(.bold))
-                    .foregroundColor(Theme.textPrimary)
+                VStack(spacing: 10) {
+                    Text("Sign In to Sync")
+                        .font(.title2.weight(.bold))
+                        .foregroundColor(Theme.textPrimary)
 
-                Text("Sign in with Google to keep your plants, care history, and settings safe across devices. You can always do this later in Settings.")
-                    .font(.subheadline)
-                    .foregroundColor(Theme.textSecondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 32)
+                    Text("Keep your plants, care history, and settings safe across devices. You can always do this later in Settings.")
+                        .font(.subheadline)
+                        .foregroundColor(Theme.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 32)
+                }
 
                 if let error = errorMessage {
                     Text(error)
@@ -42,13 +45,13 @@ struct SignInPromptView: View {
                 Spacer()
 
                 VStack(spacing: 12) {
+                    // Google
                     Button {
-                        Task { await signIn() }
+                        Task { await signInWithGoogle() }
                     } label: {
                         HStack(spacing: 10) {
                             if isSigningIn {
-                                ProgressView()
-                                    .tint(.black)
+                                ProgressView().tint(.black)
                             } else {
                                 Image(systemName: "g.circle.fill")
                                     .font(.system(size: 20))
@@ -64,6 +67,24 @@ struct SignInPromptView: View {
                     }
                     .disabled(isSigningIn)
 
+                    // Email / Password
+                    Button {
+                        showEmailAuth = true
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "envelope.fill")
+                                .font(.system(size: 18))
+                            Text("Continue with Email")
+                        }
+                        .font(.body.weight(.semibold))
+                        .foregroundColor(Theme.accent)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.clear)
+                        .cornerRadius(14)
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.accent, lineWidth: 1.5))
+                    }
+
                     Button {
                         isPresented = false
                     } label: {
@@ -76,9 +97,16 @@ struct SignInPromptView: View {
                 .padding(.bottom, 40)
             }
         }
+        .fullScreenCover(isPresented: $showEmailAuth) {
+            EmailAuthView(isPresented: $showEmailAuth)
+                .environmentObject(authService)
+                .onChange(of: authService.isAccountLinked) { _, linked in
+                    if linked { isPresented = false }
+                }
+        }
     }
 
-    private func signIn() async {
+    private func signInWithGoogle() async {
         isSigningIn = true
         errorMessage = nil
         do {
@@ -86,7 +114,6 @@ struct SignInPromptView: View {
             isPresented = false
         } catch {
             errorMessage = error.localizedDescription
-            print("[SignIn] Google sign-in failed: \(error)")
         }
         isSigningIn = false
     }

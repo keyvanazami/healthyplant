@@ -21,7 +21,7 @@ struct SettingsView: View {
                 List {
                     // Account
                     Section("Account") {
-                        if authService.isGoogleLinked {
+                        if authService.isAccountLinked {
                             HStack(spacing: 12) {
                                 if let photoURL = authService.photoURL {
                                     AsyncImage(url: photoURL) { image in
@@ -34,13 +34,18 @@ struct SettingsView: View {
                                     .frame(width: 40, height: 40)
                                     .clipShape(Circle())
                                 } else {
-                                    Image(systemName: "person.circle.fill")
-                                        .font(.system(size: 36))
-                                        .foregroundColor(Theme.accent)
+                                    ZStack {
+                                        Circle()
+                                            .fill(Theme.accent.opacity(0.15))
+                                            .frame(width: 40, height: 40)
+                                        Image(systemName: authService.isGoogleLinked ? "g.circle.fill" : "envelope.circle.fill")
+                                            .font(.system(size: 22))
+                                            .foregroundColor(Theme.accent)
+                                    }
                                 }
 
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(authService.displayName ?? "Google User")
+                                    Text(authService.displayName ?? (authService.isGoogleLinked ? "Google User" : "Email User"))
                                         .font(.subheadline.weight(.semibold))
                                         .foregroundColor(Theme.textPrimary)
                                     Text(authService.email ?? "")
@@ -91,6 +96,24 @@ struct SettingsView: View {
                                 }
                             }
                             .disabled(isSigningIn)
+                            .listRowBackground(Color.white.opacity(0.05))
+
+                            NavigationLink {
+                                EmailAuthView(isPresented: .constant(true))
+                                    .navigationBarHidden(true)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "envelope.fill")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(Theme.accent)
+                                    Text("Sign in with Email")
+                                        .foregroundColor(Theme.textPrimary)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(Theme.textSecondary)
+                                }
+                            }
                             .listRowBackground(Color.white.opacity(0.05))
                         }
                     }

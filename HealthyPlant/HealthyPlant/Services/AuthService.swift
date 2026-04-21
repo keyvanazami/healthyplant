@@ -7,6 +7,7 @@ final class AuthService: ObservableObject {
     @Published var userId: String
     @Published var isAuthenticated: Bool
     @Published var isGoogleLinked: Bool = false
+    @Published var isEmailLinked: Bool = false
     @Published var displayName: String?
     @Published var email: String?
     @Published var photoURL: URL?
@@ -14,11 +15,15 @@ final class AuthService: ObservableObject {
     private static let userIdKey = "hp_user_id"
     private static let anonIdKey = "hp_anonymous_id"
 
+    /// True if the user has a real account (Google or email/password), not anonymous.
+    var isAccountLinked: Bool { isGoogleLinked || isEmailLinked }
+
     init() {
         if let firebaseUser = Auth.auth().currentUser {
             self.userId = firebaseUser.uid
             self.isAuthenticated = true
             self.isGoogleLinked = firebaseUser.providerData.contains { $0.providerID == "google.com" }
+            self.isEmailLinked = firebaseUser.providerData.contains { $0.providerID == "password" }
             self.displayName = firebaseUser.displayName
             self.email = firebaseUser.email
             self.photoURL = firebaseUser.photoURL
@@ -35,7 +40,7 @@ final class AuthService: ObservableObject {
         }
     }
 
-    /// The anonymous user ID before Google sign-in (for data migration)
+    /// The anonymous user ID before sign-in (for data migration)
     var anonymousId: String? {
         UserDefaults.standard.string(forKey: Self.anonIdKey)
     }
@@ -57,7 +62,6 @@ final class AuthService: ObservableObject {
             throw AuthError.noRootViewController
         }
 
-        // Walk up to the topmost presented controller
         var topVC = rootVC
         while let presented = topVC.presentedViewController {
             topVC = presented
@@ -85,15 +89,78 @@ final class AuthService: ObservableObject {
         userId = firebaseUser.uid
         isAuthenticated = true
         isGoogleLinked = true
+        isEmailLinked = false
         displayName = firebaseUser.displayName
         email = firebaseUser.email
         photoURL = firebaseUser.photoURL
         UserDefaults.standard.set(firebaseUser.uid, forKey: Self.userIdKey)
 
-        // Migrate data from anonymous account
         if let oldId = oldAnonId, oldId != firebaseUser.uid {
             await migrateData(from: oldId, to: firebaseUser.uid)
         }
+    }
+
+    // MARK: - Email / Password Sign-Up
+
+    func signUpWithEmail(email: String, password: String, displayName: String) async throws {
+        let oldAnonId = UserDefaults.standard.string(forKey: Self.userIdKey)
+
+        let authResult = try await Auth.auth().createUser(withEmail: email, password: password)
+        let firebaseUser = authResult.user
+
+        // Set display name
+        let changeRequest = firebaseUser.createProfileChangeRequest()
+        changeRequest.displayName = displayName.isEmpty ? email.components(separatedBy: "@").first : displayName
+        try? await changeRequest.commitChanges()
+
+        if let oldId = oldAnonId, oldId != firebaseUser.uid {
+            UserDefaults.standard.set(oldId, forKey: Self.anonIdKey)
+        }
+
+        userId = firebaseUser.uid
+        isAuthenticated = true
+        isEmailLinked = true
+        isGoogleLinked = false
+        self.displayName = firebaseUser.displayName ?? displayName
+        self.email = firebaseUser.email
+        self.photoURL = nil
+        UserDefaults.standard.set(firebaseUser.uid, forKey: Self.userIdKey)
+
+        if let oldId = oldAnonId, oldId != firebaseUser.uid {
+            await migrateData(from: oldId, to: firebaseUser.uid)
+        }
+    }
+
+    // MARK: - Email / Password Sign-In
+
+    func signInWithEmail(email: String, password: String) async throws {
+        let oldAnonId = UserDefaults.standard.string(forKey: Self.userIdKey)
+
+        let authResult = try await Auth.auth().signIn(withEmail: email, password: password)
+        let firebaseUser = authResult.user
+
+        if let oldId = oldAnonId, oldId != firebaseUser.uid {
+            UserDefaults.standard.set(oldId, forKey: Self.anonIdKey)
+        }
+
+        userId = firebaseUser.uid
+        isAuthenticated = true
+        isEmailLinked = true
+        isGoogleLinked = firebaseUser.providerData.contains { $0.providerID == "google.com" }
+        self.displayName = firebaseUser.displayName
+        self.email = firebaseUser.email
+        self.photoURL = firebaseUser.photoURL
+        UserDefaults.standard.set(firebaseUser.uid, forKey: Self.userIdKey)
+
+        if let oldId = oldAnonId, oldId != firebaseUser.uid {
+            await migrateData(from: oldId, to: firebaseUser.uid)
+        }
+    }
+
+    // MARK: - Password Reset
+
+    func sendPasswordReset(email: String) async throws {
+        try await Auth.auth().sendPasswordReset(withEmail: email)
     }
 
     // MARK: - Sign Out
@@ -109,6 +176,7 @@ final class AuthService: ObservableObject {
         userId = newId
         isAuthenticated = true
         isGoogleLinked = false
+        isEmailLinked = false
         displayName = nil
         email = nil
         photoURL = nil
