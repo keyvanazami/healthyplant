@@ -97,12 +97,12 @@ struct SignInPromptView: View {
                 .padding(.bottom, 40)
             }
         }
+        .onChange(of: authService.isAccountLinked) { _, linked in
+            if linked { isPresented = false }
+        }
         .fullScreenCover(isPresented: $showEmailAuth) {
             EmailAuthView(isPresented: $showEmailAuth)
                 .environmentObject(authService)
-                .onChange(of: authService.isAccountLinked) { _, linked in
-                    if linked { isPresented = false }
-                }
         }
     }
 
