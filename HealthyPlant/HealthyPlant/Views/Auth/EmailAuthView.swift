@@ -4,6 +4,7 @@ struct EmailAuthView: View {
     @EnvironmentObject var authService: AuthService
     @Binding var isPresented: Bool
     var onSuccess: (() -> Void)? = nil
+    @Environment(\.dismiss) private var dismiss
 
     enum Mode { case signIn, signUp }
     @State private var mode: Mode = .signIn
@@ -123,7 +124,7 @@ struct EmailAuthView: View {
 
                     // Back
                     Button {
-                        isPresented = false
+                        dismiss()
                     } label: {
                         Text("Back")
                             .font(.subheadline)
@@ -216,7 +217,7 @@ struct EmailAuthView: View {
                                                       password: password,
                                                       displayName: displayName.trimmingCharacters(in: .whitespaces))
             }
-            isPresented = false
+            dismiss()
             onSuccess?()
         } catch {
             errorMessage = friendlyError(error)
