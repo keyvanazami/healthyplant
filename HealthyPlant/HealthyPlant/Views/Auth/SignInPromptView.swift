@@ -97,18 +97,11 @@ struct SignInPromptView: View {
                 .padding(.bottom, 40)
             }
         }
-        .onChange(of: authService.isAccountLinked) { _, linked in
-            if linked { isPresented = false }
-        }
-        .onChange(of: showEmailAuth) { _, isShowing in
-            // Catches the case where isAccountLinked fired while the cover was still animating
-            if !isShowing && authService.isAccountLinked {
-                isPresented = false
-            }
-        }
         .fullScreenCover(isPresented: $showEmailAuth) {
-            EmailAuthView(isPresented: $showEmailAuth)
-                .environmentObject(authService)
+            EmailAuthView(isPresented: $showEmailAuth, onSuccess: {
+                isPresented = false
+            })
+            .environmentObject(authService)
         }
     }
 

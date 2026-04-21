@@ -3,6 +3,7 @@ import SwiftUI
 struct EmailAuthView: View {
     @EnvironmentObject var authService: AuthService
     @Binding var isPresented: Bool
+    var onSuccess: (() -> Void)? = nil
 
     enum Mode { case signIn, signUp }
     @State private var mode: Mode = .signIn
@@ -216,6 +217,7 @@ struct EmailAuthView: View {
                                                       displayName: displayName.trimmingCharacters(in: .whitespaces))
             }
             isPresented = false
+            onSuccess?()
         } catch {
             errorMessage = friendlyError(error)
         }
