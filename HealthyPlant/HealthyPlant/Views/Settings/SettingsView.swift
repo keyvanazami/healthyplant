@@ -108,10 +108,6 @@ struct SettingsView: View {
                                         .foregroundColor(Theme.accent)
                                     Text("Sign in with Email")
                                         .foregroundColor(Theme.textPrimary)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption)
-                                        .foregroundColor(Theme.textSecondary)
                                 }
                             }
                             .listRowBackground(Color.white.opacity(0.05))
