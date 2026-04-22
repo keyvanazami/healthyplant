@@ -43,6 +43,9 @@ class MockFirestoreDB:
             snaps.append(snap)
         return snaps
 
+    async def set(self, data, merge=False):
+        pass
+
     async def run_async_transaction(self, callback):
         txn = MagicMock()
         # get() inside transaction returns a non-premium, zero-count snapshot
