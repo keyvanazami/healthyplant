@@ -21,6 +21,7 @@ Firestore layout:
         calendarCount: int
 """
 
+import asyncio
 import logging
 import os
 from datetime import datetime, timezone
@@ -68,7 +69,9 @@ async def check_and_increment(db, user_id: str, category: str) -> None:
     daily_ref = user_ref.collection("ai_usage").document(_today())
     total_ref = user_ref.collection("ai_usage").document("total")
 
-    user_snap, daily_snap, total_snap = await db.get_all([user_ref, daily_ref, total_ref])
+    user_snap, daily_snap, total_snap = await asyncio.gather(
+        user_ref.get(), daily_ref.get(), total_ref.get()
+    )
 
     daily_data = daily_snap.to_dict() if daily_snap.exists else {}
     total_data = total_snap.to_dict() if total_snap.exists else {}
@@ -105,7 +108,9 @@ async def get_usage(db, user_id: str) -> dict:
     daily_ref = user_ref.collection("ai_usage").document(_today())
     total_ref = user_ref.collection("ai_usage").document("total")
 
-    user_snap, daily_snap, total_snap = await db.get_all([user_ref, daily_ref, total_ref])
+    user_snap, daily_snap, total_snap = await asyncio.gather(
+        user_ref.get(), daily_ref.get(), total_ref.get()
+    )
 
     daily = daily_snap.to_dict() if daily_snap.exists else {}
     total = total_snap.to_dict() if total_snap.exists else {}
