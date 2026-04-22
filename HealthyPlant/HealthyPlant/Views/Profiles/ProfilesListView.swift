@@ -5,6 +5,7 @@ enum ProfileViewMode { case booklet, grid, garden }
 struct ProfilesListView: View {
     @StateObject private var viewModel = ProfilesViewModel()
     @StateObject private var gardenViewModel = GardenViewModel()
+    @EnvironmentObject var authService: AuthService
     @State private var showCreateProfile = false
     @State private var profileToDelete: PlantProfile? = nil
     @State private var showDeleteAlert = false
@@ -31,11 +32,31 @@ struct ProfilesListView: View {
                             .foregroundColor(Theme.textSecondary)
                     }
                 } else if viewModel.profiles.isEmpty && viewMode != .garden {
-                    emptyState
+                    ScrollView {
+                        emptyState
+                            .frame(maxWidth: .infinity)
+                            .padding(.top, 120)
+                    }
+                    .refreshable {
+                        await viewModel.loadProfiles()
+                    }
                 } else {
                     switch viewMode {
                     case .booklet:
-                        ProfileBookletView(profiles: viewModel.profiles, viewModel: viewModel)
+                        GeometryReader { proxy in
+                            List {
+                                ProfileBookletView(profiles: viewModel.profiles, viewModel: viewModel)
+                                    .frame(height: proxy.size.height)
+                                    .listRowInsets(EdgeInsets())
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
+                            }
+                            .listStyle(.plain)
+                            .scrollContentBackground(.hidden)
+                            .refreshable {
+                                await viewModel.loadProfiles()
+                            }
+                        }
                     case .grid:
                         ScrollView {
                             LazyVGrid(columns: columns, spacing: 16) {
@@ -145,6 +166,9 @@ struct ProfilesListView: View {
             }
             .task {
                 await viewModel.loadProfiles()
+            }
+            .onChange(of: authService.userId) { _, _ in
+                Task { await viewModel.loadProfiles() }
             }
             .onChange(of: viewMode) { _, mode in
                 if mode == .garden {

@@ -22,10 +22,12 @@
 		3785628208337DC48460753C /* PublicGardenerProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05DA7620C5FB3B2565C89C88 /* PublicGardenerProfileView.swift */; };
 		3AEDBD88A996D5AD9E3431FB /* CommunityComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD5A4B711B2B7CEFB6C10F3 /* CommunityComment.swift */; };
 		4262EF70FFD4F7D6A52CAEF9 /* ChatBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C5A7E5DD63C4056D6B2FE8C /* ChatBubbleView.swift */; };
+		4A6958A1748846F90CE2F3F5 /* EmailAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB0C6CC442267B041B20D1A7 /* EmailAuthView.swift */; };
 		4BA61E4B6E0B40FD3D97FACB /* GardenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B52B198D286EF6642EFF35ED /* GardenView.swift */; };
 		50F8B932534BB850696A9B48 /* CalendarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */; };
 		550BA8AE3A5555FAD73B3B0C /* SensorReadingCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3803BBF6B1EE21194644410C /* SensorReadingCard.swift */; };
 		56461FA418405FAD6A26A9DE /* ProfileFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230BD0C2BECEACB1E2318898 /* ProfileFlowUITests.swift */; };
+		5C4F5DFFA48A3DD13B9B8786 /* PlantAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D6F128495FDBB0B045EB80 /* PlantAnimationView.swift */; };
 		61ABAE9EC5CAE06C30697277 /* CalendarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */; };
 		62BC69F35E5769ABE14C91B4 /* HomeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84BEBF554FDF515B95719584 /* HomeUITests.swift */; };
 		6D20C63E67B7BA93E77D82B7 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B005E6AFF5ED6347D84E9987 /* CommunityViewModel.swift */; };
@@ -163,6 +165,7 @@
 		8E79621A9D19C1277D432A3C /* HealthyPlantUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = HealthyPlantUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8ED4D461DEE50371ADB38656 /* GardenerProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenerProfileView.swift; sourceTree = "<group>"; };
 		9014F3239F993F74ED65E461 /* GardenerProfileSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenerProfileSetupView.swift; sourceTree = "<group>"; };
+		90D6F128495FDBB0B045EB80 /* PlantAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantAnimationView.swift; sourceTree = "<group>"; };
 		94A45D715ED3FE8999514B99 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		9575426B00F3E4653B4895D8 /* GardenerProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GardenerProfile.swift; sourceTree = "<group>"; };
 		9933685EDD2EF5AFEFECE7B3 /* ProfilesViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesViewModelTests.swift; sourceTree = "<group>"; };
@@ -187,6 +190,7 @@
 		D7CE5FE3D1D3CE1518D5BBBB /* SignInPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromptView.swift; sourceTree = "<group>"; };
 		D86088F38AD5D230F50AEC6F /* SensorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorViewModel.swift; sourceTree = "<group>"; };
 		DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
+		DB0C6CC442267B041B20D1A7 /* EmailAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthView.swift; sourceTree = "<group>"; };
 		E2FC0F3884B32F03E54007E7 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
 		E48BBEFDE6AB09A65A539BE8 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EFEF40604144CF7328862DEE /* CalendarEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarEventTests.swift; sourceTree = "<group>"; };
@@ -390,6 +394,7 @@
 		BD9895A41466192B3D86B373 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
+				DB0C6CC442267B041B20D1A7 /* EmailAuthView.swift */,
 				D7CE5FE3D1D3CE1518D5BBBB /* SignInPromptView.swift */,
 			);
 			path = Auth;
@@ -419,6 +424,7 @@
 			children = (
 				4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */,
 				55F311D4F3D58A9DC7ED4E60 /* HomeView.swift */,
+				90D6F128495FDBB0B045EB80 /* PlantAnimationView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -692,6 +698,7 @@
 				6D3DC08BDF68D0D6D3FEBBE1 /* CreateCalendarEventView.swift in Sources */,
 				0D8C6F3D1FF174C78173B6FF /* CreateProfileView.swift in Sources */,
 				ECF71DFC30B273E777F8A883 /* DayEventsView.swift in Sources */,
+				4A6958A1748846F90CE2F3F5 /* EmailAuthView.swift in Sources */,
 				92D55262C66FD5D0574201BB /* Extensions.swift in Sources */,
 				4BA61E4B6E0B40FD3D97FACB /* GardenView.swift in Sources */,
 				E0F05610362FB895556A9278 /* GardenViewModel.swift in Sources */,
@@ -708,6 +715,7 @@
 				04020A9133A100DE876D15DB /* ImageUploadService.swift in Sources */,
 				CFA18C464582D2B631A88981 /* NotificationService.swift in Sources */,
 				8D98010E61DD49B51E406B55 /* OnboardingView.swift in Sources */,
+				5C4F5DFFA48A3DD13B9B8786 /* PlantAnimationView.swift in Sources */,
 				7F2A5301161F18F873D92C95 /* PlantProfile.swift in Sources */,
 				BB337B5B83593CB4ED82126A /* PlantScanView.swift in Sources */,
 				C3360A871998ABFE3F999456 /* PlantService.swift in Sources */,
@@ -789,7 +797,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -892,7 +900,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;

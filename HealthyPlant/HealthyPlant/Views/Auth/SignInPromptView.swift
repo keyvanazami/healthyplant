@@ -3,6 +3,9 @@ import SwiftUI
 struct SignInPromptView: View {
     @EnvironmentObject var authService: AuthService
     @Binding var isPresented: Bool
+    /// Called when an *existing* user successfully signs in (Google or email sign-in).
+    /// Not called for new sign-ups or "Skip for now".
+    var onSignedIn: (() -> Void)? = nil
     @State private var isSigningIn = false
     @State private var errorMessage: String?
     @State private var showEmailAuth = false
@@ -100,6 +103,8 @@ struct SignInPromptView: View {
         .fullScreenCover(isPresented: $showEmailAuth) {
             EmailAuthView(isPresented: $showEmailAuth, onSuccess: {
                 isPresented = false
+            }, onSignedIn: {
+                onSignedIn?()
             })
             .environmentObject(authService)
         }
@@ -110,6 +115,7 @@ struct SignInPromptView: View {
         errorMessage = nil
         do {
             try await authService.signInWithGoogle()
+            onSignedIn?()
             isPresented = false
         } catch {
             errorMessage = error.localizedDescription

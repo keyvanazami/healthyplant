@@ -4,6 +4,7 @@ struct EmailAuthView: View {
     @EnvironmentObject var authService: AuthService
     @Binding var isPresented: Bool
     var onSuccess: (() -> Void)? = nil
+    var onSignedIn: (() -> Void)? = nil
     @Environment(\.dismiss) private var dismiss
 
     enum Mode { case signIn, signUp }
@@ -212,6 +213,7 @@ struct EmailAuthView: View {
             if mode == .signIn {
                 try await authService.signInWithEmail(email: email.trimmingCharacters(in: .whitespaces),
                                                       password: password)
+                onSignedIn?()
             } else {
                 try await authService.signUpWithEmail(email: email.trimmingCharacters(in: .whitespaces),
                                                       password: password,

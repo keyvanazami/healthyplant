@@ -45,6 +45,9 @@ struct GardenerProfileView: View {
                 }
             }
             .task { await viewModel.loadMyProfile() }
+            .onChange(of: authService.userId) { _, _ in
+                Task { await viewModel.loadMyProfile() }
+            }
             .sheet(isPresented: $showFollowing) {
                 FollowingListView(viewModel: viewModel)
             }

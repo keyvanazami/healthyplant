@@ -4,7 +4,7 @@ import SwiftUI
 
 enum AppTab: String, CaseIterable {
     case home = "Home"
-    case profiles = "Profiles"
+    case profiles = "Plants"
     case scan = "Scan"
     case community = "Community"
     case calendar = "Calendar"
@@ -32,63 +32,62 @@ struct ContentView: View {
     @State private var gardenerSetupComplete = UserDefaults.standard.bool(forKey: "hp_gardener_setup_complete")
 
     var body: some View {
-        if !onboardingComplete {
-            OnboardingView(isComplete: $onboardingComplete)
-                .onChange(of: onboardingComplete) { _, done in
-                    if done && !authService.isAccountLinked {
-                        showSignInPrompt = true
-                    }
-                }
-        } else if showSignInPrompt {
-            SignInPromptView(isPresented: $showSignInPrompt)
-        } else if !gardenerSetupComplete {
-            GardenerProfileSetupView(isComplete: $gardenerSetupComplete)
-                .onAppear {
-                    // Persist immediately so restarts never show this screen again,
-                    // regardless of whether the user saves or skips this session.
+        Group {
+            if !onboardingComplete {
+                OnboardingView(isComplete: $onboardingComplete)
+            } else if showSignInPrompt {
+                SignInPromptView(isPresented: $showSignInPrompt, onSignedIn: {
+                    gardenerSetupComplete = true
                     UserDefaults.standard.set(true, forKey: "hp_gardener_setup_complete")
+                })
+            } else if !gardenerSetupComplete {
+                GardenerProfileSetupView(isComplete: $gardenerSetupComplete)
+                    .onAppear {
+                        UserDefaults.standard.set(true, forKey: "hp_gardener_setup_complete")
+                    }
+            } else {
+                ZStack(alignment: .bottom) {
+                    HomeView(isVisible: selectedTab == .home)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .opacity(selectedTab == .home ? 1 : 0)
+                        .allowsHitTesting(selectedTab == .home)
+
+                    ProfilesListView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .opacity(selectedTab == .profiles ? 1 : 0)
+                        .allowsHitTesting(selectedTab == .profiles)
+
+                    PlantScanView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .opacity(selectedTab == .scan ? 1 : 0)
+                        .allowsHitTesting(selectedTab == .scan)
+
+                    CommunityTabView(isVisible: selectedTab == .community)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .opacity(selectedTab == .community ? 1 : 0)
+                        .allowsHitTesting(selectedTab == .community)
+
+                    CalendarView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .opacity(selectedTab == .calendar ? 1 : 0)
+                        .allowsHitTesting(selectedTab == .calendar)
+
+                    AssistantView()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .opacity(selectedTab == .assistant ? 1 : 0)
+                        .allowsHitTesting(selectedTab == .assistant)
+
+                    TabBarView(selectedTab: $selectedTab)
                 }
-        } else {
-        ZStack(alignment: .bottom) {
-            // Keep all tab views alive to prevent cancellation of in-flight requests
-            HomeView(isVisible: selectedTab == .home)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .opacity(selectedTab == .home ? 1 : 0)
-                .allowsHitTesting(selectedTab == .home)
-
-            ProfilesListView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .opacity(selectedTab == .profiles ? 1 : 0)
-                .allowsHitTesting(selectedTab == .profiles)
-
-            PlantScanView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .opacity(selectedTab == .scan ? 1 : 0)
-                .allowsHitTesting(selectedTab == .scan)
-
-            CommunityTabView(isVisible: selectedTab == .community)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .opacity(selectedTab == .community ? 1 : 0)
-                .allowsHitTesting(selectedTab == .community)
-
-            CalendarView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .opacity(selectedTab == .calendar ? 1 : 0)
-                .allowsHitTesting(selectedTab == .calendar)
-
-            AssistantView()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .opacity(selectedTab == .assistant ? 1 : 0)
-                .allowsHitTesting(selectedTab == .assistant)
-
-            // Custom tab bar
-            TabBarView(selectedTab: $selectedTab)
+                .background(Theme.background)
+                .ignoresSafeArea(.keyboard)
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("OpenCommunityTab"))) { _ in
+                    selectedTab = .community
+                }
+            }
         }
-        .background(Theme.background)
-        .ignoresSafeArea(.keyboard)
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("OpenCommunityTab"))) { _ in
-            selectedTab = .community
-        }
+        .onChange(of: onboardingComplete) { _, done in
+            if done { showSignInPrompt = true }
         }
     }
 }

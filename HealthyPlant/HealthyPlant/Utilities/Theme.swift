@@ -3,12 +3,17 @@ import SwiftUI
 // MARK: - Theme
 
 struct Theme {
-    static let background = Color.black
-    static let accent = Color(hex: "00C853")
-    static let textPrimary = Color.white
-    static let textSecondary = Color.gray
+    /// Deep warm soil-brown — almost black but with earthen warmth
+    static let background = Color(hex: "161410")
+    /// Natural leaf green — softer and more organic than neon
+    static let accent = Color(hex: "6DBE67")
+    /// Warm cream — easier on the eyes than pure white
+    static let textPrimary = Color(hex: "F0E8DC")
+    /// Warm taupe — complements the cream primary
+    static let textSecondary = Color(hex: "8A8278")
     static let outlineWidth: CGFloat = 1.5
-    static let bubbleAssistant = Color(white: 0.15)
+    /// Warm dark brown for assistant chat bubbles
+    static let bubbleAssistant = Color(hex: "252220")
     static let bubbleUser = accent
 }
 
