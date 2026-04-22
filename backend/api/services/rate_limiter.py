@@ -55,7 +55,7 @@ def _today() -> str:
 
 
 async def check_and_increment(db, user_id: str, category: str) -> None:
-    """Check daily + lifetime limits, then atomically increment both counters.
+    """Check daily + lifetime limits, then increment both counters.
 
     Premium users (isPremium=true on user doc) bypass all checks.
     Raises HTTP 429 when a limit is reached.
@@ -68,45 +68,33 @@ async def check_and_increment(db, user_id: str, category: str) -> None:
     daily_ref = user_ref.collection("ai_usage").document(_today())
     total_ref = user_ref.collection("ai_usage").document("total")
 
-    exceeded: str | None = None  # "daily" | "max" | None
+    user_snap, daily_snap, total_snap = await db.get_all([user_ref, daily_ref, total_ref])
 
-    async def _txn(transaction):
-        nonlocal exceeded
-        user_snap, daily_snap, total_snap = await transaction.get_all(
-            [user_ref, daily_ref, total_ref]
-        )
+    daily_data = daily_snap.to_dict() if daily_snap.exists else {}
+    total_data = total_snap.to_dict() if total_snap.exists else {}
 
-        # Premium users skip all limits
-        if (user_snap.to_dict() or {}).get("isPremium", False):
-            transaction.set(daily_ref, {field: (daily_snap.to_dict() or {}).get(field, 0) + 1}, merge=True)
-            transaction.set(total_ref, {field: (total_snap.to_dict() or {}).get(field, 0) + 1}, merge=True)
-            return
+    # Premium users skip all limits
+    if (user_snap.to_dict() or {}).get("isPremium", False):
+        await daily_ref.set({field: daily_data.get(field, 0) + 1}, merge=True)
+        await total_ref.set({field: total_data.get(field, 0) + 1}, merge=True)
+        return
 
-        daily_count = (daily_snap.to_dict() or {}).get(field, 0)
-        total_count = (total_snap.to_dict() or {}).get(field, 0)
+    daily_count = daily_data.get(field, 0)
+    total_count = total_data.get(field, 0)
 
-        if total_count >= max_limit:
-            exceeded = "max"
-            return
-        if daily_count >= daily_limit:
-            exceeded = "daily"
-            return
-
-        transaction.set(daily_ref, {field: daily_count + 1}, merge=True)
-        transaction.set(total_ref, {field: total_count + 1}, merge=True)
-
-    await db.run_async_transaction(_txn)
-
-    if exceeded == "max":
+    if total_count >= max_limit:
         raise HTTPException(
             status_code=429,
             detail=f"Lifetime {category} limit of {max_limit} reached. Upgrade to premium for unlimited access.",
         )
-    if exceeded == "daily":
+    if daily_count >= daily_limit:
         raise HTTPException(
             status_code=429,
             detail=f"Daily {category} limit of {daily_limit} reached. Try again tomorrow.",
         )
+
+    await daily_ref.set({field: daily_count + 1}, merge=True)
+    await total_ref.set({field: total_count + 1}, merge=True)
 
     logger.debug(f"[RateLimit] {user_id} {category} incremented")
 
