@@ -138,6 +138,7 @@
 		3803BBF6B1EE21194644410C /* SensorReadingCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorReadingCard.swift; sourceTree = "<group>"; };
 		392B39C3E180BBB7A06A41C2 /* HealthyPlantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthyPlantTests.swift; sourceTree = "<group>"; };
 		3FD7B146ED0B0E553AF12C8E /* CreateProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProfileView.swift; sourceTree = "<group>"; };
+		4308ACCB7807F19CE3918D54 /* HealthyPlant.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HealthyPlant.entitlements; sourceTree = "<group>"; };
 		4FD2C872FCEF64484A02B413 /* CactusAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CactusAnimationView.swift; sourceTree = "<group>"; };
 		5005F68806E7D348C880E825 /* ImageUploadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploadService.swift; sourceTree = "<group>"; };
 		55F311D4F3D58A9DC7ED4E60 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -333,6 +334,7 @@
 			children = (
 				CD134568F9E8494A6B50B263 /* Assets.xcassets */,
 				067D709C36D68D8C39630FEE /* GoogleService-Info.plist */,
+				4308ACCB7807F19CE3918D54 /* HealthyPlant.entitlements */,
 				0A8FBC763810C7DC0F397382 /* HP-GoogleService-Info.plist */,
 				6EA1DBAA1F5648DEF43AAEB3 /* Info.plist */,
 				8624D379856AF6E56DD9EB20 /* Animations */,
@@ -796,8 +798,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HealthyPlant/Resources/HealthyPlant.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -805,7 +808,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;
@@ -899,8 +902,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = HealthyPlant/Resources/HealthyPlant.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -908,7 +912,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;

@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 struct SignInPromptView: View {
     @EnvironmentObject var authService: AuthService
@@ -7,6 +8,7 @@ struct SignInPromptView: View {
     /// Not called for new sign-ups or "Skip for now".
     var onSignedIn: (() -> Void)? = nil
     @State private var isSigningIn = false
+    @State private var appleNonce: String?
     @State private var errorMessage: String?
     @State private var showEmailAuth = false
 
@@ -48,6 +50,37 @@ struct SignInPromptView: View {
                 Spacer()
 
                 VStack(spacing: 12) {
+                    // Apple
+                    SignInWithAppleButton(.signIn) { request in
+                        let nonce = AuthService.randomNonceString()
+                        appleNonce = nonce
+                        request.requestedScopes = [.fullName, .email]
+                        request.nonce = AuthService.sha256(nonce)
+                    } onCompletion: { result in
+                        Task {
+                            switch result {
+                            case .success(let authorization):
+                                guard let nonce = appleNonce else { return }
+                                do {
+                                    try await authService.handleAppleSignIn(authorization: authorization, nonce: nonce)
+                                    onSignedIn?()
+                                    isPresented = false
+                                } catch {
+                                    errorMessage = error.localizedDescription
+                                }
+                            case .failure(let error):
+                                if (error as? ASAuthorizationError)?.code != .canceled {
+                                    errorMessage = error.localizedDescription
+                                }
+                            }
+                        }
+                    }
+                    .signInWithAppleButtonStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 54)
+                    .cornerRadius(14)
+                    .disabled(isSigningIn)
+
                     // Google
                     Button {
                         Task { await signInWithGoogle() }

@@ -1,6 +1,8 @@
 import Foundation
 import FirebaseAuth
 import GoogleSignIn
+import AuthenticationServices
+import CryptoKit
 
 @MainActor
 final class AuthService: ObservableObject {
@@ -8,6 +10,7 @@ final class AuthService: ObservableObject {
     @Published var isAuthenticated: Bool
     @Published var isGoogleLinked: Bool = false
     @Published var isEmailLinked: Bool = false
+    @Published var isAppleLinked: Bool = false
     @Published var displayName: String?
     @Published var email: String?
     @Published var photoURL: URL?
@@ -16,7 +19,7 @@ final class AuthService: ObservableObject {
     private static let anonIdKey = "hp_anonymous_id"
 
     /// True if the user has a real account (Google or email/password), not anonymous.
-    var isAccountLinked: Bool { isGoogleLinked || isEmailLinked }
+    var isAccountLinked: Bool { isGoogleLinked || isEmailLinked || isAppleLinked }
 
     init() {
         if let firebaseUser = Auth.auth().currentUser {
@@ -24,6 +27,7 @@ final class AuthService: ObservableObject {
             self.isAuthenticated = true
             self.isGoogleLinked = firebaseUser.providerData.contains { $0.providerID == "google.com" }
             self.isEmailLinked = firebaseUser.providerData.contains { $0.providerID == "password" }
+            self.isAppleLinked = firebaseUser.providerData.contains { $0.providerID == "apple.com" }
             self.displayName = firebaseUser.displayName
             self.email = firebaseUser.email
             self.photoURL = firebaseUser.photoURL
@@ -177,9 +181,72 @@ final class AuthService: ObservableObject {
         isAuthenticated = true
         isGoogleLinked = false
         isEmailLinked = false
+        isAppleLinked = false
         displayName = nil
         email = nil
         photoURL = nil
+    }
+
+    // MARK: - Apple Sign-In
+
+    func handleAppleSignIn(authorization: ASAuthorization, nonce: String) async throws {
+        guard let appleCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
+              let tokenData = appleCredential.identityToken,
+              let idToken = String(data: tokenData, encoding: .utf8) else {
+            throw AuthError.missingToken
+        }
+
+        let oldAnonId = UserDefaults.standard.string(forKey: Self.userIdKey)
+
+        let firebaseCredential = OAuthProvider.appleCredential(
+            withIDToken: idToken,
+            rawNonce: nonce,
+            fullName: appleCredential.fullName
+        )
+        let authResult = try await Auth.auth().signIn(with: firebaseCredential)
+        let firebaseUser = authResult.user
+
+        // Apple only provides the name on first sign-in
+        let fullName = [appleCredential.fullName?.givenName, appleCredential.fullName?.familyName]
+            .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " ")
+        if !fullName.isEmpty && (firebaseUser.displayName == nil || firebaseUser.displayName!.isEmpty) {
+            let changeRequest = firebaseUser.createProfileChangeRequest()
+            changeRequest.displayName = fullName
+            try? await changeRequest.commitChanges()
+        }
+
+        if let oldId = oldAnonId, oldId != firebaseUser.uid {
+            UserDefaults.standard.set(oldId, forKey: Self.anonIdKey)
+        }
+
+        userId = firebaseUser.uid
+        isAuthenticated = true
+        isAppleLinked = true
+        isGoogleLinked = firebaseUser.providerData.contains { $0.providerID == "google.com" }
+        isEmailLinked = firebaseUser.providerData.contains { $0.providerID == "password" }
+        displayName = firebaseUser.displayName ?? (fullName.isEmpty ? nil : fullName)
+        email = firebaseUser.email ?? appleCredential.email
+        photoURL = firebaseUser.photoURL
+        UserDefaults.standard.set(firebaseUser.uid, forKey: Self.userIdKey)
+
+        if let oldId = oldAnonId, oldId != firebaseUser.uid {
+            await migrateData(from: oldId, to: firebaseUser.uid)
+        }
+    }
+
+    // MARK: - Apple Nonce Helpers (static so views can use them)
+
+    static func randomNonceString(length: Int = 32) -> String {
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        _ = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        let charset = Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        return String(randomBytes.map { charset[Int($0) % charset.count] })
+    }
+
+    static func sha256(_ input: String) -> String {
+        SHA256.hash(data: Data(input.utf8))
+            .compactMap { String(format: "%02x", $0) }
+            .joined()
     }
 
     // MARK: - Data Migration

@@ -26,16 +26,22 @@ targets:
       - path: HealthyPlant
         excludes:
           - "**/.DS_Store"
+    entitlements:
+      path: HealthyPlant/Resources/HealthyPlant.entitlements
+      properties:
+        com.apple.developer.applesignin:
+          - Default
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.healthyplant.app
         MARKETING_VERSION: "1.1.0"
-        CURRENT_PROJECT_VERSION: "17"
+        CURRENT_PROJECT_VERSION: "18"
         SWIFT_VERSION: "5.9"
         INFOPLIST_FILE: HealthyPlant/Resources/Info.plist
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         DEVELOPMENT_TEAM: SNJ4V48UPB
+        CODE_SIGN_ENTITLEMENTS: HealthyPlant/Resources/HealthyPlant.entitlements
     dependencies:
       - package: Lottie
       - package: FirebaseSDK

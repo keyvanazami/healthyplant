@@ -1,6 +1,7 @@
 import SwiftUI
 import PhotosUI
 import CoreLocation
+import AuthenticationServices
 
 struct GardenerProfileView: View {
     @EnvironmentObject var authService: AuthService
@@ -10,6 +11,7 @@ struct GardenerProfileView: View {
     @State private var showSavedToast = false
     @State private var isDetectingLocation = false
     @State private var locationHelper = LocationHelper()
+    @State private var appleNonce: String?
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -353,6 +355,23 @@ struct GardenerProfileView: View {
                 .padding(.horizontal, 32)
 
             VStack(spacing: 10) {
+                SignInWithAppleButton(.signIn) { request in
+                    let nonce = AuthService.randomNonceString()
+                    appleNonce = nonce
+                    request.requestedScopes = [.fullName, .email]
+                    request.nonce = AuthService.sha256(nonce)
+                } onCompletion: { result in
+                    Task {
+                        if case .success(let auth) = result, let nonce = appleNonce {
+                            try? await authService.handleAppleSignIn(authorization: auth, nonce: nonce)
+                        }
+                    }
+                }
+                .signInWithAppleButtonStyle(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 54)
+                .cornerRadius(14)
+
                 Button {
                     Task { try? await authService.signInWithGoogle() }
                 } label: {

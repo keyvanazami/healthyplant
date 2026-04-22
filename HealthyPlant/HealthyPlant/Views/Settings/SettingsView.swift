@@ -1,4 +1,5 @@
 import SwiftUI
+import AuthenticationServices
 
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
@@ -12,6 +13,7 @@ struct SettingsView: View {
     @State private var showSignOutAlert = false
     @State private var tokenSensor: Sensor? = nil
     @State private var detailSensor: Sensor? = nil
+    @State private var appleNonce: String?
 
     var body: some View {
         NavigationStack {
@@ -38,7 +40,7 @@ struct SettingsView: View {
                                         Circle()
                                             .fill(Theme.accent.opacity(0.15))
                                             .frame(width: 40, height: 40)
-                                        Image(systemName: authService.isGoogleLinked ? "g.circle.fill" : "envelope.circle.fill")
+                                        Image(systemName: authService.isGoogleLinked ? "g.circle.fill" : authService.isAppleLinked ? "apple.logo" : "envelope.circle.fill")
                                             .font(.system(size: 22))
                                             .foregroundColor(Theme.accent)
                                     }
@@ -72,6 +74,25 @@ struct SettingsView: View {
                             }
                             .listRowBackground(Color.white.opacity(0.05))
                         } else {
+                            // Sign in with Apple
+                            SignInWithAppleButton(.signIn) { request in
+                                let nonce = AuthService.randomNonceString()
+                                appleNonce = nonce
+                                request.requestedScopes = [.fullName, .email]
+                                request.nonce = AuthService.sha256(nonce)
+                            } onCompletion: { result in
+                                Task {
+                                    if case .success(let auth) = result, let nonce = appleNonce {
+                                        try? await authService.handleAppleSignIn(authorization: auth, nonce: nonce)
+                                    }
+                                }
+                            }
+                            .signInWithAppleButtonStyle(.white)
+                            .frame(height: 44)
+                            .cornerRadius(10)
+                            .listRowBackground(Color.white.opacity(0.05))
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+
                             Button {
                                 Task {
                                     isSigningIn = true
