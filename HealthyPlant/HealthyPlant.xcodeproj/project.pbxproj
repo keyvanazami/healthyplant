@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02D8EB7532BAA8F66D0AF70B /* LocationPickerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B0630ACC8D04EF9041691D /* LocationPickerSection.swift */; };
 		02E1F27BED55E9BE4C52D353 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B12E6B48BB0CF50BF509A8B2 /* AppState.swift */; };
 		04020A9133A100DE876D15DB /* ImageUploadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5005F68806E7D348C880E825 /* ImageUploadService.swift */; };
 		0683486046F6D36A09E719F3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607934E90864478D31784E51 /* SettingsView.swift */; };
@@ -188,6 +189,7 @@
 		CC63341521B7E45CFC808C68 /* CalendarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModelTests.swift; sourceTree = "<group>"; };
 		CCF0C9A3ACAAE477EC60C422 /* PlantScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantScanView.swift; sourceTree = "<group>"; };
 		CD134568F9E8494A6B50B263 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D3B0630ACC8D04EF9041691D /* LocationPickerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerSection.swift; sourceTree = "<group>"; };
 		D7CE5FE3D1D3CE1518D5BBBB /* SignInPromptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInPromptView.swift; sourceTree = "<group>"; };
 		D86088F38AD5D230F50AEC6F /* SensorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorViewModel.swift; sourceTree = "<group>"; };
 		DAB52BD763DEC723FA856ED9 /* CalendarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewModel.swift; sourceTree = "<group>"; };
@@ -267,6 +269,7 @@
 			children = (
 				A5D0EEC4AD334481E6C5F951 /* CameraView.swift */,
 				2F19DA36C04F2958BDB50C1B /* GreenOutlineStyle.swift */,
+				D3B0630ACC8D04EF9041691D /* LocationPickerSection.swift */,
 				2446114BCB6649FE8A010280 /* TabBarView.swift */,
 			);
 			path = Components;
@@ -715,6 +718,7 @@
 				0EDD84FB1C061E868052FB05 /* HomeView.swift in Sources */,
 				CB2C2167E65875D1B5190752 /* HomeViewModel.swift in Sources */,
 				04020A9133A100DE876D15DB /* ImageUploadService.swift in Sources */,
+				02D8EB7532BAA8F66D0AF70B /* LocationPickerSection.swift in Sources */,
 				CFA18C464582D2B631A88981 /* NotificationService.swift in Sources */,
 				8D98010E61DD49B51E406B55 /* OnboardingView.swift in Sources */,
 				5C4F5DFFA48A3DD13B9B8786 /* PlantAnimationView.swift in Sources */,
@@ -800,7 +804,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HealthyPlant/Resources/HealthyPlant.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -808,7 +812,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;
@@ -904,7 +908,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HealthyPlant/Resources/HealthyPlant.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = SNJ4V48UPB;
 				INFOPLIST_FILE = HealthyPlant/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -912,7 +916,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.healthyplant.app;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.9;

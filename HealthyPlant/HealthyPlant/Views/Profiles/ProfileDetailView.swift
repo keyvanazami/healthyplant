@@ -24,6 +24,7 @@ struct ProfileDetailView: View {
     @State private var heightFeet: Int
     @State private var heightInches: Int
     @State private var isIndoor: Bool
+    @State private var location: String?
 
     init(profile: PlantProfile, viewModel: ProfilesViewModel) {
         self.profile = profile
@@ -34,6 +35,7 @@ struct ProfileDetailView: View {
         _heightFeet = State(initialValue: profile.heightFeet)
         _heightInches = State(initialValue: profile.heightInches)
         _isIndoor = State(initialValue: profile.isIndoor)
+        _location = State(initialValue: profile.location)
     }
 
     var body: some View {
@@ -254,6 +256,9 @@ struct ProfileDetailView: View {
                     .foregroundColor(profile.isIndoor ? .blue : Theme.accent)
                 Spacer()
             }
+            if let loc = profile.location, !loc.isEmpty {
+                detailRow(label: "Location", value: loc)
+            }
             detailRow(label: "Age", value: profile.formattedAge)
             detailRow(label: "Height", value: profile.formattedHeight)
             detailRow(label: "Planted", value: profile.plantedDate)
@@ -270,6 +275,8 @@ struct ProfileDetailView: View {
                     .foregroundColor(Theme.textPrimary)
             }
             .tint(Theme.accent)
+
+            locationEditField
 
             HStack {
                 Text("Age (days)")
@@ -290,6 +297,46 @@ struct ProfileDetailView: View {
                     .frame(width: 120)
             }
             .foregroundColor(Theme.textPrimary)
+        }
+    }
+
+    private var isCustomLocation: Bool {
+        guard let loc = location, !loc.isEmpty else { return false }
+        return !PlantLocation.presets.contains(loc)
+    }
+
+    @ViewBuilder
+    private var locationEditField: some View {
+        HStack {
+            Text("Location")
+                .foregroundColor(Theme.textSecondary)
+            Spacer()
+            Menu {
+                Button("None") { location = nil }
+                ForEach(PlantLocation.presets, id: \.self) { preset in
+                    Button(preset) { location = preset }
+                }
+                Divider()
+                Button("Custom…") { location = isCustomLocation ? (location ?? "") : "" }
+            } label: {
+                HStack(spacing: 4) {
+                    Text(location?.isEmpty == false ? location! : "Choose…")
+                        .foregroundColor(location?.isEmpty == false ? Theme.textPrimary : Theme.textSecondary)
+                    Image(systemName: "chevron.up.chevron.down")
+                        .font(.caption2)
+                        .foregroundColor(Theme.textSecondary)
+                }
+            }
+        }
+        if isCustomLocation {
+            TextField("Custom location", text: Binding(
+                get: { location ?? "" },
+                set: { location = $0.isEmpty ? nil : $0 }
+            ))
+            .foregroundColor(Theme.textPrimary)
+            .padding(8)
+            .background(Color.white.opacity(0.05))
+            .cornerRadius(8)
         }
     }
 
@@ -420,7 +467,8 @@ struct ProfileDetailView: View {
                 ageDays: ageDays,
                 heightFeet: heightFeet,
                 heightInches: heightInches,
-                isIndoor: isIndoor
+                isIndoor: isIndoor,
+                location: location
             )
         }
     }

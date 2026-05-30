@@ -17,6 +17,7 @@ class PlantProfileCreate(BaseModel):
     height_feet: int = Field(..., alias="heightFeet", ge=0, description="Height in feet")
     height_inches: int = Field(..., alias="heightInches", ge=0, le=11, description="Height remaining inches")
     is_indoor: bool = Field(False, alias="isIndoor")
+    location: Optional[str] = Field(None, max_length=100, description="Room or location, e.g. 'Living Room'")
 
     model_config = {"populate_by_name": True}
 
@@ -35,6 +36,7 @@ class PlantProfileUpdate(BaseModel):
     water_needs: Optional[str] = Field(None, alias="waterNeeds", description="AI-generated water requirements")
     harvest_time: Optional[str] = Field(None, alias="harvestTime", description="AI-generated harvest time estimate")
     is_indoor: Optional[bool] = Field(None, alias="isIndoor")
+    location: Optional[str] = Field(None, max_length=100)
 
     model_config = {"populate_by_name": True}
 
@@ -59,6 +61,7 @@ class PlantProfileResponse(BaseModel):
     sun_hours_max: Optional[int] = Field(None, alias="sunHoursMax")
     ai_last_updated: Optional[str] = Field(None, alias="aiLastUpdated")
     is_indoor: bool = Field(False, alias="isIndoor")
+    location: Optional[str] = Field(None)
     sensor_id: Optional[str] = Field(None, alias="sensorId")
     sensor_last_reading: Optional[Any] = Field(None, alias="sensorLastReading")
     created_at: str = Field(..., alias="createdAt")

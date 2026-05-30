@@ -11,6 +11,7 @@ struct PlantProfile: Codable, Identifiable, Equatable, Hashable {
     var heightFeet: Int
     var heightInches: Int
     var isIndoor: Bool = false
+    var location: String? = nil
     var sunNeeds: String?
     var waterNeeds: String?
     var harvestTime: String?

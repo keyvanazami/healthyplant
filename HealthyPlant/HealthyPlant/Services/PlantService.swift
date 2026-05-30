@@ -18,7 +18,8 @@ struct PlantService {
         heightFeet: Int,
         heightInches: Int,
         photoURL: String? = nil,
-        isIndoor: Bool = false
+        isIndoor: Bool = false,
+        location: String? = nil
     ) async throws -> PlantProfile {
         let plantedDate = Calendar.current.date(byAdding: .day, value: -ageDays, to: Date()) ?? Date()
         let formatter = DateFormatter()
@@ -32,7 +33,8 @@ struct PlantService {
             heightFeet: heightFeet,
             heightInches: heightInches,
             photoURL: photoURL,
-            isIndoor: isIndoor
+            isIndoor: isIndoor,
+            location: location
         )
         return try await api.post(path: "/api/v1/profiles", body: body)
     }
@@ -46,7 +48,8 @@ struct PlantService {
         ageDays: Int,
         heightFeet: Int,
         heightInches: Int,
-        isIndoor: Bool
+        isIndoor: Bool,
+        location: String? = nil
     ) async throws -> PlantProfile {
         let body = UpdateProfileRequest(
             name: name,
@@ -54,7 +57,8 @@ struct PlantService {
             ageDays: ageDays,
             heightFeet: heightFeet,
             heightInches: heightInches,
-            isIndoor: isIndoor
+            isIndoor: isIndoor,
+            location: location
         )
         return try await api.put(path: "/api/v1/profiles/\(id)", body: body)
     }
@@ -90,6 +94,7 @@ struct CreateProfileRequest: Encodable {
     let heightInches: Int
     let photoURL: String?
     let isIndoor: Bool
+    let location: String?
 }
 
 struct UpdateProfileRequest: Encodable {
@@ -99,6 +104,7 @@ struct UpdateProfileRequest: Encodable {
     let heightFeet: Int
     let heightInches: Int
     let isIndoor: Bool
+    let location: String?
 }
 
 struct UpdatePhotoRequest: Encodable {

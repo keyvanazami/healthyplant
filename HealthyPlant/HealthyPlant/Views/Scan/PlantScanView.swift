@@ -104,9 +104,19 @@ struct PlantScanView: View {
         }
         .photosPicker(isPresented: $showPhotoPicker, selection: $selectedPhotoItem, matching: .images)
         .onChange(of: selectedPhotoItem) { _, newItem in
+            guard let newItem else { return }
             Task {
-                if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                    imageData = data
+                do {
+                    if let data = try await newItem.loadTransferable(type: Data.self) {
+                        imageData = normalizeToJPEG(data)
+                    } else {
+                        errorMessage = "Couldn't load that photo. Try a different one."
+                        selectedPhotoItem = nil
+                    }
+                } catch {
+                    errorMessage = "Couldn't load that photo. Try a different one."
+                    selectedPhotoItem = nil
+                    print("[PlantScan] Photo load failed: \(error)")
                 }
             }
         }
@@ -372,6 +382,7 @@ struct PlantScanView: View {
         } catch {
             errorMessage = "Failed to identify plant. Try again."
             self.imageData = nil
+            self.selectedPhotoItem = nil
             print("[PlantScan] Lookup failed: \(error)")
         }
         isLoading = false
@@ -382,6 +393,16 @@ struct PlantScanView: View {
         lookupResult = nil
         errorMessage = nil
         selectedPhotoItem = nil
+    }
+
+    /// Re-encode any image format (HEIC, PNG, raw camera) to JPEG so the
+    /// `multipart/form-data` Content-Type header is honest.
+    private func normalizeToJPEG(_ data: Data) -> Data {
+        if let image = UIImage(data: data),
+           let jpeg = image.jpegData(compressionQuality: 0.8) {
+            return jpeg
+        }
+        return data
     }
 }
 

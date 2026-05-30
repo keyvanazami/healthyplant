@@ -18,6 +18,7 @@ struct CreateProfileView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var selectedImageData: Data?
     @State private var isIndoor: Bool = false
+    @State private var location: String? = nil
     @State private var isSaving = false
     @State private var showImageSourcePicker = false
     @State private var showCamera = false
@@ -69,6 +70,8 @@ struct CreateProfileView: View {
                         .tint(Theme.accent)
                     }
                     .listRowBackground(Color.white.opacity(0.05))
+
+                    LocationPickerSection(location: $location)
 
                     // Age
                     Section("Age") {
@@ -225,7 +228,8 @@ struct CreateProfileView: View {
                 heightFeet: heightFeet,
                 heightInches: heightInches,
                 imageData: selectedImageData,
-                isIndoor: isIndoor
+                isIndoor: isIndoor,
+                location: location
             )
             dismiss()
         }
